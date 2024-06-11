@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:ielts_practice_flutter_application/page/listening/listening_list_test.dart';
 import 'package:ielts_practice_flutter_application/page/reading/reading_list_test.dart';
 import 'package:ielts_practice_flutter_application/page/writing/writing_list_test.dart';
@@ -11,115 +12,198 @@ class HomePage extends StatefulWidget {
 
 class _IELTSHomeState extends State<HomePage> {
   bool isAcademic = true;
+  int _currentCarouselIndex = 0;
+
+  final Map<String, String> iconPaths = {
+    'Listening Test': 'icons/icons8-headphone-48.png',
+    'Reading Test': 'icons/icons8-book-48.png',
+    'Writing Test': 'icons/icons8-pencil-48.png',
+    'Speaking Test': 'icons/icons8-mic-48.png',
+    'Full Skills': 'icons/icons8-diversity-48.png',
+    'Grammar': 'icons/icons8-grammar-48.png',
+    'Listening Practice': 'icons/icons8-headphone-48.png',
+    'Reading Practice': 'icons/icons8-book-48.png',
+    'Writing Practice': 'icons/icons8-pencil-48.png',
+    'Speaking Practice': 'icons/icons8-mic-48.png',
+    'General Skills': 'icons/icons8-diversity-48.png',
+    'Grammar Practice': 'icons/icons8-grammar-48.png',
+  };
+
+  final List<String> carouselTexts = [
+    '"Start with a clear purpose in mind, keep your sentences concise, and revise for clarity."',
+    '"Master IELTS Academic: Open Doors to Global Success!"'
+  ];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('IELTS', style: TextStyle(color: Colors.red, fontWeight: FontWeight.bold)),
-        backgroundColor: Colors.white,
-        elevation: 0,
-        actions: [
-          IconButton(
-            icon: Icon(Icons.notifications, color: Colors.amber),
-            onPressed: () {},
+        appBar: AppBar(
+          title: Text(
+            'IELTS',
+            style: TextStyle(color: Colors.red, fontWeight: FontWeight.bold),
           ),
-        ],
-      ),
-      body: Column(
-        children: [
-          Container(
-            padding: EdgeInsets.all(20),
-            child: Column(
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    GestureDetector(
-                      onTap: () {
-                        setState(() {
-                          isAcademic = true;
-                        });
-                      },
-                      child: Column(
-                        children: [
-                          Icon(Icons.school, color: isAcademic ? Colors.blue : Colors.grey),
-                          Text('Academic', style: TextStyle(color: isAcademic ? Colors.blue : Colors.grey)),
-                        ],
+          backgroundColor: Colors.white,
+          elevation: 0,
+          actions: [
+            IconButton(
+              icon: Icon(Icons.notifications, color: Colors.amber),
+              onPressed: () {},
+            ),
+          ],
+        ),
+        body: Column(
+          children: [
+            Container(
+              padding: EdgeInsets.all(20),
+              child: Column(
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            isAcademic = true;
+                          });
+                        },
+                        child: Container(
+                          padding: EdgeInsets.symmetric(horizontal: 10),
+                          decoration: BoxDecoration(
+                            border: Border(
+                              bottom: BorderSide(
+                                color: isAcademic ? Colors.blue : Colors.transparent,
+                                width: 2,
+                              ),
+                            ),
+                          ),
+                          child: Row(
+                            children: [
+                              Image.asset(
+                                'icons/icons8-mortarboard-48.png', // Academic icon
+                                width: 40,
+                                height: 40,
+                              ),
+                              SizedBox(width: 8),
+                              Text('Academic', style: TextStyle(color: isAcademic ? Colors.blue : Colors.grey)),
+                            ],
+                          ),
+                        ),
+                      ),
+                      GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            isAcademic = false;
+                          });
+                        },
+                        child: Container(
+                          padding: EdgeInsets.symmetric(horizontal: 10),
+                          decoration: BoxDecoration(
+                            border: Border(
+                              bottom: BorderSide(
+                                color: !isAcademic ? Colors.blue : Colors.transparent,
+                                width: 2,
+                              ),
+                            ),
+                          ),
+                          child: Row(
+                            children: [
+                              Image.asset(
+                                'icons/icons8-people-skin-type-7-48.png', // General icon
+                                width: 40,
+                                height: 40,
+                              ),
+                              SizedBox(width: 8),
+                              Text('General', style: TextStyle(color: !isAcademic ? Colors.blue : Colors.grey)),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 16),
+                  Card(
+                    elevation: 4,
+                    margin: EdgeInsets.symmetric(horizontal: 20),
+                    child: CarouselSlider(
+                      items: carouselTexts.map((text) {
+                        return Builder(
+                          builder: (BuildContext context) {
+                            return Container(
+                              padding: EdgeInsets.all(16),
+                              child: Text(
+                                text,
+                                style: TextStyle(fontSize: 16),
+                                textAlign: TextAlign.center,
+                              ),
+                            );
+                          },
+                        );
+                      }).toList(),
+                      options: CarouselOptions(
+                        height: 100.0,
+                        viewportFraction: 1.0,
+                        onPageChanged: (index, _) {
+                          setState(() {
+                            _currentCarouselIndex = index;
+                          });
+                        },
                       ),
                     ),
-                    GestureDetector(
-                      onTap: () {
-                        setState(() {
-                          isAcademic = false;
-                        });
-                      },
-                      child: Column(
-                        children: [
-                          Icon(Icons.public, color: !isAcademic ? Colors.orange : Colors.grey),
-                          Text('General', style: TextStyle(color: !isAcademic ? Colors.orange : Colors.grey)),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-                SizedBox(height: 16),
-                Text(
-                  isAcademic
-                      ? '"Start with a clear purpose in mind, keep your sentences concise, and revise for clarity."'
-                      : '"Master IELTS Academic: Open Doors to Global Success!"',
-                  style: TextStyle(fontSize: 16),
-                  textAlign: TextAlign.center,
-                ),
-              ],
+                  ),
+                ],
+              ),
             ),
-          ),
-          Expanded(
-            child: GridView.count(
-              crossAxisCount: 2,
-              children: isAcademic
-                  ? [
-                _buildGridItem(Icons.headset, 'Listening Test', ListeningListTestPage()),
-                _buildGridItem(Icons.book, 'Reading Test', ReadingListTestPage()),
-                _buildGridItem(Icons.edit, 'Writing Test', WritingListTestPage()),
-                _buildGridItem(Icons.mic, 'Speaking Test', SpeakingListTestPage()),
-                _buildGridItem(Icons.all_inclusive, 'Full Skills', null),
-                _buildGridItem(Icons.spellcheck, 'Grammar', null),
-              ]
-                  : [
-                _buildGridItem(Icons.headset, 'Listening Practice', ListeningListTestPage()),
-                _buildGridItem(Icons.book, 'Reading Practice', ReadingListTestPage()),
-                _buildGridItem(Icons.edit, 'Writing Practice', WritingListTestPage()),
-                _buildGridItem(Icons.mic, 'Speaking Practice', SpeakingListTestPage()),
-                _buildGridItem(Icons.all_inclusive, 'General Skills', null),
-                _buildGridItem(Icons.spellcheck, 'Grammar Practice', null),
-              ],
+            Expanded(
+              child: GridView.count(
+                crossAxisCount: 2,
+                children: isAcademic
+                    ? [
+                  _buildGridItem('Listening Test', ListeningListTestPage()),
+                  _buildGridItem('Reading Test', ReadingListTestPage()),
+                  _buildGridItem('Writing Test', WritingListTestPage()),
+                  _buildGridItem('Speaking Test', SpeakingListTestPage()),
+                  _buildGridItem('Full Skills', null),
+                  _buildGridItem('Grammar', null),
+                ]
+                    : [
+                  _buildGridItem('Listening Practice', ListeningListTestPage()),
+                  _buildGridItem('Reading Practice', ReadingListTestPage()),
+                  _buildGridItem('Writing Practice', WritingListTestPage()),
+                  _buildGridItem('Speaking Practice', SpeakingListTestPage()),
+                  _buildGridItem('General Skills', null),
+                  _buildGridItem('Grammar Practice', null),
+                ],
+              ),
             ),
-          ),
-        ],
-      ),
-      bottomNavigationBar: BottomNavigationBar(
+          ],
+        ),
+        bottomNavigationBar: BottomNavigationBar(
         items: [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'Home',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.bar_chart),
-            label: 'Progress',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person),
-            label: 'Profile',
-          ),
-        ],
-        selectedItemColor: Colors.blue,
-        unselectedItemColor: Colors.grey,
-      ),
+        BottomNavigationBarItem(
+        icon: Icon(Icons.home),
+    label: 'Home',
+    ),
+    BottomNavigationBarItem(
+    icon: Icon(Icons.bar_chart),
+    label: 'Progress',
+    ),
+    BottomNavigationBarItem(
+    icon: Icon(Icons.person),
+    label: 'Profile',
+    ),
+    ],
+    selectedItemColor: Colors.blue,
+    unselectedItemColor: Colors.grey,
+    onTap: (index) {
+    setState(() {
+    isAcademic = index == 0;
+    });
+    },
+        ),
     );
   }
 
-  Widget _buildGridItem(IconData icon, String label, Widget? page) {
+  Widget _buildGridItem(String label, Widget? page) {
     return Card(
       margin: EdgeInsets.all(8),
       elevation: 4,
@@ -140,9 +224,9 @@ class _IELTSHomeState extends State<HomePage> {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Icon(icon, size: 40, color: Colors.blue),
+              Image.asset(iconPaths[label]!, width: 40, height: 40),
               SizedBox(height: 8),
-              Text(label, style: TextStyle(color: Colors.blue)),
+              Text(label),
             ],
           ),
         ),
@@ -150,3 +234,4 @@ class _IELTSHomeState extends State<HomePage> {
     );
   }
 }
+
