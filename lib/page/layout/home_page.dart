@@ -124,11 +124,13 @@ class _IELTSHomeState extends State<HomePage> {
                   Card(
                     elevation: 4,
                     margin: EdgeInsets.symmetric(horizontal: 20),
-                    child: CarouselSlider(
+                    child:CarouselSlider(
                       items: carouselTexts.map((text) {
                         return Builder(
                           builder: (BuildContext context) {
                             return Container(
+                              width: MediaQuery.of(context).size.width, // Chiều rộng của mỗi item là chiều rộng của màn hình
+                              margin: EdgeInsets.symmetric(horizontal: 5.0), // Khoảng cách giữa các item
                               padding: EdgeInsets.all(16),
                               child: Text(
                                 text,
@@ -140,8 +142,12 @@ class _IELTSHomeState extends State<HomePage> {
                         );
                       }).toList(),
                       options: CarouselOptions(
-                        height: 100.0,
-                        viewportFraction: 1.0,
+                        height: 120.0, // Chiều cao của carousel
+                        autoPlay: true, // Tự động chuyển slide
+                        autoPlayInterval: Duration(seconds: 2), // Thời gian chờ giữa các chuyển slide
+                        autoPlayAnimationDuration: Duration(milliseconds: 800), // Thời gian animation của chuyển slide
+                        enableInfiniteScroll: true, // Cho phép cuộn vô hạn
+                        viewportFraction: 1.0, // Phần trăm của màn hình mà mỗi item chiếm
                         onPageChanged: (index, _) {
                           setState(() {
                             _currentCarouselIndex = index;
