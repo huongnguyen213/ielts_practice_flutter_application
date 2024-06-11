@@ -1,0 +1,74 @@
+{
+  "writing": {
+    "test_1": {
+      "like": true,
+      "name": "Writing Practice Test 1",
+      "part_1": {
+        "img": "lib/assets/images/writing_part1_1.jpg",
+        "note": "Write at least 150 words.",
+        "q1": "The graph below shows the production levels of the main kinds of fuel in the UK between 1981 and 2000. Summarize the formation by selecting and reporting the main features and make comparisons where relevant."
+      },
+      "part_2": {
+        "note": "Write at least 250 words.",
+        "q2": "In some countries university students live at home with their family while they study, whereas in other countries students attend university in another city. Do you think the benefits of living away from home during university outweigh the disadvantages?"
+      },
+      "score": 8
+    },
+    "test_2": {
+      "like": false,
+      "name": "Writing Practice Test 2",
+      "part_1": {
+        "img": "lib/assets/images/writing_part1_2.png",
+        "note": "You should write at least 150 words.",
+        "q1": "The line graph shows the percentages of Australian export with four countries. The graph below shows the percentage of Australian exports to 4 countries from 1990 to 2012"
+      },
+      "part_2": {
+        "note": "You should write at least 250 words.",
+        "q2": "In many countries today, if people want to find work, they have to move away from their friends and their families. Do you think the advantages of this development outweigh the disadvantages?"
+      },
+      "score": ""
+    },
+    "test_3": {
+      "like": true,
+      "name": "Writing Practice Test 3",
+      "part_1": {
+        "img": "lib/assets/images/writing_part1_3.png",
+        "note": "You should write at least 150 words.",
+        "q1": "The charts below show the percentages of men and women aged 60-64 in employment in four countries in 1970 and 2000. Summaries the information by selecting and reporting the main features, and make comparison where relevant."
+      },
+      "part_2": {
+        "note": "You should write at least 250 words.",
+        "q2": "Some people want governments to spend money looking for life on other planets. Others, however, think this is a waste of public money when there are so many problems on earth. Discuss both these views and give your own opinion."
+      },
+      "score": 6
+    },
+    "test_4": {
+      "like": false,
+      "name": "Writing Practice Test 4",
+      "part_1": {
+        "img": "lib/assets/images/writing_part1_4.png",
+        "note": "You should write at least 150 words.",
+        "q1": "The table below shows the number of temporary migrant worker in four countries in 2003 and 2006 and the number of these workers per 1,000 people in these countries in 2006. Summarise the information by selecting and reporting the main features, and make comparisons where relevant."
+      },
+      "part_2": {
+        "note": "You should write at least 250 words.",
+        "q2": "Rich countries often give money to poorer countries, but it does not solve poverty. Therefore, developed countries should give other types of help to the poor countries rather than financial aid. To what extent do you agree or disagree?"
+      },
+      "score": ""
+    },
+    "test_5": {
+      "like": true,
+      "name": "Writing Practice Test 5",
+      "part_1": {
+        "img": "lib/assets/images/writing_part1_5.jpg",
+        "note": "You should write at least 150 words.",
+        "q1": "The diagram below shows how rain water is collected and then treated to be used as drinking water in an Australian town. Summarise the information by selecting and reporting the main features and make comparisons where relevant."
+      },
+      "part_2": {
+        "note": "You should write at least 250 words.",
+        "q2": "The best way to teach children to cooperate is through team sports at school. To what extent do you agree or disagree?"
+      },
+      "score": 4
+    }
+  }
+}

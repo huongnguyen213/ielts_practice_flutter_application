@@ -28,6 +28,7 @@ environment:
 # the latest version available on pub.dev. To see which dependencies have newer
 # versions available, run `flutter pub outdated`.
 dependencies:
+  shared_preferences: ^2.0.0
   carousel_slider: ^4.0.0
   flutter:
     sdk: flutter
@@ -69,12 +70,20 @@ flutter:
     - icons/icons8-mortarboard-48.png
     - icons/icons8-people-skin-type-7-48.png
     - icons/icons8-user-profile-48.png
+    - lib/assets/images/tip-writing-1.png
+    - lib/assets/images/tip-writing-2.png
+    - lib/assets/images/tip-writing-3.png
+    - lib/assets/images/writing_part1_1.jpg
+    - lib/assets/images/writing_part1_2.png
+    - lib/assets/images/writing_part1_3.png
+    - lib/assets/images/writing_part1_4.png
+    - lib/assets/images/writing_part1_4.png
+    - lib/assets/images/writing_part1_5.jpg
+    - lib/assets/data/writing.json
 
 
   # To add assets to your application, add an assets section, like this:
-  # assets:
-  #   - icons/a_dot_burr.jpeg
-  #   - icons/a_dot_ham.jpeg
+
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
