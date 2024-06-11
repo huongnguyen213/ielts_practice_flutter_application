@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'listening_test_detail.dart';
+
 
 class ListeningListTestPage extends StatelessWidget {
   @override
@@ -166,10 +166,7 @@ class BorderRadiusListView extends StatelessWidget {
                 ),
                 trailing: ElevatedButton(
                   onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => DetailPage()),
-                    );
+
                   },
                   child: Text('Do it now',
                   style: TextStyle(
