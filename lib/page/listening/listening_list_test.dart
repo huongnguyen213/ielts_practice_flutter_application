@@ -18,7 +18,7 @@ class ListeningListTestPage extends StatelessWidget {
             borderRadius: BorderRadius.all(Radius.circular(30))
 
         ),
-          child: BorderRadiusListView(),
+        child: BorderRadiusListView(),
 
 
       ),
@@ -150,7 +150,7 @@ class BorderRadiusListView extends StatelessWidget {
                           fontWeight: FontWeight.w500,
                         ),
                       ),
-                       LinearProgressIndicator(
+                      LinearProgressIndicator(
                         value: 0.8, // Giá trị thanh tiến trình, bạn có thể thay đổi
                         backgroundColor: Color(0xffD1F1DC),
                         valueColor: AlwaysStoppedAnimation<Color>(Colors.green),
@@ -170,13 +170,13 @@ class BorderRadiusListView extends StatelessWidget {
                   },
                   //fe
                   child: Text('Do it now',
-                  style: TextStyle(
-                    color: Colors.orange,
- //fe
-                  ),
+                    style: TextStyle(
+                      color: Colors.orange,
+                      //fe
+                    ),
                   ),
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xffFDF1DC)
+                      backgroundColor: const Color(0xffFDF1DC)
                   ),
                 ),
               ),
