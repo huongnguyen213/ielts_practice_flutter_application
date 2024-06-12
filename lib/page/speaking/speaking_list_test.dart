@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:ielts_practice_flutter_application/page/speaking/speaking_set_up.dart';
+import 'popup_setup.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SpeakingListTestPage extends StatefulWidget {
@@ -40,6 +42,21 @@ class _SpeakingListTestPageScreenState extends State<SpeakingListTestPage> {
     });
   }
 
+  // void _showSetUpTest() {
+  //   // showDialog(
+  //   //   context: context,
+  //   //   builder: (BuildContext context) {
+  //   //     return SpeakingSetUpTest();
+  //   //   },
+  //   // );
+  // }
+  void _showSetUpTest(String testName) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => SpeakingSetUpTest(testName: testName)),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -71,51 +88,54 @@ class _SpeakingListTestPageScreenState extends State<SpeakingListTestPage> {
       ),
     );
   }
-
   Widget _buildTestCard(String testName, int score) {
     bool isFavorite = _prefs?.getBool(testName) ?? false;
-    return Card(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          ListTile(
-            title: Text(
-              testName,
-              style: TextStyle(fontWeight: FontWeight.bold),
+    return GestureDetector(
+      onTap: () => _showSetUpTest(testName), // Chuyển tên của bài test vào hàm _showSetUpTest
+      child: Card(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            ListTile(
+              title: Text(
+                testName,
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
             ),
-          ),
-          Container(
-            padding: EdgeInsets.symmetric(horizontal: 8.0),
-            child: Row(
-              children: [
-                Expanded(
-                  child: LinearProgressIndicator(
-                    value: score != null ? score / 10 : _progress,
-                    backgroundColor: Colors.grey[300],
-                    valueColor: AlwaysStoppedAnimation<Color>(Colors.green),
+            Container(
+              padding: EdgeInsets.symmetric(horizontal: 8.0),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: LinearProgressIndicator(
+                      value: score != null ? score / 10 : _progress,
+                      backgroundColor: Colors.grey[300],
+                      valueColor: AlwaysStoppedAnimation<Color>(Colors.green),
+                    ),
                   ),
-                ),
-                IconButton(
-                  icon: Icon(
-                    isFavorite ? Icons.star : Icons.star_border,
-                    color: isFavorite ? Colors.yellow : Colors.grey,
+                  IconButton(
+                    icon: Icon(
+                      isFavorite ? Icons.star : Icons.star_border,
+                      color: isFavorite ? Colors.yellow : Colors.grey,
+                    ),
+                    onPressed: () {
+                      _toggleFavorite(testName);
+                    },
                   ),
-                  onPressed: () {
-                    _toggleFavorite(testName);
-                  },
-                ),
-              ],
+                ],
+              ),
             ),
-          ),
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: 8.0),
-            child: Text(
-              'Score: ${score ?? _score}/10',
-              style: TextStyle(fontStyle: FontStyle.italic),
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 8.0),
+              child: Text(
+                'Score: ${score ?? _score}/10',
+                style: TextStyle(fontStyle: FontStyle.italic),
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
+
 }
