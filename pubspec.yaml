@@ -82,7 +82,7 @@ flutter:
     - lib/assets/images/writing_part1_4.png
     - lib/assets/images/writing_part1_5.jpg
     - lib/assets/data/writing.json
-
+    - lib/assets/data/speaking.json
 
   # To add assets to your application, add an assets section, like this:
 
