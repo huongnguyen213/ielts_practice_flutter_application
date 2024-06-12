@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'speaking_details.dart';
+import 'speaking_question.dart';
 
 class SpeakingSetUpTest extends StatefulWidget {
   final String testName;
@@ -20,7 +20,10 @@ class _SpeakingSetUpTestState extends State<SpeakingSetUpTest> {
       Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => SpeakingDetails(part: _selectedPart),
+          builder: (context) => SpeakingQuestionPage(
+            part: _selectedPart,
+            timeLimit: _selectedTime == 'No limit' ? 0 : int.parse(_selectedTime.split(' ')[0]),
+          ),
         ),
       );
     } else {
@@ -110,7 +113,7 @@ class _SpeakingSetUpTestState extends State<SpeakingSetUpTest> {
                         },
                       ),
                     ),
-                    SizedBox(height: 8.0),
+                    const SizedBox(height: 16.0),
                     Row(
                       children: [
                         const Text(
@@ -137,24 +140,27 @@ class _SpeakingSetUpTestState extends State<SpeakingSetUpTest> {
                         ),
                       ],
                     ),
+                    const SizedBox(height: 16.0),
+                    Center(
+                      child: TextButton(
+                        style: TextButton.styleFrom(
+                          foregroundColor: Colors.white,
+                          backgroundColor: Colors.green,
+                          side: const BorderSide(color: Colors.green),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8.0),
+                          ),
+                        ),
+                        onPressed: _startTest,
+                        child: Container(
+                          width: double.infinity,
+                          alignment: Alignment.center,
+                          child: Text('Start'),
+                        ),
+                      ),
+                    ),
                   ],
                 ),
-              ),
-            ),
-            Spacer(),
-            Center(
-              child: TextButton(
-                style: TextButton.styleFrom(
-                  foregroundColor: Colors.white,
-                  backgroundColor: Colors.green,
-                  minimumSize: Size(double.infinity, 50), // Increase button width
-                  side: const BorderSide(color: Colors.green),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8.0),
-                  ),
-                ),
-                onPressed: _startTest,
-                child: Text('Start'),
               ),
             ),
           ],
