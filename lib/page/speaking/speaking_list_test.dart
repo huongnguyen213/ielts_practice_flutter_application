@@ -112,13 +112,15 @@ class _SpeakingListTestPageState extends State<SpeakingListTestPage> {
     super.dispose();
   }
 
-  void _onSpeakingItemPressed(String speakingKey, String testName) {
+  void _onSpeakingItemPressed(String speakingKey) {
     if (parsedData.containsKey(speakingKey)) {
       Navigator.push(
         context,
         MaterialPageRoute(
           builder: (context) => SpeakingSetUpTest(
-              speakingData: parsedData[speakingKey], testName: testName),
+            speakingData: parsedData[speakingKey],
+            testName: parsedData[speakingKey]['name'],
+          ),
         ),
       );
     }
@@ -216,7 +218,7 @@ class _SpeakingListTestPageState extends State<SpeakingListTestPage> {
 
         return GestureDetector(
           onTap: () {
-            _onSpeakingItemPressed(key, item['name']);
+            _onSpeakingItemPressed(key);
           },
           child: Card(
             margin: const EdgeInsets.symmetric(vertical: 12.0, horizontal: 15.0),
