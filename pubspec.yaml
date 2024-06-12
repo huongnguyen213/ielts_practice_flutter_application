@@ -82,6 +82,10 @@ flutter:
     - lib/assets/images/writing_part1_4.png
     - lib/assets/images/writing_part1_5.jpg
     - lib/assets/data/writing.json
+    - lib/assets/data/listening.json
+    - lib/assets/audio/L1.mp3
+    - lib/assets/audio/L2.mp3
+    - icons/oclock.png
 
 
   # To add assets to your application, add an assets section, like this:
