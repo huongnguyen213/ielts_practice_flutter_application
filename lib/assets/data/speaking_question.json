@@ -1,0 +1,38 @@
+{
+  "part1": [
+    {"question": "What is your name?"},
+    {"question": "Where are you from?"},
+    {"question": "What do you do?"},
+    {"question": "What are your hobbies?"},
+    {"question": "Can you describe your family?"},
+    {"question": "What is your favorite food?"},
+    {"question": "What is your favorite book?"},
+    {"question": "Do you like traveling? Why?"},
+    {"question": "What is your favorite sport?"},
+    {"question": "Do you like watching movies? Why?"}
+  ],
+  "part2": [
+    {"question": "Describe a memorable event in your life."},
+    {"question": "Talk about a place you would like to visit."},
+    {"question": "Describe your best friend."},
+    {"question": "Talk about your favorite subject in school."},
+    {"question": "Describe a person you admire."},
+    {"question": "Talk about a hobby you enjoy."},
+    {"question": "Describe a historical event you find interesting."},
+    {"question": "Talk about your favorite holiday destination."},
+    {"question": "Describe a challenge you have faced."},
+    {"question": "Talk about your future plans."}
+  ],
+  "part3": [
+    {"question": "Discuss the advantages and disadvantages of technology."},
+    {"question": "How do you think education will change in the future?"},
+    {"question": "What are the benefits of learning a foreign language?"},
+    {"question": "How can people maintain a healthy lifestyle?"},
+    {"question": "Discuss the impact of social media on society."},
+    {"question": "What role do sports play in your country?"},
+    {"question": "How important is environmental conservation?"},
+    {"question": "What are the challenges of urbanization?"},
+    {"question": "How does culture influence people's behavior?"},
+    {"question": "What are the key factors for a successful career?"}
+  ]
+}

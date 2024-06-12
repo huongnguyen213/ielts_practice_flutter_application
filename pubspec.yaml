@@ -82,7 +82,12 @@ flutter:
     - lib/assets/images/writing_part1_4.png
     - lib/assets/images/writing_part1_5.jpg
     - lib/assets/data/writing.json
+<<<<<<< HEAD
     - lib/assets/data/speaking.json
+=======
+    - lib/assets/data/speaking_question.json
+
+>>>>>>> origin/enhancement/12-fix-speaking-set-up
 
   # To add assets to your application, add an assets section, like this:
 

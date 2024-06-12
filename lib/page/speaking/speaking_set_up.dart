@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
+<<<<<<< HEAD
 import 'speaking_intruction.dart';
+=======
+import 'speaking_question.dart';
+>>>>>>> origin/enhancement/12-fix-speaking-set-up
 
 class SpeakingSetUpTest extends StatefulWidget {
   final String testName;
@@ -22,9 +26,15 @@ class _SpeakingSetUpTestState extends State<SpeakingSetUpTest> {
       Navigator.push(
         context,
         MaterialPageRoute(
+<<<<<<< HEAD
           builder: (context) => SpeakingInstructions(
             part: _selectedPart,
             selectedTime: _selectedTime,
+=======
+          builder: (context) => SpeakingQuestionPage(
+            part: _selectedPart,
+            timeLimit: _selectedTime == 'No limit' ? 0 : int.parse(_selectedTime.split(' ')[0]),
+>>>>>>> origin/enhancement/12-fix-speaking-set-up
           ),
         ),
       );
@@ -115,7 +125,7 @@ class _SpeakingSetUpTestState extends State<SpeakingSetUpTest> {
                         },
                       ),
                     ),
-                    SizedBox(height: 8.0),
+                    const SizedBox(height: 16.0),
                     Row(
                       children: [
                         const Text(
@@ -142,10 +152,30 @@ class _SpeakingSetUpTestState extends State<SpeakingSetUpTest> {
                         ),
                       ],
                     ),
+                    const SizedBox(height: 16.0),
+                    Center(
+                      child: TextButton(
+                        style: TextButton.styleFrom(
+                          foregroundColor: Colors.white,
+                          backgroundColor: Colors.green,
+                          side: const BorderSide(color: Colors.green),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8.0),
+                          ),
+                        ),
+                        onPressed: _startTest,
+                        child: Container(
+                          width: double.infinity,
+                          alignment: Alignment.center,
+                          child: Text('Start'),
+                        ),
+                      ),
+                    ),
                   ],
                 ),
               ),
             ),
+<<<<<<< HEAD
             Spacer(),
             Center(
               child: TextButton(
@@ -162,6 +192,8 @@ class _SpeakingSetUpTestState extends State<SpeakingSetUpTest> {
                 child: Text('Start'),
               ),
             ),
+=======
+>>>>>>> origin/enhancement/12-fix-speaking-set-up
           ],
         ),
       ),
