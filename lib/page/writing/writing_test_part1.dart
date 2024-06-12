@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'take_picture_part1.dart';
 
 class WritingTestPart1Page extends StatelessWidget {
   final String testTitle;
@@ -77,7 +78,6 @@ class WritingTestPart1Page extends StatelessWidget {
             child: IconButton(
               icon: Icon(Icons.camera_alt),
               onPressed: () {
-                // Add image capture functionality
                 _captureImageFromCamera(context);
               },
             ),
@@ -87,13 +87,15 @@ class WritingTestPart1Page extends StatelessWidget {
     );
   }
 
-  // Function to capture image from camera
   void _captureImageFromCamera(BuildContext context) {
-    // Add your code here to capture image from camera
-    // For example:
-    // Navigator.push(
-    //   context,
-    //   MaterialPageRoute(builder: (context) => CameraScreen()),
-    // );
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => TakePictureScreen()),
+    ).then((imagePath) {
+      if (imagePath != null) {
+        // Update the testPartData with the captured image path
+        testPartData['capturedImage'] = imagePath;
+      }
+    });
   }
 }
