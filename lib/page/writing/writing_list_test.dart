@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show rootBundle;
-import 'package:ielts_practice_flutter_application/page/writing/writing_test_detail.dart';
+import 'writing_set_up_test.dart'; // Ensure this import points to the correct path
 
 class WritingListTestPage extends StatefulWidget {
   @override
@@ -67,7 +67,7 @@ class _WritingListTestPageState extends State<WritingListTestPage> {
       Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => WritingDetailPage(writingData: parsedData[writingKey]),
+          builder: (context) => WritingSetUpPage(writingData: parsedData[writingKey]),
         ),
       );
     }
@@ -161,7 +161,7 @@ class _WritingListTestPageState extends State<WritingListTestPage> {
           child: Card(
             margin: const EdgeInsets.symmetric(vertical: 12.0, horizontal: 15.0),
             elevation: 4.0,
-            // color: Colors.white,
+            color: Color(0xFFFFFFFF), // Set card color to light blue
             child: Padding(
               padding: const EdgeInsets.all(10.0),
               child: ListTile(
