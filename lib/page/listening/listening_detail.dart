@@ -10,8 +10,7 @@ class DetailPage extends StatefulWidget {
   final TestSetup testSetup;
   final String testname;
 
-
-  DetailPage({required this.testSetup,required this.testname});
+  DetailPage({required this.testSetup, required this.testname});
 
   @override
   _DetailPageState createState() => _DetailPageState();
@@ -30,43 +29,50 @@ class _DetailPageState extends State<DetailPage> {
   Duration position = Duration();
   double volume = 1.0;
   late String audioPath;
+  bool isSliding = false;
+  double sliderValue = 0.0;
 
   @override
   void initState() {
     super.initState();
     remainingMinutes = widget.testSetup.selectedTime;
     initPlayer();
+    loadAudioPath();
     startTimer();
-
-    if (widget.testSetup.isPlaying) {
-      playAudio();
-    }
   }
+
   Future<void> loadAudioPath() async {
     String jsonString = await rootBundle.loadString('lib/assets/data/listening.json');
     Map<String, dynamic> jsonMap = jsonDecode(jsonString);
-    Map<String, dynamic> test = jsonMap['listening']["Listeing "+widget.testname];
+    Map<String, dynamic> test = jsonMap['listening'][widget.testname];
     Map<String, dynamic> part = test['part'][widget.testSetup.selectedPart];
+    print(part);
     setState(() {
       audioPath = part['audio'];
+
     });
 
     if (widget.testSetup.isPlaying) {
       playAudio();
+      print(audioPath);
     }
   }
-
-
 
   void initPlayer() {
     audioPlayer.onDurationChanged.listen((Duration d) {
       setState(() {
         duration = d;
+        // Cập nhật Slider khi có thay đổi thời lượng audio
+        sliderValue = position.inSeconds.toDouble();
       });
     });
     audioPlayer.onAudioPositionChanged.listen((Duration p) {
       setState(() {
-        position = p;
+        if (!isSliding) {
+          position = p;
+          // Cập nhật Slider khi có thay đổi vị trí audio
+          sliderValue = position.inSeconds.toDouble();
+        }
       });
     });
     audioPlayer.onPlayerStateChanged.listen((PlayerState s) {
@@ -75,7 +81,6 @@ class _DetailPageState extends State<DetailPage> {
       });
     });
   }
-
 
   Future<void> playAudio() async {
     await audioPlayer.play(audioPath, isLocal: true);
@@ -127,6 +132,7 @@ class _DetailPageState extends State<DetailPage> {
   void dispose() {
     timer?.cancel();
     audioPlayer.dispose();
+    audioPlayer.release();
     super.dispose();
   }
 
@@ -156,106 +162,196 @@ class _DetailPageState extends State<DetailPage> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Listening Testing ${widget.testname}'),
-        actions: [
-          Container(
-            margin: EdgeInsets.all(15),
-            child: Icon(Icons.more_vert),
-          ),
-        ],
-      ),
-      body: Column(
-        children: [
-          Container(
-            padding: EdgeInsets.all(16.0),
-            color: Colors.grey[200],
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Row(
-                  children: [
-                    ImageIcon(
-                      AssetImage('icons/oclock.png'),
-                      size: 48,
-                    ),
-                    SizedBox(width: 10.0),
-                    Text(
-                      remainingTime,
-                      style: TextStyle(
-                        fontSize: 24.0,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ],
-                ),
-              ],
+        backgroundColor: Color(0xffB5E0EA),
+      actions: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            ImageIcon(
+              AssetImage('icons/oclock.png'),
+              size: 48,
             ),
-          ),
-          Container(
-            decoration: BoxDecoration(
-              color: Colors.green[100],
-              borderRadius: BorderRadius.circular(15.0),
-            ),
-            padding: EdgeInsets.all(5.0),
-            margin: EdgeInsets.all(10.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                IconButton(
-                  icon: Icon(Icons.replay_5),
-                  iconSize: 30.0,
-                  onPressed: () => seekAudio((audioProgress - 5 / 1200).clamp(0, 1)),
-                ),
-                IconButton(
-                  icon: Icon(isPlaying ? Icons.pause : Icons.play_arrow),
-                  iconSize: 30.0,
-                  onPressed: toggleAudio,
-                ),
-                IconButton(
-                  icon: Icon(Icons.forward_5),
-                  iconSize: 30.0,
-                  onPressed: () => seekAudio((audioProgress + 5 / 1200).clamp(0, 1)),
-                ),
-                Expanded(
-                  child: Slider(
-                    value: duration.inSeconds.toDouble(),
-                    min: 0,
-                    max: duration.inSeconds.toDouble(),
-                    onChanged: (value) async {
-                      final position = Duration(seconds: value.toInt());
-                      await audioPlayer.seek(position);
-                      await audioPlayer.resume();
-                    },
-                  ),
-                ),
-                Icon(Icons.volume_up),
-                Container(
-                  width: 100,
-                  child: Slider(
-                    value: volume,
-                    min: 0,
-                    max: 1,
-                    onChanged: (value) {
-                      setState(() {
-                        volume = value;
-                        audioPlayer.setVolume(volume);
-                      
-                      });
-                    },
-                  ),
-                ),
-              ],
-            ),
-          ),
-          Container(
-            padding: EdgeInsets.all(16.0),
-            child: Text(
-              widget.testSetup.selectedPart,
+            SizedBox(width: 10.0),
+            Text(
+              remainingTime,
               style: TextStyle(
-                color: Colors.black,
-                fontSize: 20,
+                fontSize: 24.0,
                 fontWeight: FontWeight.bold,
               ),
+            ),
+            SizedBox(width: 90.0),
+            ElevatedButton(
+              onPressed: () {
+                // Submit button functionality
+              },
+              child: Text('Submit',style: TextStyle(
+                color: Colors.white,
+                fontSize: 20
+              ),
+              ),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Color(0xff3898D7)
+              ),
+            ),
+            SizedBox(width: 20.0),
+          ],
+        ),
+
+      ],
+      ),
+      backgroundColor: Colors.white,
+      body:
+
+      Column(
+        children: [
+          // Frame 1 - 22
+          // Frame 2 - 60%
+          Expanded(
+            child: Column(
+              children: [
+                // Subframe 1 - 10% (Audio Controls)
+                Container(
+                  height: MediaQuery.of(context).size.height * 0.10,
+
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(15.0),
+
+                  ),
+                  padding: EdgeInsets.all(5.0),
+                  margin: EdgeInsets.all(0.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      IconButton(
+                        icon: Icon(Icons.replay_5),
+                        color: Color(0xff1BAABF),
+                        iconSize: 30.0,
+                        onPressed: () => seekAudio((audioProgress - 5 / 1200).clamp(0, 1)),
+                      ),
+                      Container(
+
+                        decoration: BoxDecoration(
+                           color: Color(0xff1BAABF),
+                           shape: BoxShape.rectangle,
+                          borderRadius: BorderRadius.all(Radius.circular(15)),
+
+                        ),
+                        child: IconButton(
+
+                          icon: Icon(isPlaying ? Icons.pause : Icons.play_arrow),
+                          iconSize: 30.0,
+                     
+                          color: Colors.white,
+
+
+                          onPressed: toggleAudio,
+                        ),
+                      ),
+                      IconButton(
+                        color: Color(0xff1BAABF),
+                        icon: Icon(Icons.forward_5),
+                        iconSize: 30.0,
+                        onPressed: () => seekAudio((audioProgress + 5 / 1200).clamp(0, 1)),
+                      ),
+                      Expanded(
+                        child:Slider(
+                          min: 0,
+                          max: duration.inSeconds.toDouble(),
+                          value: isPlaying
+                              ? position.inSeconds.toDouble().clamp(0,
+                              duration.inSeconds.toDouble())
+                              : sliderValue,// Sử dụng clamp để giữ giá trị trong khoảng cho phép
+                          onChanged: (value) {
+                            setState(() {
+                              isSliding = true; // Đánh dấu rằng Slider đang được trượt
+                              final seconds = value.toInt().clamp(0, duration.inSeconds); // Đảm bảo giá trị không vượt quá thời lượng
+                              position = Duration(seconds: seconds);
+                            });
+                          },
+                          onChangeEnd: (value) {
+                            final newPosition = value * 1.0;
+                            seekAudio(newPosition);
+                            setState(() {
+                              isSliding = false; // Đánh dấu rằng Slider không được trượt nữa
+                            });
+                          },
+                        ),
+
+
+
+
+                      ),
+                      Icon(Icons.volume_up),
+                      Container(
+                        width: 100,
+                        child: Slider(
+                          value: volume,
+                          min: 0,
+                          max: 1,
+                          onChanged: (value) {
+                            setState(() {
+                              volume = value;
+                              audioPlayer.setVolume(volume);
+                            });
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                // Subframe 2 - 50% (Questions)
+                Expanded(
+                  child: Container(
+                    padding: EdgeInsets.all(16.0),
+                    child: ListView(
+                      children: [
+                        // Replace with your questions widgets
+                        Container(
+                          width: 1000,
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            border: Border(
+                              bottom: BorderSide(width: 1.0, color: Colors.grey), // Border ở dưới
+                            ),
+
+
+                          ),
+                          child: Text(
+                            widget.testSetup.selectedPart,
+                            style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          // Frame 3 - 10% (Navigation Buttons)
+          Container(
+            height: MediaQuery.of(context).size.height * 0.10,
+            color: Colors.blue[100],
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                // Replace with your navigation buttons
+                IconButton(
+                  icon: Icon(Icons.arrow_back),
+                  iconSize: 30.0,
+                  onPressed: () {
+                    // Previous question
+                  },
+                ),
+                IconButton(
+                  icon: Icon(Icons.arrow_forward),
+                  iconSize: 30.0,
+                  onPressed: () {
+                    // Next question
+                  },
+                ),
+              ],
             ),
           ),
         ],
