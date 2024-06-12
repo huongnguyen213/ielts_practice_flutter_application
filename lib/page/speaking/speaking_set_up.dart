@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:ielts_practice_flutter_application/page/speaking/speaking_instructions.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'speaking_details.dart';
 
 class SpeakingSetUpTest extends StatefulWidget {
   final String testName;
-  SpeakingSetUpTest({required this.testName});
+  final Map<String, dynamic> speakingData;
+  SpeakingSetUpTest({required this.testName, required this.speakingData});
+
   @override
   _SpeakingSetUpTestState createState() => _SpeakingSetUpTestState();
 }
@@ -20,7 +22,10 @@ class _SpeakingSetUpTestState extends State<SpeakingSetUpTest> {
       Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => SpeakingDetails(part: _selectedPart),
+          builder: (context) => SpeakingInstructions(
+            part: _selectedPart,
+            selectedTime: _selectedTime,
+          ),
         ),
       );
     } else {
@@ -147,7 +152,7 @@ class _SpeakingSetUpTestState extends State<SpeakingSetUpTest> {
                 style: TextButton.styleFrom(
                   foregroundColor: Colors.white,
                   backgroundColor: Colors.green,
-                  minimumSize: Size(double.infinity, 50), // Increase button width
+                  minimumSize: Size(double.infinity, 50),
                   side: const BorderSide(color: Colors.green),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(8.0),
