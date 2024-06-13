@@ -73,6 +73,8 @@ flutter:
     - icons/icons8-mortarboard-48.png
     - icons/icons8-people-skin-type-7-48.png
     - icons/icons8-user-profile-48.png
+    - icons/icons8-right-button-40.png
+    - icons/icons8-check-48.png
     - lib/assets/images/tip-writing-1.png
     - lib/assets/images/tip-writing-2.png
     - lib/assets/images/tip-writing-3.png
@@ -88,6 +90,7 @@ flutter:
     - lib/assets/audio/L2.mp3
     - icons/oclock.png
     - lib/assets/data/speaking.json
+    - icons/icons8-right-button-40.png
 
 
 

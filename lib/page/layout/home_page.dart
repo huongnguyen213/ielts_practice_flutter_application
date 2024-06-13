@@ -67,6 +67,7 @@ class _IELTSHomeState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         title: Text(
           'IELTS',
           style: TextStyle(color: Colors.red, fontWeight: FontWeight.bold),
