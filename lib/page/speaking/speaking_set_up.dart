@@ -134,7 +134,7 @@ class _SpeakingSetUpTestState extends State<SpeakingSetUpTest> {
                         },
                       ),
                     ),
-                    SizedBox(height: 8.0),
+                    const SizedBox(height: 8.0),
                     Row(
                       children: [
                         const Text(
@@ -165,20 +165,20 @@ class _SpeakingSetUpTestState extends State<SpeakingSetUpTest> {
                 ),
               ),
             ),
-            Spacer(),
+            const Spacer(),
             Center(
               child: TextButton(
                 style: TextButton.styleFrom(
                   foregroundColor: Colors.white,
                   backgroundColor: Colors.green,
-                  minimumSize: Size(double.infinity, 50),
+                  minimumSize: const Size(double.infinity, 50),
                   side: const BorderSide(color: Colors.green),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(8.0),
                   ),
                 ),
                 onPressed: _startTest,
-                child: Text('Start'),
+                child: const Text('Start'),
               ),
             ),
           ],
