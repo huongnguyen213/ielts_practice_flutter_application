@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:ielts_practice_flutter_application/page/speaking/speaking_instructions.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'speaking_details.dart';
 
 class SpeakingSetUpTest extends StatefulWidget {
-  final String testName;
-  SpeakingSetUpTest({required this.testName});
+  final Map<String, dynamic> speakingData;
+
+  SpeakingSetUpTest({required this.speakingData, required testName});
+
   @override
   _SpeakingSetUpTestState createState() => _SpeakingSetUpTestState();
 }
@@ -12,7 +14,14 @@ class SpeakingSetUpTest extends StatefulWidget {
 class _SpeakingSetUpTestState extends State<SpeakingSetUpTest> {
   String _selectedPart = 'Part 1';
   String _selectedTime = 'No limit';
-  final List<String> _times = ['No limit', '10 minutes', '13 minutes'];
+  final List<String> _times = ['No limit', '10 minutes', '15 minutes'];
+  late String testName;
+
+  @override
+  void initState() {
+    super.initState();
+    testName = widget.speakingData['name'] ?? 'Unknown Test';
+  }
 
   void _startTest() async {
     PermissionStatus status = await Permission.microphone.request();
@@ -20,7 +29,11 @@ class _SpeakingSetUpTestState extends State<SpeakingSetUpTest> {
       Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => SpeakingDetails(part: _selectedPart),
+          builder: (context) => SpeakingInstructions(
+            part: _selectedPart,
+            selectedTime: _selectedTime,
+            speakingData: widget.speakingData,
+          ),
         ),
       );
     } else {
@@ -39,6 +52,8 @@ class _SpeakingSetUpTestState extends State<SpeakingSetUpTest> {
           child: Text('Speaking Practice'),
         ),
         centerTitle: false,
+        elevation: 0,
+        backgroundColor: Color(0xFFB5E0EA),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -46,9 +61,18 @@ class _SpeakingSetUpTestState extends State<SpeakingSetUpTest> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Center(
-              child: Text(
-                'Set Up Test',
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24.0),
+              child: Column(
+                children: [
+                  Text(
+                    'Set Up Test',
+                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24.0),
+                  ),
+                  SizedBox(height: 8.0),
+                  Text(
+                    testName,
+                    style: TextStyle(fontSize: 18.0, color: Colors.grey[700]),
+                  ),
+                ],
               ),
             ),
             SizedBox(height: 16.0),
@@ -147,7 +171,7 @@ class _SpeakingSetUpTestState extends State<SpeakingSetUpTest> {
                 style: TextButton.styleFrom(
                   foregroundColor: Colors.white,
                   backgroundColor: Colors.green,
-                  minimumSize: Size(double.infinity, 50), // Increase button width
+                  minimumSize: Size(double.infinity, 50),
                   side: const BorderSide(color: Colors.green),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(8.0),
