@@ -88,6 +88,7 @@ class _WritingSetUpPageState extends State<WritingSetUpPage> {
                 child: DropdownButton<String>(
                   value: selectedTime,
                   items: <String>[
+                    '1 minutes',
                     '15 minutes',
                     '20 minutes',
                     '30 minutes',
