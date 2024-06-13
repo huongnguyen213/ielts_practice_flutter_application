@@ -66,7 +66,7 @@ class _DetailPageState extends State<DetailPage> {
         sliderValue = position.inSeconds.toDouble();
       });
     });
-    audioPlayer.onAudioPositionChanged.listen((Duration p) {
+    audioPlayer.onDurationChanged.listen((Duration p) {
       setState(() {
         if (!isSliding) {
           position = p;
@@ -77,13 +77,14 @@ class _DetailPageState extends State<DetailPage> {
     });
     audioPlayer.onPlayerStateChanged.listen((PlayerState s) {
       setState(() {
-        isPlaying = s == PlayerState.PLAYING;
+        isPlaying = s == PlayerState.playing;
       });
     });
   }
 
   Future<void> playAudio() async {
-    await audioPlayer.play(audioPath, isLocal: true);
+    Source source=UrlSource(audioPath);
+    await audioPlayer.play(source);
   }
 
   Future<void> pauseAudio() async {
