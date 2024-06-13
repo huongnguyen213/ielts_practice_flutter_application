@@ -84,7 +84,7 @@ class _DetailPageState extends State<DetailPage> {
 
   Future<void> playAudio() async {
     Source source=UrlSource(audioPath);
-
+    await audioPlayer.play(source);
   }
 
   Future<void> pauseAudio() async {
@@ -164,41 +164,41 @@ class _DetailPageState extends State<DetailPage> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Color(0xffB5E0EA),
-      actions: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            ImageIcon(
-              AssetImage('icons/oclock.png'),
-              size: 48,
-            ),
-            SizedBox(width: 10.0),
-            Text(
-              remainingTime,
-              style: TextStyle(
-                fontSize: 24.0,
-                fontWeight: FontWeight.bold,
+        actions: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              ImageIcon(
+                AssetImage('icons/oclock.png'),
+                size: 48,
               ),
-            ),
-            SizedBox(width: 90.0),
-            ElevatedButton(
-              onPressed: () {
-                // Submit button functionality
-              },
-              child: Text('Submit',style: TextStyle(
-                color: Colors.white,
-                fontSize: 20
+              SizedBox(width: 10.0),
+              Text(
+                remainingTime,
+                style: TextStyle(
+                  fontSize: 24.0,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
+              SizedBox(width: 90.0),
+              ElevatedButton(
+                onPressed: () {
+                  // Submit button functionality
+                },
+                child: Text('Submit',style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 20
+                ),
+                ),
+                style: ElevatedButton.styleFrom(
+                    backgroundColor: Color(0xff3898D7)
+                ),
               ),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Color(0xff3898D7)
-              ),
-            ),
-            SizedBox(width: 20.0),
-          ],
-        ),
+              SizedBox(width: 20.0),
+            ],
+          ),
 
-      ],
+        ],
       ),
       backgroundColor: Colors.white,
       body:
@@ -233,8 +233,8 @@ class _DetailPageState extends State<DetailPage> {
                       Container(
 
                         decoration: BoxDecoration(
-                           color: Color(0xff1BAABF),
-                           shape: BoxShape.rectangle,
+                          color: Color(0xff1BAABF),
+                          shape: BoxShape.rectangle,
                           borderRadius: BorderRadius.all(Radius.circular(15)),
 
                         ),
