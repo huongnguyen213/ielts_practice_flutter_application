@@ -1,7 +1,181 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'dart:convert';
+import 'package:flutter/services.dart' show rootBundle;
+import 'listening_detail.dart';
+import 'test_set_up.dart';
+import 'listening_detail.dart';
+
+void main() {
+  runApp(MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      home: ListeningListTestPage(),
+    );
+  }
+}
+
+class ListeningListTestPage extends StatefulWidget {
+  @override
+  _ListeningListTestPageState createState() => _ListeningListTestPageState();
+}
+
+class _ListeningListTestPageState extends State<ListeningListTestPage> {
+  Map<String, dynamic>? tests;
+  SharedPreferences? _prefs;
+  TextEditingController _searchController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    _loadJson();
+    _loadPreferences();
+  }
+
+  Future<void> _loadJson() async {
+    String jsonString = await rootBundle.loadString('lib/assets/data/listening.json');
+    setState(() {
+      tests = jsonDecode(jsonString)['listening'];
+    });
+  }
+
+  Future<void> _loadPreferences() async {
+    _prefs = await SharedPreferences.getInstance();
+    setState(() {});
+  }
+
+  _toggleFavorite(String testName) async {
+    bool? currentFavorite = _prefs!.getBool(testName);
+    bool newFavorite = currentFavorite != null ? !currentFavorite : true;
+    await _prefs!.setBool(testName, newFavorite);
+    setState(() {});
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Listening Tests'),
+      ),
+      body: tests == null
+          ? Center(child: CircularProgressIndicator())
+          : Column(
+        children: [
+          Container(
+            padding: EdgeInsets.all(16.0),
+            color: Colors.grey[200],
+            child: Text(
+              'Stay focused, practice regularly, and develop note-taking skills to excel in the IELTS listening test!',
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+              textAlign: TextAlign.center,
+            ),
+          ),
+          Container(
+            padding: EdgeInsets.all(16.0),
+            child: TextField(
+              controller: _searchController,
+              decoration: InputDecoration(
+                prefixIcon: Icon(Icons.search),
+                hintText: 'Search...',
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10.0),
+                ),
+              ),
+              onChanged: (value) {
+                // Implement search functionality here if needed
+              },
+            ),
+          ),
+          Expanded(
+            child: ListView.builder(
+              itemCount: tests!.length,
+              itemBuilder: (context, index) {
+                String testName = tests!.keys.elementAt(index);
+                var test = tests![testName];
+                int score = test['score'];
+                bool isFavorite = _prefs?.getBool(testName) ?? false;
+
+                return Card(
+                  margin: EdgeInsets.all(8.0),
+                  elevation: 5.0,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10.0),
+                  ),
+                  child: Padding(
+                    padding: EdgeInsets.all(16.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        ListTile(
+                          contentPadding: EdgeInsets.zero,
+                          title: Text(
+                            'Listening $testName',
+                            style: TextStyle(fontWeight: FontWeight.bold),
+                          ),
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => ListeningTestSetupPage(testName),
+                              ),
+                            );
+                          },
+                          trailing: IconButton(
+                            icon: Icon(
+                              isFavorite ? Icons.star : Icons.star_border,
+                              color: Colors.yellow,
+                            ),
+                            onPressed: () {
+                              _toggleFavorite(testName);
+                            },
+                          ),
+                        ),
+                        Padding(
+                          padding: EdgeInsets.symmetric(vertical: 8.0),
+                          child: LinearProgressIndicator(
+                            value: score / 10,
+                            backgroundColor: Colors.grey[300],
+                            valueColor: AlwaysStoppedAnimation<Color>(Colors.green),
+                          ),
+                        ),
+                        Text(
+                          'Score: $score/10',
+                          style: TextStyle(fontStyle: FontStyle.italic),
+                        ),
+                      ],
+                    ),
+                  ),
+                );
+              },
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class ListeningTestSetupPage extends StatefulWidget {
+  late String testname;
 
 
-class ListeningListTestPage extends StatelessWidget {
+
+
+  ListeningTestSetupPage(this.testname);
+
+  @override
+  _ListeningTestSetupPageState createState() => _ListeningTestSetupPageState();
+}
+
+class _ListeningTestSetupPageState extends State<ListeningTestSetupPage> {
+  String _selectedPart = 'Part 1';
+  String _selectedTime = 'Standard';
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -9,183 +183,117 @@ class ListeningListTestPage extends StatelessWidget {
         title: Text('Listening Test'),
         backgroundColor: Colors.green,
       ),
-      body:
-      Container(
-        padding: EdgeInsets.all(10),
-        margin: EdgeInsets.all(10),
-        decoration: const BoxDecoration(
-            color: Color(0xFFEFF0F6),
-            borderRadius: BorderRadius.all(Radius.circular(30))
-
-        ),
-        child: BorderRadiusListView(),
-
-
-      ),
-    );
-  }
-}
-
-class BorderRadiusListView extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        Container(
-          padding: EdgeInsets.all(16.0),
-          margin: EdgeInsets.only(bottom: 16.0),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(15.0),
-          ),
-          child: Text(
-            'Stay focused, practice regularly and develop note-taking skills to excel in the IELTS listening test',
-            style: TextStyle(
-              color: Colors.black,
-              fontWeight: FontWeight.w500,
-            ),
-          ),
-        ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      body: Container(
+        margin: EdgeInsets.all(30),
+        padding: EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Expanded(
-              child: Container(
-                margin: EdgeInsets.only(right: 8.0),
-                padding: EdgeInsets.symmetric(horizontal: 16.0),
-                decoration: BoxDecoration(
-                  color: Colors.white,
+            Text(
+              'Set up ${widget.testname}',
+              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+              textAlign: TextAlign.center,
+            ),
+            SizedBox(height: 24),
+            Text(
+              'Choose part:',
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            ),
+            GridView.count(
+              shrinkWrap: true,
+              crossAxisCount: 2,
+              crossAxisSpacing: 2.0,
+              mainAxisSpacing: 2.0,
+              childAspectRatio: 4.0,
+              children: [
+                _buildRadioTile('Part 1'),
+                _buildRadioTile('Part 2'),
+                _buildRadioTile('Part 3'),
+                _buildRadioTile('Part 4'),
+                _buildRadioTile('Full part'),
+              ],
+            ),
+            SizedBox(height: 24),
+            Text(
+              'Choose time:',
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            ),
+            DropdownButtonFormField<String>(
+              value: _selectedTime,
+              onChanged: (String? newValue) {
+                setState(() {
+                  _selectedTime = newValue!;
+                });
+              },
+              items: <String>['Standard', '15 minutes', '20 minutes']
+                  .map<DropdownMenuItem<String>>((String value) {
+                return DropdownMenuItem<String>(
+                  value: value,
+                  child: Text(value),
+                );
+              }).toList(),
+              decoration: InputDecoration(
+                border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(15.0),
                 ),
-                child: Row(
-                  children: [
-                    Icon(Icons.search),
-                    SizedBox(width: 8.0),
-                    Expanded(
-                      child: TextField(
-                        decoration: InputDecoration(
-                          hintText: 'Enter test name',
-                          border: InputBorder.none,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
+                contentPadding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
               ),
             ),
-            Container(
-              padding: EdgeInsets.symmetric(horizontal: 16.0),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(15.0),
-              ),
-              child: PopupMenuButton(
-                onSelected: (String value) {},
-                itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
-                  PopupMenuItem<String>(
-                    value: 'like',
-                    child: Row(
-                      children: [
-                        Icon(Icons.thumb_up),
-                        SizedBox(width: 8),
-                        Text('Like'),
-                      ],
-                    ),
-                  ),
-                  PopupMenuItem<String>(
-                    value: 'share',
-                    child: Row(
-                      children: [
-                        Icon(Icons.share),
-                        SizedBox(width: 8),
-                        Text('Share'),
-                      ],
-                    ),
-                  ),
-                ],
-                icon: Icon(Icons.arrow_drop_down),
+            SizedBox(height: 24),
+            Center(
+              child: SizedBox(
+                width: 150,
+                height: 50,
+                child: ElevatedButton(
+                  onPressed: () {
+                    TestSetup testSetup = TestSetup(
+                      selectedPart: _selectedPart,
+                      selectedTime: _getTimeValue(_selectedTime),
+                      isPlaying: true,
+
+                    );
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => DetailPage(testSetup: testSetup,testname: widget.testname,),
+                      ),
+                    );
+                  },
+                  child: Text('Start'),
+                ),
               ),
             ),
           ],
         ),
-        SizedBox(height: 16.0),
-        ListView.builder(
-          shrinkWrap: true,
-          physics: NeverScrollableScrollPhysics(),
-          itemCount: 4,
-          itemBuilder: (context, index) {
-            int displayIndex = index + 1;
-            return Container(
-              margin: EdgeInsets.symmetric(vertical: 8.0),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(15.0),
-              ),
-              child: ListTile(
-                contentPadding: EdgeInsets.all(16.0),
-                leading: Container(
-                  child: const Icon(
-                    Icons.headphones,
-                    color: Color(0xff1DB954),
-                    size: 40.0,
-                  ),
-                  padding: const EdgeInsets.all(5),
-                  width: 50,
-                  height: 250,
-                  decoration: const BoxDecoration(
-                      color: Color(0xffD1F1DC),
-                      borderRadius: BorderRadius.all(Radius.circular(15))),
-                ),
-                title: Container(
-                  height: 80,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      Text(
-                        'GT Listening 0$displayIndex',
-                        style: const TextStyle(
-                          color: Color(0xff000000),
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                      LinearProgressIndicator(
-                        value: 0.8, // Giá trị thanh tiến trình, bạn có thể thay đổi
-                        backgroundColor: Color(0xffD1F1DC),
-                        valueColor: AlwaysStoppedAnimation<Color>(Colors.green),
-                      ),
-                      Text(
-                        'Score: 8/10', // Điểm số, bạn có thể thay đổi
-                        style: TextStyle(
-                          color: Colors.black54,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                trailing: ElevatedButton(
-                  onPressed: () {
+      ),
+    );
+  }
 
-                  },
-                  //fe
-                  child: Text('Do it now',
-                    style: TextStyle(
-                      color: Colors.orange,
-                      //fe
-                    ),
-                  ),
-                  style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xffFDF1DC)
-                  ),
-                ),
-              ),
-            );
-          },
-        ),
-      ],
+  Widget _buildRadioTile(String part) {
+    return RadioListTile<String>(
+      title: Text(part),
+      value: part,
+      groupValue: _selectedPart,
+      onChanged: (value) {
+        setState(() {
+          _selectedPart = value!;
+        });
+      },
+      contentPadding: EdgeInsets.all(0),
+      dense: true,
     );
   }
 }
 
-
+int _getTimeValue(String timeLabel) {
+  switch (timeLabel) {
+    case 'Standard':
+      return 10;
+    case '15 minutes':
+      return 15;
+    case '20 minutes':
+      return 20;
+    default:
+      return 0;
+  }
+}

@@ -19,7 +19,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 version: 1.0.0+1
 
 environment:
-  sdk: '>=3.3.1 <4.0.0'
+  sdk: '>=3.3.0 <4.0.0'
 
 # Dependencies specify other packages that your package needs in order to work.
 # To automatically upgrade your package dependencies to the latest versions
@@ -40,7 +40,13 @@ dependencies:
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.6
-  audioplayers: ^0.20.1
+  audioplayers: ^6.0.0
+  gap: ^3.0.1
+  flutter_animate: ^4.5.0
+  bloc: ^8.1.4
+  flutter_bloc: ^8.1.6
+  equatable: ^2.0.5
+  pie_chart: ^5.4.0
 
 dev_dependencies:
   flutter_test:
@@ -64,6 +70,8 @@ flutter:
   # the material Icons class.
   uses-material-design: true
   assets:
+    - assets/images/
+    - assets/mock/
     - icons/icons8-book-48.png
     - icons/icons8-diversity-48.png
     - icons/icons8-headphone-48.png
@@ -73,6 +81,8 @@ flutter:
     - icons/icons8-mortarboard-48.png
     - icons/icons8-people-skin-type-7-48.png
     - icons/icons8-user-profile-48.png
+    - icons/icons8-right-button-40.png
+    - icons/icons8-check-48.png
     - lib/assets/images/tip-writing-1.png
     - lib/assets/images/tip-writing-2.png
     - lib/assets/images/tip-writing-3.png
@@ -83,7 +93,13 @@ flutter:
     - lib/assets/images/writing_part1_4.png
     - lib/assets/images/writing_part1_5.jpg
     - lib/assets/data/writing.json
+    - lib/assets/data/listening.json
+    - lib/assets/audio/L1.mp3
+    - lib/assets/audio/L2.mp3
+    - icons/oclock.png
     - lib/assets/data/speaking.json
+    - icons/icons8-right-button-40.png
+
 
 
   # To add assets to your application, add an assets section, like this:
