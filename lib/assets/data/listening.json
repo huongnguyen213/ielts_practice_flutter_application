@@ -6,22 +6,68 @@
       "Like": true,
       "part": {
         "Part 1": {
+
+
           "titile": "Part 1",
           "audio": "lib/assets/audio/L1.mp3",
+          "timeInMillis": 369000,
           "question": {
-            "q1": {
-              "Q": "What your name?",
-              "A": "A"
-            },
-            "q2": {
-              "Q": "What your name?",
-              "A": "A"
+
+
+                 "q1": {
+                   "Q": "Destination: ",
+                   "A": "Same"
+                 },
+                 "q2": {
+                   "Q": "Weather: : ",
+                   "A": "Same"
+                 },
+                 "q3": {
+                   "Q": "Arrival time:: : ",
+                   "A": "Same"
+                 },
+                 "q4": {
+                   "Q": "Activities Planned See:",
+                   "A": "Same"
+                 },
+                 "q5": {
+                   "Q": "Attend:: : ",
+                   "A": "Same"
+                 },
+                 "q6": {
+                   "Q": "Return time:",
+                   "A": "Same"
+                 },
+
+
+
+              "q7": {
+                "Q": "Activities Planned See:",
+                "A": "Same"
+              },
+              "q8": {
+                "Q": "Attend:: : ",
+                "A": "Same"
+              },
+              "q9": {
+                "Q": "Return time:",
+                "A": "Same"
+              },
+              "q10": {
+                "Q": "Return time:",
+                "A": "Same"
+              }
             }
+
+
+
           }
-        },
+        ,
         "Part 2": {
+
           "titile": "Part 2",
           "audio": "lib/assets/audio/L2.mp3",
+          "timeInMillis": 369000,
           "question": {
             "q1": {
               "Q": "What your name?",
@@ -36,6 +82,7 @@
         "Part 3": {
           "titile": "Part 3",
           "audio": "lib/assets/audio/L1.mp3",
+          "timeInMillis": 369000,
           "question": {
             "q1": {
               "Q": "What your name?",
@@ -251,6 +298,6 @@
           }
         }
       }
-    }
+    } }
   }
-}
+

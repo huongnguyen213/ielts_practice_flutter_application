@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/services.dart';
@@ -22,15 +21,19 @@ class _DetailPageState extends State<DetailPage> {
   Timer? timer;
 
   double audioProgress = 0.0;
-  bool isPlaying = false;
+  bool isPlaying = true;
 
   AudioPlayer audioPlayer = AudioPlayer();
-  Duration duration = Duration();
-  Duration position = Duration();
+  Duration duration = Duration.zero;
+  Duration position = Duration.zero;
   double volume = 1.0;
   late String audioPath;
   bool isSliding = false;
   double sliderValue = 0.0;
+  Map<String, dynamic> parts = {};
+  int currentQuestionIndex = 0;
+  int currentPartIndex = 0;
+  List<String> partKeys = [];
 
   @override
   void initState() {
@@ -39,55 +42,76 @@ class _DetailPageState extends State<DetailPage> {
     initPlayer();
     loadAudioPath();
     startTimer();
+    loadQuestions();
   }
 
   Future<void> loadAudioPath() async {
-    String jsonString = await rootBundle.loadString('lib/assets/data/listening.json');
-    Map<String, dynamic> jsonMap = jsonDecode(jsonString);
-    Map<String, dynamic> test = jsonMap['listening'][widget.testname];
-    Map<String, dynamic> part = test['part'][widget.testSetup.selectedPart];
-    print(part);
-    setState(() {
-      audioPath = part['audio'];
+    try {
+      String jsonString =
+      await rootBundle.loadString('lib/assets/data/listening.json');
+      Map<String, dynamic> jsonMap = jsonDecode(jsonString);
+      Map<String, dynamic> test = jsonMap['listening'][widget.testname];
+      Map<String, dynamic> part = test['part'][widget.testSetup.selectedPart];
+      setState(() {
+        audioPath = part['audio'];
+      });
 
-    });
-
-    if (widget.testSetup.isPlaying) {
-      playAudio();
-      print(audioPath);
+      if (widget.testSetup.isPlaying) {
+        playAudio();
+      }
+    } catch (e) {
+      print("Error loading audio path: $e");
     }
   }
 
   void initPlayer() {
+    audioPlayer.onPlayerStateChanged.listen((state) {
+      setState(() {
+        isPlaying = state == PlayerState.playing;
+      });
+    });
     audioPlayer.onDurationChanged.listen((Duration d) {
       setState(() {
         duration = d;
-        // Cập nhật Slider khi có thay đổi thời lượng audio
-        sliderValue = position.inSeconds.toDouble();
       });
     });
-    audioPlayer.onAudioPositionChanged.listen((Duration p) {
-      setState(() {
-        if (!isSliding) {
+
+    audioPlayer.onPositionChanged.listen((Duration p) {
+      if (!isSliding) {
+        setState(() {
           position = p;
-          // Cập nhật Slider khi có thay đổi vị trí audio
           sliderValue = position.inSeconds.toDouble();
-        }
-      });
+        });
+      }
     });
-    audioPlayer.onPlayerStateChanged.listen((PlayerState s) {
+
+    audioPlayer.onPlayerComplete.listen((event) {
       setState(() {
-        isPlaying = s == PlayerState.PLAYING;
+        isPlaying = false;
+        position = Duration.zero;
+        sliderValue = 0.0;
       });
     });
   }
 
   Future<void> playAudio() async {
-    await audioPlayer.play(audioPath, isLocal: true);
+    try {
+      int result = audioPlayer.play(UrlSource(audioPath)) as int;
+      if (result == 1) {
+        print("Audio is playing");
+      }
+    } catch (e) {
+      print("Error in playAudio: $e");
+    }
   }
 
   Future<void> pauseAudio() async {
-    await audioPlayer.pause();
+    try {
+      await audioPlayer.pause();
+      print("Audio paused");
+    } catch (e) {
+      print("Error in pauseAudio: $e");
+    }
   }
 
   void startTimer() {
@@ -95,11 +119,13 @@ class _DetailPageState extends State<DetailPage> {
       setState(() {
         if (remainingSeconds > 0) {
           remainingSeconds--;
-          audioProgress = 1 - ((remainingMinutes * 60 + remainingSeconds) / 1200);
+          audioProgress =
+              1 - ((remainingMinutes * 60 + remainingSeconds) / 1200);
         } else if (remainingMinutes > 0) {
           remainingMinutes--;
           remainingSeconds = 59;
-          audioProgress = 1 - ((remainingMinutes * 60 + remainingSeconds) / 1200);
+          audioProgress =
+              1 - ((remainingMinutes * 60 + remainingSeconds) / 1200);
         } else {
           timer.cancel();
           showAlertDialog();
@@ -128,6 +154,29 @@ class _DetailPageState extends State<DetailPage> {
     );
   }
 
+  void loadQuestions() async {
+    try {
+      String jsonString =
+      await rootBundle.loadString('lib/assets/data/listening.json');
+      Map<String, dynamic> jsonMap = jsonDecode(jsonString);
+      Map<String, dynamic> test = jsonMap['listening'][widget.testname];
+      Map<String, dynamic> partsData = test['part'];
+      setState(() {
+        parts = partsData;
+        partKeys = partsData.keys.toList();
+      });
+    } catch (e) {
+      print("Error loading questions: $e");
+    }
+  }
+
+  void goToPart(int index) {
+    setState(() {
+      currentPartIndex = index;
+      currentQuestionIndex = 0;
+    });
+  }
+
   @override
   void dispose() {
     timer?.cancel();
@@ -140,7 +189,7 @@ class _DetailPageState extends State<DetailPage> {
     setState(() {
       isPlaying = !isPlaying;
       if (isPlaying) {
-        playAudio();
+        audioPlayer.resume();
       } else {
         pauseAudio();
       }
@@ -148,10 +197,20 @@ class _DetailPageState extends State<DetailPage> {
   }
 
   Future<void> seekAudio(double value) async {
-    final newPosition = Duration(seconds: value.toInt());
-    await audioPlayer.seek(newPosition);
-    if (!isPlaying) {
-      await audioPlayer.resume();
+    setState(() {
+      isSliding = true;
+    });
+    Duration newPosition = Duration(seconds: value.toInt());
+
+    try {
+      await audioPlayer.seek(newPosition);
+      setState(() {
+        position = newPosition;
+        sliderValue = position.inSeconds.toDouble();
+        isSliding = false;
+      });
+    } catch (e) {
+      print("Error in seekAudio: $e");
     }
   }
 
@@ -159,199 +218,261 @@ class _DetailPageState extends State<DetailPage> {
   Widget build(BuildContext context) {
     String remainingTime =
         '${remainingMinutes.toString().padLeft(2, '0')}:${remainingSeconds.toString().padLeft(2, '0')}';
+    List<String> currentPartQuestionsKeys = parts.isNotEmpty
+        ? (parts[partKeys[currentPartIndex]]['question'] as Map<String, dynamic>)
+        .keys
+        .toList()
+        : [];
+    var questionSet = parts[partKeys[currentPartIndex]]['question']
+    as Map<String, dynamic>;
+
+    List<Map<String, String>> questions = [];
+    questionSet.forEach((key, value) {
+      questions.add({'Q': value['Q'], 'A': value['A']});
+    });
 
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Color(0xffB5E0EA),
-      actions: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            ImageIcon(
-              AssetImage('icons/oclock.png'),
-              size: 48,
-            ),
-            SizedBox(width: 10.0),
-            Text(
-              remainingTime,
-              style: TextStyle(
-                fontSize: 24.0,
-                fontWeight: FontWeight.bold,
+        actions: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              ImageIcon(
+                AssetImage('icons/oclock.png'),
+                size: 48,
               ),
-            ),
-            SizedBox(width: 90.0),
-            ElevatedButton(
-              onPressed: () {
-                // Submit button functionality
-              },
-              child: Text('Submit',style: TextStyle(
-                color: Colors.white,
-                fontSize: 20
+              SizedBox(width: 10.0),
+              Text(
+                remainingTime,
+                style: TextStyle(
+                  fontSize: 24.0,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
+              SizedBox(width: 90.0),
+              ElevatedButton(
+                onPressed: () {
+                  // Submit button functionality
+                },
+                child: Text(
+                  'Submit',
+                  style: TextStyle(color: Colors.white, fontSize: 20),
+                ),
+                style: ElevatedButton.styleFrom(
+                    backgroundColor: Color(0xff3898D7)),
               ),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Color(0xff3898D7)
-              ),
-            ),
-            SizedBox(width: 20.0),
-          ],
-        ),
-
-      ],
+              SizedBox(width: 20.0),
+            ],
+          ),
+        ],
       ),
       backgroundColor: Colors.white,
-      body:
-
-      Column(
+      body: Column(
         children: [
-          // Frame 1 - 22
-          // Frame 2 - 60%
-          Expanded(
-            child: Column(
+          Container(
+            height: MediaQuery.of(context).size.height * 0.10,
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(15.0),
+            ),
+            padding: EdgeInsets.all(5.0),
+            margin: EdgeInsets.all(0.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                // Subframe 1 - 10% (Audio Controls)
+                IconButton(
+                  icon: Icon(Icons.replay_5),
+                  color: Color(0xff1BAABF),
+                  iconSize: 30.0,
+                  onPressed: () {
+                    seekAudio((sliderValue - 5)
+                        .clamp(0, duration.inSeconds.toDouble()));
+                  },
+                ),
                 Container(
-                  height: MediaQuery.of(context).size.height * 0.10,
-
                   decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(15.0),
-
+                    color: Color(0xff1BAABF),
+                    shape: BoxShape.rectangle,
+                    borderRadius: BorderRadius.all(Radius.circular(15)),
                   ),
-                  padding: EdgeInsets.all(5.0),
-                  margin: EdgeInsets.all(0.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      IconButton(
-                        icon: Icon(Icons.replay_5),
-                        color: Color(0xff1BAABF),
-                        iconSize: 30.0,
-                        onPressed: () => seekAudio((audioProgress - 5 / 1200).clamp(0, 1)),
-                      ),
-                      Container(
-
-                        decoration: BoxDecoration(
-                           color: Color(0xff1BAABF),
-                           shape: BoxShape.rectangle,
-                          borderRadius: BorderRadius.all(Radius.circular(15)),
-
-                        ),
-                        child: IconButton(
-
-                          icon: Icon(isPlaying ? Icons.pause : Icons.play_arrow),
-                          iconSize: 30.0,
-                     
-                          color: Colors.white,
-
-
-                          onPressed: toggleAudio,
-                        ),
-                      ),
-                      IconButton(
-                        color: Color(0xff1BAABF),
-                        icon: Icon(Icons.forward_5),
-                        iconSize: 30.0,
-                        onPressed: () => seekAudio((audioProgress + 5 / 1200).clamp(0, 1)),
-                      ),
-                      Expanded(
-                        child:Slider(
-                          min: 0,
-                          max: duration.inSeconds.toDouble(),
-                          value: isPlaying
-                              ? position.inSeconds.toDouble().clamp(0,
-                              duration.inSeconds.toDouble())
-                              : sliderValue,// Sử dụng clamp để giữ giá trị trong khoảng cho phép
-                          onChanged: (value) {
-                            setState(() {
-                              isSliding = true; // Đánh dấu rằng Slider đang được trượt
-                              final seconds = value.toInt().clamp(0, duration.inSeconds); // Đảm bảo giá trị không vượt quá thời lượng
-                              position = Duration(seconds: seconds);
-                            });
-                          },
-                          onChangeEnd: (value) {
-                            final newPosition = value * 1.0;
-                            seekAudio(newPosition);
-                            setState(() {
-                              isSliding = false; // Đánh dấu rằng Slider không được trượt nữa
-                            });
-                          },
-                        ),
-
-
-
-
-                      ),
-                      Icon(Icons.volume_up),
-                      Container(
-                        width: 100,
-                        child: Slider(
-                          value: volume,
-                          min: 0,
-                          max: 1,
-                          onChanged: (value) {
-                            setState(() {
-                              volume = value;
-                              audioPlayer.setVolume(volume);
-                            });
-                          },
-                        ),
-                      ),
-                    ],
+                  child: IconButton(
+                    icon: Icon(isPlaying ? Icons.pause : Icons.play_arrow),
+                    iconSize: 30.0,
+                    color: Colors.white,
+                    onPressed: toggleAudio,
                   ),
                 ),
-                // Subframe 2 - 50% (Questions)
+                IconButton(
+                  color: Color(0xff1BAABF),
+                  icon: Icon(Icons.forward_5),
+                  iconSize: 30.0,
+                  onPressed: () {
+                    seekAudio((sliderValue + 5)
+                        .clamp(0, duration.inSeconds.toDouble()));
+                  },
+                ),
                 Expanded(
-                  child: Container(
-                    padding: EdgeInsets.all(16.0),
-                    child: ListView(
-                      children: [
-                        // Replace with your questions widgets
-                        Container(
-                          width: 1000,
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            border: Border(
-                              bottom: BorderSide(width: 1.0, color: Colors.grey), // Border ở dưới
-                            ),
-
-
-                          ),
-                          child: Text(
-                            widget.testSetup.selectedPart,
-                            style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
-                          ),
-                        ),
-                      ],
-                    ),
+                  child: Slider(
+                    min: 0.0,
+                    max: duration.inSeconds.toDouble(),
+                    value: sliderValue,
+                    onChanged: (value) {
+                      setState(() {
+                        sliderValue = value;
+                      });
+                    },
+                    onChangeStart: (value) {
+                      setState(() {
+                        isSliding = true;
+                      });
+                    },
+                    onChangeEnd: (value) {
+                      setState(() {
+                        isSliding = false;
+                      });
+                      seekAudio(value);
+                    },
+                    activeColor: Colors.blue,
+                    inactiveColor: Colors.grey,
                   ),
+                ),
+                IconButton(
+                  icon: Icon(
+                    Icons.volume_up,
+                    color: Color(0xff1BAABF),
+                  ),
+                  onPressed: () {
+                    showDialog(
+                      context: context,
+                      builder: (context) {
+                        return AlertDialog(
+                          title: Text("Volume"),
+                          content: Slider(
+                            value: volume,
+                            min: 0.0,
+                            max: 1.0,
+                            divisions: 10,
+                            onChanged: (value) {
+                              setState(() {
+                                volume = value;
+                                audioPlayer.setVolume(volume);
+                              });
+                            },
+                          ),
+                          actions: <Widget>[
+                            TextButton(
+                              child: Text("Close"),
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                              },
+                            ),
+                          ],
+                        );
+                      },
+                    );
+                  },
                 ),
               ],
             ),
           ),
-          // Frame 3 - 10% (Navigation Buttons)
+          Container(
+            margin: EdgeInsets.all(15.0),
+            child: Text(widget.testname,style: TextStyle(
+              fontSize: 30,
+              color: Colors.black,
+              fontWeight: FontWeight.w500,
+
+            ),
+            ),
+            width: 1000,
+            decoration: BoxDecoration(
+              border:  Border(
+                bottom: BorderSide(width: 1.0, color: Colors.black),
+              ),
+              color: Colors.white,
+            ),
+          ),
+          Expanded(
+            child: ListView.builder(
+              itemCount: questions.length,
+              itemBuilder: (context, index) {
+                return Container(
+                  padding: EdgeInsets.all(30.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: [
+                          Expanded(
+                            child: Text(
+                              "${index+1}: "+ questions[index]['Q']!,
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                          Expanded(
+                            flex: 2,
+                            child: TextField(
+                              decoration: InputDecoration(
+                                hintText: 'Enter your answer...',
+                                border: OutlineInputBorder(),
+                              ),
+                              onChanged: (value) {
+                                setState(() {
+                                  questions[index]['A'] = value;
+                                });
+                              },
+                            ),
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: 8),
+                    ],
+                  ),
+
+                );
+              },
+            ),
+          ),
           Container(
             height: MediaQuery.of(context).size.height * 0.10,
             color: Colors.blue[100],
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                // Replace with your navigation buttons
-                IconButton(
-                  icon: Icon(Icons.arrow_back),
-                  iconSize: 30.0,
-                  onPressed: () {
-                    // Previous question
-                  },
-                ),
-                IconButton(
-                  icon: Icon(Icons.arrow_forward),
-                  iconSize: 30.0,
-                  onPressed: () {
-                    // Next question
-                  },
-                ),
-              ],
+            child: ListView.builder(
+              scrollDirection: Axis.horizontal,
+              itemCount: currentPartQuestionsKeys.length,
+              itemBuilder: (context, index) {
+                return Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        currentQuestionIndex = index;
+                      });
+                    },
+                    child: Container(
+                      width: 40,
+                      height: 40,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: currentQuestionIndex == index
+                            ? Colors.blue
+                            : Colors.grey,
+                      ),
+                      child: Center(
+                        child: Text(
+                          '${index + 1}',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                );
+              },
             ),
           ),
         ],
