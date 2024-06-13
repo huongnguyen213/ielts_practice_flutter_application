@@ -1,0 +1,135 @@
+{
+  "speaking": {
+    "test_1": {
+      "like": true,
+      "name": "Speaking Test 1",
+      "part_1": {
+        "ans1": "URL",
+        "q1": "What is your name?",
+        "q2": "Where are you from?",
+        "q3": "Do you work or study?",
+        "q4": "Do you want to travel in the outer space?",
+        "q5": "What would you do if you had an opportunity?",
+        "q6": "Have you ever learnt about stars and outer space?",
+        "q7": "Is it important to study stars?",
+        "q8": "What is your favourite star?",
+        "q9": "Do you like wearing jewellery?",
+        "q10": "What type of jewellery do you like?"
+
+      },
+      "part_2": {
+        "ans2": "URL",
+        "q1": "Describe a person you like to work or study with?",
+        "q2": "Who this person is ?",
+        "q3": "How long have you known this person?",
+        "q4": "How you met?",
+        "q5": "Why you want to work or study with this person?"
+      },
+      "part_3": {
+        "ans3": "URL",
+        "q1": "What are the characteristics that good co-workers need?",
+        "q2": "What benefits if you are surrounded by good co-workers?",
+        "q3": "What would happen if the co-workers are not good?",
+        "q4": "Are there values if managers build good relationships with the workers who work underneath them?",
+        "q5": "Is it good for workers if the company applies sports facilities for them?",
+        "q6": "Are knowledgeable people popular at work?"
+      },
+      "score": 8
+    },
+    "test_2": {
+      "like": true,
+      "name": "Speaking Test 2",
+      "part_1": {
+        "ans1": "URL",
+        "q1": "What kinds of music do you like to listen to?",
+        "q2": "When did you start listening to that type of music?",
+        "q3": "How much time do you spend listening to music every day?",
+        "q4": "How do you feel when you listen to it?",
+        "q5": "Do you prefer listening to music with or without headphones?",
+        "q6": "Are there many small businesses near your house?",
+        "q7": "Do you prefer buying things in big companies or from small businesses?",
+        "q8": "Do you know many small businesses?",
+        "q9": "On what occasions do you go shopping in big businesses?"
+      },
+      "part_2": {
+        "ans2": "URL",
+        "q1": "Describe a character from a film. What character it is?",
+        "q2": "Who acted the character?",
+        "q3": "When you saw the film\nAnd explain whether you like this character"
+      },
+      "part_3": {
+        "ans3": "URL",
+        "q1": "Is it interesting to be an actor or actress?",
+        "q2": "What can children learn from acting?",
+        "q3": "Why do children like special costumes?",
+        "q4": "What are the differences between actors/actresses who earn much and those who earn little?",
+        "q5": "What are the differences between acting in a theatre and in a film?"
+      },
+      "score": 8
+    },
+    "test_3": {
+      "like": true,
+      "name": "Speaking Test 3",
+      "part_1": {
+        "ans1": "URL",
+        "q1": "What is your full name?",
+        "q2": "Do you work or study?",
+        "q3": "What kinds of music do you like to listen to?",
+        "q4": "How much time do you spend listening to music every day?",
+        "q5": "Do you prefer listening to music with or without headphones?",
+        "q6": "Are there many small businesses near your house?",
+        "q7": "Do you prefer buying things in big companies or from small businesses?",
+        "q8": "Do you know many small businesses?",
+        "q9": "On what occasions do you go shopping in big businesses?"
+      },
+      "part_2": {
+        "ans2": "URL",
+        "q1": "Describe a character from a film. ",
+        "q2": "What is the name of the film?",
+        "q3": "What character it is",
+        "q4": "Who acted the character?",
+        "q5": "When you saw the film\nAnd explain whether you like this character"
+      },
+      "part_3": {
+        "ans3": "URL",
+        "q1": "Is it interesting to be an actor or actress?",
+        "q2": "What can children learn from acting?",
+        "q3": "Why do children like special costumes?",
+        "q4": "What are the differences between actors/actresses who earn much and those who earn little?",
+        "q5": "What are the differences between acting in a theatre and in a film?"
+      },
+      "score": 8
+    },
+    "test_4": {
+      "like": true,
+      "name": "Speaking Full Part",
+      "part_1": {
+        "ans1": "URL",
+        "q1": "What is your full name?",
+        "q2": "Where are you from?",
+        "q3": "Do you work or study?",
+        "q4": "What do you usually do at weekends?",
+        "q5": "What did you do last weekend?",
+        "q6": "Do you like weekends?",
+        "q7": "Do you think it is important to make the most of your weekend?",
+        "q8": "Do you prefer to spend time alone or with others on weekends?"
+      },
+      "part_2": {
+        "ans2": "URL",
+        "q1": "Describe a person you met at a party who you enjoyed talking with. What party it was?",
+        "q2": "How you met this person?",
+        "q3": "What you talked about And explain why you enjoyed talking with him or her?"
+      },
+      "part_3": {
+        "ans3": "URL",
+        "q1": "On what occasions would people be willing to get to know new people?",
+        "q2": "Where would people get to know new people?",
+        "q3": "How do people start a conversation?",
+        "q4": "Is it difficult for Vietnamese people to communicate with people from other countries?",
+        "q5": "Why are some people unwilling to have conversations with others?",
+        "q6": "Is it difficult for adults to talk with children?"
+      },
+      "score": 8
+    }
+  }
+}
