@@ -5,6 +5,9 @@ import 'package:ielts_practice_flutter_application/page/reading/reading_list_tes
 import 'package:ielts_practice_flutter_application/page/writing/writing_list_test.dart';
 import 'package:ielts_practice_flutter_application/page/speaking/speaking_list_test.dart';
 
+import '../reading/pages/reading_page.dart';
+
+
 class HomePage extends StatefulWidget {
   @override
   _IELTSHomeState createState() => _IELTSHomeState();
@@ -234,12 +237,15 @@ class _IELTSHomeState extends State<HomePage> {
     child: InkWell(
     onTap:
         () {
-      if (page != null) {
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => page),
-        );
-      }
+          if(label=="Reading Test"||label=="Reading Practice"){
+            Navigator.push(context, MaterialPageRoute(builder: (context) => const ReadingPage()));
+          }
+          else if (page != null) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => page),
+            );
+          }
     },
       child: Center(
         child: Column(
