@@ -6,16 +6,16 @@ import 'package:ielts_practice_flutter_application/page/writing/writing_result.d
 import 'package:path_provider/path_provider.dart';
 import 'dart:async';
 
-class TakePictureScreen extends StatefulWidget {
+class TakePictureScreen2 extends StatefulWidget {
   final Duration remainingTime;
 
-  TakePictureScreen({required this.remainingTime});
+  TakePictureScreen2({required this.remainingTime});
 
   @override
-  _TakePictureScreenState createState() => _TakePictureScreenState();
+  _TakePictureScreen2State createState() => _TakePictureScreen2State();
 }
 
-class _TakePictureScreenState extends State<TakePictureScreen> {
+class _TakePictureScreen2State extends State<TakePictureScreen2> {
   CameraController? _cameraController;
   List<CameraDescription>? _cameras;
   bool _isCameraInitialized = false;
@@ -120,7 +120,7 @@ class _TakePictureScreenState extends State<TakePictureScreen> {
 
     if (await jsonFile.exists()) {
       final jsonData = json.decode(await jsonFile.readAsString());
-      jsonData['writing']['test_1']['part_1']['ans'] = imagePath;
+      jsonData['writing']['test_1']['part_2']['ans'] = imagePath;
       await jsonFile.writeAsString(json.encode(jsonData));
     } else {
       print('JSON file does not exist');
