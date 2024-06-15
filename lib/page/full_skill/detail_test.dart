@@ -1,7 +1,9 @@
 import 'dart:async';
-
+import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart' show rootBundle;
 import 'package:ielts_practice_flutter_application/page/full_skill/test_result.dart';
+import 'widgets/WritingContentWidget.dart';
 
 class DetailTest extends StatefulWidget {
   @override
@@ -17,13 +19,24 @@ class _DetailTestState extends State<DetailTest> {
   ];
 
   Duration remainingTime = Duration(hours: 2, minutes: 45); // Updated duration
-
   late Timer timer;
+
+  Map<String, dynamic>? writingData; // To store the parsed JSON data
 
   @override
   void initState() {
     super.initState();
     startTimer();
+    loadJsonData();
+  }
+
+  Future<void> loadJsonData() async {
+    final String response = await rootBundle.loadString('lib/assets/data/full_skill.json');
+    final data = await json.decode(response);
+
+    setState(() {
+      writingData = data['ielts']['test_1']['writing'];
+    });
   }
 
   void startTimer() {
@@ -121,7 +134,13 @@ class _DetailTestState extends State<DetailTest> {
             Center(child: Text('Content for Speaking tab')),
             Center(child: Text('Content for Listening tab')),
             Center(child: Text('Content for Reading tab')),
-            Center(child: Text('Content for Writing tab')),
+            writingData == null
+                ? Center(child: CircularProgressIndicator())
+                : WritingContentWidget(
+              part1Data: writingData!['part_1'],
+              part2Data: writingData!['part_2'],
+              remainingTime: remainingTime,
+            ),
           ],
         ),
       ),
