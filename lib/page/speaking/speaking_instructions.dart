@@ -90,10 +90,9 @@ class SpeakingInstructions extends StatelessWidget {
                 ],
               ),
             ),
-            SizedBox(height: 20),
+            const Spacer(),
             ElevatedButton(
               onPressed: () {
-                // Navigate to SpeakingQuestionPage and pass part and selectedTime parameters
                 Navigator.push(
                   context,
                   MaterialPageRoute(
@@ -106,13 +105,14 @@ class SpeakingInstructions extends StatelessWidget {
                   ),
                 );
               },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFFB5E0EA),
-                padding: const EdgeInsets.symmetric(horizontal: 80, vertical: 15),
-                textStyle: const TextStyle(
-                  fontSize: 18.0,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black,
+
+              style: TextButton.styleFrom(
+                foregroundColor: Colors.white,
+                backgroundColor: Colors.green,
+                minimumSize: const Size(double.infinity, 50),
+                side: const BorderSide(color: Colors.green),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8.0),
                 ),
               ),
               child: const Text('Start'),

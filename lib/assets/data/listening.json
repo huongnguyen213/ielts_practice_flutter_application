@@ -6,105 +6,376 @@
       "Like": true,
       "part": {
         "Part 1": {
-
-
           "titile": "Part 1",
           "audio": "lib/assets/audio/L1.mp3",
           "timeInMillis": 369000,
           "question": {
-
-
-                 "q1": {
-                   "Q": "Destination: ",
-                   "A": "Same"
-                 },
-                 "q2": {
-                   "Q": "Weather: : ",
-                   "A": "Same"
-                 },
-                 "q3": {
-                   "Q": "Arrival time:: : ",
-                   "A": "Same"
-                 },
-                 "q4": {
-                   "Q": "Activities Planned See:",
-                   "A": "Same"
-                 },
-                 "q5": {
-                   "Q": "Attend:: : ",
-                   "A": "Same"
-                 },
-                 "q6": {
-                   "Q": "Return time:",
-                   "A": "Same"
-                 },
-
-
-
-              "q7": {
-                "Q": "Activities Planned See:",
-                "A": "Same"
-              },
-              "q8": {
-                "Q": "Attend:: : ",
-                "A": "Same"
-              },
-              "q9": {
-                "Q": "Return time:",
-                "A": "Same"
-              },
-              "q10": {
-                "Q": "Return time:",
-                "A": "Same"
-              }
+            "q1": {
+              "Q": "Destination: ",
+              "A": "Same"
+            },
+            "q2": {
+              "Q": "Weather: : ",
+              "A": "Same"
+            },
+            "q3": {
+              "Q": "Arrival time:: : ",
+              "A": "Same"
+            },
+            "q4": {
+              "Q": "Activities Planned See:",
+              "A": "Same"
+            },
+            "q5": {
+              "Q": "Attend:: : ",
+              "A": "Same"
+            },
+            "q6": {
+              "Q": "Return time:",
+              "A": "Same"
+            },
+            "q7": {
+              "Q": "Activities Planned See:",
+              "A": "Same"
+            },
+            "q8": {
+              "Q": "Attend:: : ",
+              "A": "Same"
+            },
+            "q9": {
+              "Q": "Return time:",
+              "A": "Same"
+            },
+            "q10": {
+              "Q": "Return time:",
+              "A": "Same"
             }
-
-
-
           }
-        ,
+        },
         "Part 2": {
-
           "titile": "Part 2",
           "audio": "lib/assets/audio/L2.mp3",
           "timeInMillis": 369000,
           "question": {
             "q1": {
-              "Q": "What your name?",
-              "A": "A"
+              "Q": "The company deals mostly with:",
+              "AN": {
+                "A": "Big cities.",
+                "B": "Nature holidays.",
+                "C": "Nepal."
+              }
             },
             "q2": {
-              "Q": "What your name?",
-              "A": "A"
+              "Q": "The overseas consultants deal mostly with:",
+              "AN": {
+                "A": "Asia",
+                "B": "North America",
+                "C": "Europe"
+              }
+            },
+            "q3": {
+              "Q": " For deserts and gorges, customers should come in the:",
+              "AN": {
+                "A": "Morning.",
+                "B": "Afternoon.",
+                "C": "Night."
+              }
+            },
+            "q4": {
+              "Q": "Trips to regional locations are good because:",
+              "AN": {
+                "A": "The buses are comfortable.",
+                "B": "There is storage for suitcases.",
+                "C": "They can be seen quickly."
+              }
+            },
+            "q5": {
+              "Q": "SleekLine buses are particularly known for their:",
+              "AN": {
+                "A": "Service.",
+                "B": "Size.",
+                "C": "Comfort."
+              }
+            },
+            "q6": {
+              "Q": "The company deals mostly with:",
+              "AN": {
+                "A": "Big cities.",
+                "B": "Nature holidays.",
+                "C": "Nepal."
+              }
             }
           }
         },
         "Part 3": {
           "titile": "Part 3",
-          "audio": "lib/assets/audio/L1.mp3",
+          "audio": "lib/assets/audio/L3.mp3",
           "timeInMillis": 369000,
           "question": {
             "q1": {
-              "Q": "What your name?",
-              "A": "A"
+              "Q": "What did Klara originally want to do her project on?",
+              "A": "Same"
             },
             "q2": {
-              "Q": "What your name?",
-              "A": "A"
+              "Q": "Where can Klara read about housing prices every day?",
+              "A": "Same"
+            },
+            "q3": {
+              "Q": "Which facilities might influence housing prices?",
+              "A": "Same"
+            },
+            "q4": {
+              "Q": "What did Klara’s friend suggest including information on?",
+              "A": "Same"
+            },
+            "q5": {
+              "Q": "Where could Klara get such information from?",
+              "A": "Same"
+            },
+            "q6": {
+              "Q": "In the middle part, Klara needs to use a",
+              "A": "Same"
+            },
+            "q7": {
+              "Q": "The professor suggests that headings are",
+              "A": "Same"
+            },
+            "q8": {
+              "Q": "Klara has to finish the project in",
+              "A": "Same"
+            },
+            "q9": {
+              "Q": "The last thing Klara needs to do before giving the professor her project is",
+              "A": "Same"
             }
           }
         },
         "Part 4": {
           "titile": "Part 4",
-          "audio": "lib/assets/audio/L1.mp3",
+          "audio": "lib/assets/audio/L4.mp3",
           "question": {
             "q1": {
-              "Q": "What your name?",
-              "A": "A"
+              "Q": "Available to all overseas students"
             },
             "q2": {
-              "Q": "What your name?",
-              "A": "A"
+              "Q": "Where should you apply for this scholarship?"
+            },
+            "q3": {
+              "Q": "How much is each scholarship worth?"
+            },
+            "q4": {
+              "Q": "Awarded jointly by the Foreign Office and HE institutions"
+            },
+            "q5": {
+              "Q": "Usually awarded for"
+            },
+            "q6": {
+              "Q": "Not employed by the government or"
+            },
+            "q7": {
+              "Q": "Course must be in field of"
+            },
+            "q8": {
+              "Q": "What is covered by these awards?"
+            },
+            "q9": {
+              "Q": "Which organisation provides these awards?"
+            }
+          }
+        },
+        "Full Part": {
+          "title": "Full Part",
+          "audio": {
+            "part1": "lib/assets/audio/L1.mp3",
+            "part2": "lib/assets/audio/L2.mp3",
+            "part3": "lib/assets/audio/L3.mp3",
+            "part4": "lib/assets/audio/L4.mp3"
+          },
+          "question": {
+            "q1": {
+              "Q": "Destination: ",
+              "A": "Same",
+              "partk": "Part 1"
+            },
+            "q2": {
+              "Q": "Weather: ",
+              "A": "Same",
+              "partk": "Part 1"
+            },
+            "q3": {
+              "Q": "Arrival time: ",
+              "A": "Same",
+              "partk": "Part 1"
+            },
+            "q4": {
+              "Q": "Activities Planned See:",
+              "A": "Same",
+              "partk": "Part 1"
+            },
+            "q5": {
+              "Q": "Attend: ",
+              "A": "Same",
+              "partk": "Part 1"
+            },
+            "q6": {
+              "Q": "Return time:",
+              "A": "Same",
+              "partk": "Part 1"
+            },
+            "q7": {
+              "Q": "Activities Planned See:",
+              "A": "Same",
+              "partk": "Part 1"
+            },
+            "q8": {
+              "Q": "Attend: ",
+              "A": "Same",
+              "partk": "Part 1"
+            },
+            "q9": {
+              "Q": "Return time:",
+              "A": "Same",
+              "partk": "Part 1"
+            },
+            "q10": {
+              "Q": "Return time:",
+              "A": "Same",
+              "partk": "Part 1"
+            },
+            "q11": {
+              "Q": "The company deals mostly with:",
+              "AN": {
+                "A": "Big cities.",
+                "B": "Nature holidays.",
+                "C": "Nepal."
+              },
+              "partk": "Part 2"
+            },
+            "q12": {
+              "Q": "The overseas consultants deal mostly with:",
+              "AN": {
+                "A": "Asia",
+                "B": "North America",
+                "C": "Europe"
+              },
+              "partk": "Part 2"
+            },
+            "q13": {
+              "Q": "For deserts and gorges, customers should come in the:",
+              "AN": {
+                "A": "Morning.",
+                "B": "Afternoon.",
+                "C": "Night."
+              },
+              "partk": "Part 2"
+            },
+            "q14": {
+              "Q": "Trips to regional locations are good because:",
+              "AN": {
+                "A": "The buses are comfortable.",
+                "B": "There is storage for suitcases.",
+                "C": "They can be seen quickly."
+              },
+              "partk": "Part 2"
+            },
+            "q15": {
+              "Q": "SleekLine buses are particularly known for their:",
+              "AN": {
+                "A": "Service.",
+                "B": "Size.",
+                "C": "Comfort."
+              },
+              "partk": "Part 2"
+            },
+            "q16": {
+              "Q": "The company deals mostly with:",
+              "AN": {
+                "A": "Big cities.",
+                "B": "Nature holidays.",
+                "C": "Nepal."
+              },
+              "partk": "Part 2"
+            },
+            "q17": {
+              "Q": "What did Klara originally want to do her project on?",
+              "A": "Same",
+              "partk": "Part 3"
+            },
+            "q18": {
+              "Q": "Where can Klara read about housing prices every day?",
+              "A": "Same",
+              "partk": "Part 3"
+            },
+            "q19": {
+              "Q": "Which facilities might influence housing prices?",
+              "A": "Same",
+              "partk": "Part 3"
+            },
+            "q20": {
+              "Q": "What did Klara’s friend suggest including information on?",
+              "A": "Same",
+              "partk": "Part 3"
+            },
+            "q21": {
+              "Q": "Where could Klara get such information from?",
+              "A": "Same",
+              "partk": "Part 3"
+            },
+            "q22": {
+              "Q": "In the middle part, Klara needs to use a",
+              "A": "Same",
+              "partk": "Part 3"
+            },
+            "q23": {
+              "Q": "The professor suggests that headings are",
+              "A": "Same",
+              "partk": "Part 3"
+            },
+            "q24": {
+              "Q": "Klara has to finish the project in",
+              "A": "Same",
+              "partk": "Part 3"
+            },
+            "q25": {
+              "Q": "The last thing Klara needs to do before giving the professor her project is",
+              "A": "Same",
+              "partk": "Part 3"
+            },
+            "q26": {
+              "Q": "Available to all overseas students",
+              "partk": "Part 4"
+            },
+            "q27": {
+              "Q": "Where should you apply for this scholarship?",
+              "partk": "Part 4"
+            },
+            "q28": {
+              "Q": "How much is each scholarship worth?",
+              "partk": "Part 4"
+            },
+            "q29": {
+              "Q": "Awarded jointly by the Foreign Office and HE institutions",
+              "partk": "Part 4"
+            },
+            "q30": {
+              "Q": "Usually awarded for",
+              "partk": "Part 4"
+            },
+            "q31": {
+              "Q": "Not employed by the government or",
+              "partk": "Part 4"
+            },
+            "q32": {
+              "Q": "Course must be in field of",
+              "partk": "Part 4"
+            },
+            "q33": {
+              "Q": "What is covered by these awards?",
+              "partk": "Part 4"
+            },
+            "q34": {
+              "Q": "Which organisation provides these awards?",
+              "partk": "Part 4"
             }
           }
         }

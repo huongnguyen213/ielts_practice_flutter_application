@@ -1,10 +1,16 @@
 import 'dart:io';
-
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
-import 'package:permission_handler/permission_handler.dart';
+import 'package:ielts_practice_flutter_application/page/writing/writing_result.dart';
+import 'package:path_provider/path_provider.dart';
+import 'dart:async';
 
 class TakePictureScreen extends StatefulWidget {
+  final Duration remainingTime;
+
+  TakePictureScreen({required this.remainingTime});
+
   @override
   _TakePictureScreenState createState() => _TakePictureScreenState();
 }
@@ -14,11 +20,15 @@ class _TakePictureScreenState extends State<TakePictureScreen> {
   List<CameraDescription>? _cameras;
   bool _isCameraInitialized = false;
   String? _capturedImagePath;
+  late Duration remainingTime;
+  late Timer timer;
 
   @override
   void initState() {
     super.initState();
+    remainingTime = widget.remainingTime;
     _initCameras();
+    startTimer();
   }
 
   Future<void> _initCameras() async {
@@ -27,14 +37,11 @@ class _TakePictureScreenState extends State<TakePictureScreen> {
       _cameraController = CameraController(
         _cameras![0],
         ResolutionPreset.high,
-        enableAudio: false, // Không bật âm thanh khi chụp
-        imageFormatGroup: ImageFormatGroup.jpeg, // Chọn định dạng ảnh JPEG
+        enableAudio: false,
+        imageFormatGroup: ImageFormatGroup.jpeg,
       );
 
-      // Không bật flash tự động
       _cameraController!.setFlashMode(FlashMode.off);
-
-      // Enable auto focus
       _cameraController!.setFocusMode(FocusMode.auto);
 
       await _cameraController!.initialize();
@@ -44,8 +51,46 @@ class _TakePictureScreenState extends State<TakePictureScreen> {
     }
   }
 
+  void startTimer() {
+    timer = Timer.periodic(Duration(seconds: 1), (timer) {
+      setState(() {
+        if (remainingTime.inSeconds > 0) {
+          remainingTime = Duration(seconds: remainingTime.inSeconds - 1);
+        } else {
+          timer.cancel();
+          _showTimeUpDialog();
+        }
+      });
+    });
+  }
+
+  void _showTimeUpDialog() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Time is up!'),
+          content: Text('Your time is over. Submitting the test.'),
+          actions: [
+            ElevatedButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => WritingTestResult()),
+                );
+              },
+              child: Text('OK'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   @override
   void dispose() {
+    timer.cancel();
     _cameraController?.dispose();
     super.dispose();
   }
@@ -54,12 +99,31 @@ class _TakePictureScreenState extends State<TakePictureScreen> {
     if (_cameraController != null && _cameraController!.value.isInitialized) {
       try {
         final image = await _cameraController!.takePicture();
+        final directory = await getApplicationDocumentsDirectory();
+        final imagePath = '${directory.path}/${DateTime.now().millisecondsSinceEpoch}.jpg';
+        await image.saveTo(imagePath);
+
         setState(() {
-          _capturedImagePath = image.path;
+          _capturedImagePath = imagePath;
         });
+
+        await _updateJsonWithImagePath(imagePath);
       } catch (e) {
         print(e);
       }
+    }
+  }
+
+  Future<void> _updateJsonWithImagePath(String imagePath) async {
+    final directory = await getApplicationDocumentsDirectory();
+    final jsonFile = File('${directory.path}/writing_tests.json');
+
+    if (await jsonFile.exists()) {
+      final jsonData = json.decode(await jsonFile.readAsString());
+      jsonData['writing']['test_1']['part_1']['ans'] = imagePath;
+      await jsonFile.writeAsString(json.encode(jsonData));
+    } else {
+      print('JSON file does not exist');
     }
   }
 
@@ -67,14 +131,14 @@ class _TakePictureScreenState extends State<TakePictureScreen> {
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
     final double screenWidth = size.width;
-    final double screenHeight = size.height - kToolbarHeight; // Giảm chiều cao đi thanh AppBar
+    final double screenHeight = size.height - kToolbarHeight;
 
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
           icon: Icon(Icons.arrow_back),
           onPressed: () {
-            Navigator.pop(context);
+            Navigator.pop(context, _capturedImagePath);
           },
         ),
         title: Row(
@@ -82,14 +146,18 @@ class _TakePictureScreenState extends State<TakePictureScreen> {
           children: [
             Icon(Icons.timer),
             SizedBox(width: 5),
-            Text('59 minutes'), // Show the remaining time here
+            Text(formatDuration(remainingTime)),
           ],
         ),
         actions: [
           IconButton(
-            icon: Icon(Icons.arrow_forward),
+            icon: Image.asset(
+              'icons/icons8-right-button-40.png',
+              width: 30,
+              height: 30,
+            ),
             onPressed: () {
-              // Add navigation action if needed
+              _showSubmitConfirmationDialog(context);
             },
           ),
         ],
@@ -126,7 +194,7 @@ class _TakePictureScreenState extends State<TakePictureScreen> {
             Center(child: CircularProgressIndicator()),
           Positioned(
             bottom: 20.0,
-            left: (screenWidth - 50.0) / 2, // Center horizontally
+            left: (screenWidth - 50.0) / 2,
             child: IconButton(
               icon: Icon(Icons.camera_alt, color: Color(0xFFB5E0EA)),
               onPressed: _captureImage,
@@ -136,5 +204,47 @@ class _TakePictureScreenState extends State<TakePictureScreen> {
         ],
       ),
     );
+  }
+
+  void _showSubmitConfirmationDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Are you sure to submit test?'),
+          content: Container(
+            width: double.infinity,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                ElevatedButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: Text('No'),
+                ),
+                ElevatedButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => WritingTestResult()),
+                    );
+                  },
+                  child: Text('Yes'),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  String formatDuration(Duration duration) {
+    String twoDigits(int n) => n.toString().padLeft(2, '0');
+    String twoDigitMinutes = twoDigits(duration.inMinutes.remainder(60));
+    String twoDigitSeconds = twoDigits(duration.inSeconds.remainder(60));
+    return "$twoDigitMinutes:$twoDigitSeconds";
   }
 }

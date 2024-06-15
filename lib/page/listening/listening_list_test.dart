@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:ielts_practice_flutter_application/page/listening/listening_detail_part4.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 import 'package:flutter/services.dart' show rootBundle;
-import 'listening_detail.dart';
+import 'listening_detail_fullpart.dart';
+import 'listening_detail_part1.dart';
+import 'listening_detail_part2.dart';
+import 'listening_detail_part3.dart';
 import 'test_set_up.dart';
-import 'listening_detail.dart';
+import 'listening_detail_part1.dart';
 
 void main() {
   runApp(MyApp());
@@ -255,7 +259,12 @@ class _ListeningTestSetupPageState extends State<ListeningTestSetupPage> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => DetailPage(testSetup: testSetup,testname: widget.testname,),
+                        builder: (context) => testSetup.selectedPart == "Part 1" ?
+                        Part1Page():
+                            testSetup.selectedPart == "Part 2"? Part2Page(): testSetup.selectedPart == "Part 3" ?
+                            Part3Page(): testSetup.selectedPart == "Part 4" ? Part4Page():
+                            FullPartPage(),
+
                       ),
                     );
                   },
