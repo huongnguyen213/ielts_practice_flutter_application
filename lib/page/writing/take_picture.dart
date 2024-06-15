@@ -80,7 +80,11 @@ class _TakePictureScreenState extends State<TakePictureScreen> {
         title: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(Icons.timer),
+            Image.asset(
+              "assets/images/img_clock.png",
+              width: 40,
+              height: 40,
+            ),
             SizedBox(width: 5),
             Text('59 minutes'), // Show the remaining time here
           ],
