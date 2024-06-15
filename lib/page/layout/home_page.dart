@@ -5,6 +5,7 @@ import 'package:ielts_practice_flutter_application/page/reading/reading_list_tes
 import 'package:ielts_practice_flutter_application/page/writing/writing_list_test.dart';
 import 'package:ielts_practice_flutter_application/page/speaking/speaking_list_test.dart';
 
+import '../full_skill/list_test.dart';
 import '../reading/pages/reading_page.dart';
 
 
@@ -229,36 +230,43 @@ class _IELTSHomeState extends State<HomePage> {
 
   Widget _buildGridItem(String label, Widget? page) {
     return Card(
-        margin: EdgeInsets.all(8),
-    elevation: 4,
-    shadowColor: Colors.black54,
-    shape: RoundedRectangleBorder(
-    borderRadius: BorderRadius.circular(10),
-    ),
-    child: InkWell(
-    onTap:
-        () {
-          if(label=="Reading Test"||label=="Reading Practice"){
-            Navigator.push(context, MaterialPageRoute(builder: (context) => const ReadingPage()));
-          }
-          else if (page != null) {
+      margin: EdgeInsets.all(8),
+      elevation: 4,
+      shadowColor: Colors.black54,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(10),
+      ),
+      child: InkWell(
+        onTap: () {
+          if (label == "Full Skills") {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => ListTestPage()), // Đổi thành InstructionPage
+            );
+          } else if (label == "Reading Test" || label == "Reading Practice") {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const ReadingPage()),
+            );
+          } else if (page != null) {
             Navigator.push(
               context,
               MaterialPageRoute(builder: (context) => page),
             );
           }
-    },
-      child: Center(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Image.asset(iconPaths[label]!, width: 40, height: 40),
-            SizedBox(height: 8),
-            Text(label),
-          ],
+        },
+        child: Center(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Image.asset(iconPaths[label]!, width: 40, height: 40),
+              SizedBox(height: 8),
+              Text(label),
+            ],
+          ),
         ),
       ),
-    ),
     );
   }
+
 }
