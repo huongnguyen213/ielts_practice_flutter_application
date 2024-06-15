@@ -47,7 +47,7 @@ class _SpeakingSetUpTestState extends State<SpeakingSetUpTest> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Align(
+        title: const Align(
           alignment: Alignment.centerLeft,
           child: Text('Speaking Practice'),
         ),
@@ -63,7 +63,7 @@ class _SpeakingSetUpTestState extends State<SpeakingSetUpTest> {
             Center(
               child: Column(
                 children: [
-                  Text(
+                  const Text(
                     'Set Up Test',
                     style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24.0),
                   ),
@@ -75,7 +75,7 @@ class _SpeakingSetUpTestState extends State<SpeakingSetUpTest> {
                 ],
               ),
             ),
-            SizedBox(height: 16.0),
+            const SizedBox(height: 16.0),
             Card(
               child: Padding(
                 padding: const EdgeInsets.all(16.0),
@@ -87,7 +87,7 @@ class _SpeakingSetUpTestState extends State<SpeakingSetUpTest> {
                       style: TextStyle(fontWeight: FontWeight.bold),
                     ),
                     ListTile(
-                      title: const Text('Part 1'),
+                      title: const Text('Part 1: Introduction'),
                       leading: Radio<String>(
                         value: 'Part 1',
                         groupValue: _selectedPart,
@@ -99,7 +99,7 @@ class _SpeakingSetUpTestState extends State<SpeakingSetUpTest> {
                       ),
                     ),
                     ListTile(
-                      title: const Text('Part 2'),
+                      title: const Text('Part 2: Topic'),
                       leading: Radio<String>(
                         value: 'Part 2',
                         groupValue: _selectedPart,
@@ -111,7 +111,7 @@ class _SpeakingSetUpTestState extends State<SpeakingSetUpTest> {
                       ),
                     ),
                     ListTile(
-                      title: const Text('Part 3'),
+                      title: const Text('Part 3: Topic Discussion'),
                       leading: Radio<String>(
                         value: 'Part 3',
                         groupValue: _selectedPart,
@@ -125,7 +125,7 @@ class _SpeakingSetUpTestState extends State<SpeakingSetUpTest> {
                     ListTile(
                       title: const Text('Full Part'),
                       leading: Radio<String>(
-                        value: 'Full Part',
+                        value: 'Part 4',
                         groupValue: _selectedPart,
                         onChanged: (String? value) {
                           setState(() {
@@ -141,7 +141,7 @@ class _SpeakingSetUpTestState extends State<SpeakingSetUpTest> {
                           'Choose time',
                           style: TextStyle(fontWeight: FontWeight.bold),
                         ),
-                        SizedBox(width: 16.0),
+                        const SizedBox(width: 16.0),
                         Expanded(
                           child: DropdownButton<String>(
                             value: _selectedTime,
@@ -165,20 +165,19 @@ class _SpeakingSetUpTestState extends State<SpeakingSetUpTest> {
                 ),
               ),
             ),
-            const Spacer(),
             Center(
               child: TextButton(
                 style: TextButton.styleFrom(
-                  foregroundColor: Colors.white,
-                  backgroundColor: Colors.green,
-                  minimumSize: const Size(double.infinity, 50),
-                  side: const BorderSide(color: Colors.green),
+                  foregroundColor: Colors.black,
+                  backgroundColor: const Color(0xFFB5E0EA),
+                  minimumSize: const Size(double.infinity, 2),
+                  side: const BorderSide(color: Color(0xFFB5E0EA)),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(8.0),
                   ),
                 ),
                 onPressed: _startTest,
-                child: const Text('Start'),
+                child: const Text('Start', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),),
               ),
             ),
           ],

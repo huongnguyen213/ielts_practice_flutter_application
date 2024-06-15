@@ -275,11 +275,12 @@ class _SpeakingQuestionPageState extends State<SpeakingQuestionPage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
+              const SizedBox(height: 32),
               Text(
                 widget.testName,
                 style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: 28),
               Container(
                 width: double.infinity,
                 decoration: BoxDecoration(
@@ -313,7 +314,7 @@ class _SpeakingQuestionPageState extends State<SpeakingQuestionPage> {
                   ),
                 ),
               ),
-              const SizedBox(height: 80),
+              const SizedBox(height: 32),
               _isTestCompleted
                   ? const Column(
                 children: [
@@ -321,18 +322,17 @@ class _SpeakingQuestionPageState extends State<SpeakingQuestionPage> {
                     'Review your recording:',
                     style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                   ),
-                  SizedBox(height: 16),
+                  SizedBox(height: 28),
                   Text('Your recording will be shown here'),
                 ],
-              )
-                  : Row(
+              ) : Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Expanded(
                     flex: 1,
                     child: Container(
                       alignment: Alignment.center,
-                      height: 60,
+                      width: 60,
                       child: const Icon(
                         Icons.graphic_eq,
                         size: 70,
@@ -346,6 +346,7 @@ class _SpeakingQuestionPageState extends State<SpeakingQuestionPage> {
                       icon: Icon(
                         _isRecording ? Icons.stop_circle_outlined: Icons.mic_outlined,
                         size: 60,
+                        color: Colors.red,
                       ),
                       onPressed: _isRecording ? _stopRecording : _startRecording,
                     ),
@@ -354,7 +355,7 @@ class _SpeakingQuestionPageState extends State<SpeakingQuestionPage> {
                     flex: 1,
                     child: Container(
                       alignment: Alignment.center,
-                      height: 60,
+                      width: 60,
                       child: const Icon(
                         Icons.graphic_eq,
                         size: 70,
@@ -364,20 +365,19 @@ class _SpeakingQuestionPageState extends State<SpeakingQuestionPage> {
                   ),
                 ],
               ),
-
-              const Spacer(),
+              const SizedBox(height: 32),
               ElevatedButton(
                 onPressed: _isTestCompleted ? null : _nextQuestion,
                 style: TextButton.styleFrom(
-                  foregroundColor: Colors.white,
-                  backgroundColor: Colors.green,
+                  foregroundColor: Colors.black,
+                  backgroundColor: const Color(0xFFB5E0EA),
                   minimumSize: const Size(double.infinity, 50),
-                  side: const BorderSide(color: Colors.green),
+                  side: const BorderSide(color: Color(0xFFB5E0EA)),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(8.0),
                   ),
                 ),
-                child: Text(_isTestCompleted ? 'Submit Test' : 'Next Question'),
+                child: Text(_isTestCompleted ? 'Submit Test' : 'Next Question', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),),
               ),
             ],
           ),
