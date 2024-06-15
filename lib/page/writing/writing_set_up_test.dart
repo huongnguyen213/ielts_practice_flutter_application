@@ -1,4 +1,7 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:gap/gap.dart';
 import 'package:ielts_practice_flutter_application/page/writing/writing_test_full_part.dart';
 import 'package:ielts_practice_flutter_application/page/writing/writing_test_part1.dart';
 import 'package:ielts_practice_flutter_application/page/writing/writing_test_part2.dart';
@@ -7,7 +10,7 @@ import 'package:ielts_practice_flutter_application/page/writing/writing_test_par
 class WritingSetUpPage extends StatefulWidget {
   final Map<String, dynamic> writingData;
 
-  WritingSetUpPage({required this.writingData});
+  WritingSetUpPage({required this.writingData, required data});
 
   @override
   _WritingSetUpPageState createState() => _WritingSetUpPageState();
@@ -153,7 +156,7 @@ class _WritingSetUpPageState extends State<WritingSetUpPage> {
                     style: TextStyle(
                       fontSize: 20, // Set the font size
                       fontWeight: FontWeight.bold, // Set the font weight
-                      color: Colors.white, // Set the font color
+                      color: Colors.black, // Set the font color
                     ),
                   ),
                   style: ElevatedButton.styleFrom(
