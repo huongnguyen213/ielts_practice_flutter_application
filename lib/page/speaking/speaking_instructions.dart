@@ -36,9 +36,14 @@ class SpeakingInstructions extends StatelessWidget {
           },
         ),
         title: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Icon(Icons.timer),
-            const SizedBox(width: 8),
+            Image.asset(
+              "assets/images/img_clock.png",
+              width: 40,
+              height: 40,
+            ),
+            const SizedBox(width: 5),
             Text(selectedTime),
           ],
         ),

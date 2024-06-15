@@ -206,7 +206,6 @@ class _SpeakingListTestPageState extends State<SpeakingListTestPage> {
     if (filteredData.isEmpty) {
       return const Center(child: CircularProgressIndicator());
     }
-
     return ListView.builder(
       padding: const EdgeInsets.all(10.0),
       itemCount: filteredData.length,
@@ -215,7 +214,6 @@ class _SpeakingListTestPageState extends State<SpeakingListTestPage> {
         var item = filteredData[key];
         int score = item['score'] is int ? item['score'] : 0;
         bool isFavorite = item['isFavorite'] ?? false;
-
         return GestureDetector(
           onTap: () {
             _onSpeakingItemPressed(key);
@@ -224,34 +222,44 @@ class _SpeakingListTestPageState extends State<SpeakingListTestPage> {
             margin: const EdgeInsets.symmetric(vertical: 12.0, horizontal: 15.0),
             elevation: 4.0,
             color: Colors.white,
+            child: Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(8.5),
+                border: Border.all(
+                  color: const Color(0xFFB5E0EA),
+                  width: 1.5,
+                ),
+              ),
             child: Padding(
               padding: const EdgeInsets.all(10.0),
               child: ListTile(
-                leading: Container(
-                  padding: const EdgeInsets.all(5),
-                  width: 50,
-                  height: 50,
-                  decoration: const BoxDecoration(
-                      color: Color(0xFFB5E0EA),
-                      borderRadius: BorderRadius.all(Radius.circular(15))),
-                  child: const Icon(
-                    Icons.mic,
-                    size: 40.0,
-                  ),
+                leading: CircleAvatar(
+                  backgroundColor: Colors.white,
+
+                  child: Image.asset("icons/icons8-mic-48.png"),
                 ),
-                title: Text(item['name']),
+                title: Text(item['name'], style: const TextStyle(fontWeight: FontWeight.bold),),
                 subtitle: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    LinearProgressIndicator(
-                      value: score / 10.0,
-                      backgroundColor: Colors.grey[300],
-                      valueColor: AlwaysStoppedAnimation<Color>(
-                        _getProgressColor(score),
-                      ),
+                    TweenAnimationBuilder<double>(
+                        tween: Tween<double>(
+                          begin: 0.0,
+                          end: score / 10.0
+                        ),
+                        duration: const Duration(milliseconds: 500),
+                        builder: (context, value, child) {
+                          return LinearProgressIndicator(
+                            value: score / 10.0,
+                            backgroundColor: Colors.grey[300],
+                            valueColor: AlwaysStoppedAnimation<Color>(
+                              _getProgressColor(score),
+                            ),
+                          );
+                        },
                     ),
                     const SizedBox(height: 15),
-                    Text('Score: ${score == 0 ? 'N/A' : score}/10'),
+                    Text('Score: ${score == 0 ? '_' : score}/10', style: const TextStyle(fontWeight: FontWeight.bold),),
                   ],
                 ),
                 trailing: IconButton(
@@ -264,6 +272,7 @@ class _SpeakingListTestPageState extends State<SpeakingListTestPage> {
                   },
                 ),
               ),
+            ),
             ),
           ),
         );

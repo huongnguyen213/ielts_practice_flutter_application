@@ -67,7 +67,7 @@ class _SpeakingSetUpTestState extends State<SpeakingSetUpTest> {
                     'Set Up Test',
                     style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24.0),
                   ),
-                  SizedBox(height: 8.0),
+                  const SizedBox(height: 8.0),
                   Text(
                     testName,
                     style: TextStyle(fontSize: 18.0, color: Colors.grey[700]),

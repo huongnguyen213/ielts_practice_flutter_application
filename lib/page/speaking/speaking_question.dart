@@ -258,8 +258,12 @@ class _SpeakingQuestionPageState extends State<SpeakingQuestionPage> {
           title: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const Icon(Icons.timer),
-              const SizedBox(width: 4),
+              Image.asset(
+                "assets/images/img_clock.png",
+                width: 40,
+                height: 40,
+              ),
+              const SizedBox(width: 5),
               Text(
                 '${_remainingTime.inMinutes}:${(_remainingTime.inSeconds % 60)
                     .toString()
@@ -285,7 +289,7 @@ class _SpeakingQuestionPageState extends State<SpeakingQuestionPage> {
                 width: double.infinity,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(10),
-                  border: Border.all(color: Colors.black26),
+                  border: Border.all(color: const Color(0xFFB5E0EA)),
                 ),
                 child: Padding(
                   padding: const EdgeInsets.all(16.0),
