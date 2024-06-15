@@ -104,7 +104,11 @@ class _WritingTestFullPartPageState extends State<WritingTestFullPartPage> {
         title: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(Icons.timer),
+            Image.asset(
+              "assets/images/img_clock.png",
+              width: 40,
+              height: 40,
+            ),
             SizedBox(width: 5),
             Text(formatDuration(remainingTime)),
           ],
@@ -149,42 +153,98 @@ class _WritingTestFullPartPageState extends State<WritingTestFullPartPage> {
               ],
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.all(10.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  selectedPartData['note'],
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
-                ),
-                SizedBox(height: 10),
-                Text(selectedPart == 'Part 1' ? selectedPartData['q1'] : selectedPartData['q2']),
-                SizedBox(height: 10),
-                if (selectedPart == 'Part 1')
-                  Image.asset(selectedPartData['img']),
-              ],
-            ),
-          ),
           Expanded(
-            child: Padding(
-              padding: const EdgeInsets.all(10.0),
-              child: TextField(
-                maxLines: null,
-                expands: true,
-                decoration: InputDecoration(
-                  hintText: 'Your answer...',
-                  border: OutlineInputBorder(),
-                ),
-              ),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(10.0),
-            child: IconButton(
-              icon: Icon(Icons.camera_alt),
-              onPressed: () {
-                _captureImageFromCamera(context);
+            child: LayoutBuilder(
+              builder: (context, constraints) {
+                final halfHeight = constraints.maxHeight / 2;
+                return selectedPart == 'Part 1'
+                    ? Column(
+                  children: [
+                    Container(
+                      height: halfHeight,
+                      child: SingleChildScrollView(
+                        child: Padding(
+                          padding: const EdgeInsets.all(10.0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'Part 1: ' + selectedPartData['note'],
+                                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+                              ),
+                              SizedBox(height: 10),
+                              Text(selectedPartData['q1']),
+                              SizedBox(height: 10),
+                              Image.asset(selectedPartData['img']),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.all(10.0),
+                        child: TextField(
+                          maxLines: null,
+                          expands: true,
+                          decoration: InputDecoration(
+                            hintText: 'Your answer...',
+                            border: OutlineInputBorder(),
+                          ),
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(10.0),
+                      child: IconButton(
+                        icon: Icon(Icons.camera_alt),
+                        onPressed: () {
+                          _captureImageFromCamera(context);
+                        },
+                      ),
+                    ),
+                  ],
+                )
+                    : Column(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(10.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            selectedPartData['note'],
+                            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+                          ),
+                          SizedBox(height: 10),
+                          Text(selectedPartData['q2']),
+                        ],
+                      ),
+                    ),
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.all(10.0),
+                        child: TextField(
+                          maxLines: null,
+                          expands: true,
+                          decoration: InputDecoration(
+                            hintText: 'Your answer...',
+                            border: OutlineInputBorder(),
+                          ),
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(10.0),
+                      child: IconButton(
+                        icon: Icon(Icons.camera_alt),
+                        onPressed: () {
+                          _captureImageFromCamera(context);
+                        },
+                      ),
+                    ),
+                  ],
+                );
               },
             ),
           ),

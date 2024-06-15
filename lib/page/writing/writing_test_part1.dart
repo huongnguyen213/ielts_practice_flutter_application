@@ -101,7 +101,11 @@ class _WritingTestPart1PageState extends State<WritingTestPart1Page> {
         title: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(Icons.timer),
+            Image.asset(
+              "assets/images/img_clock.png",
+              width: 40,
+              height: 40,
+            ),
             SizedBox(width: 5),
             Text(formatDuration(remainingTime)),
           ],
@@ -120,47 +124,57 @@ class _WritingTestPart1PageState extends State<WritingTestPart1Page> {
         ],
         backgroundColor: Color(0xFFB5E0EA),
       ),
-      body: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(10.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Part 1: ' + widget.testPartData['note'],
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
-                ),
-                SizedBox(height: 10),
-                Text(widget.testPartData['q1']),
-                SizedBox(height: 10),
-                Image.asset(widget.testPartData['img']),
-              ],
-            ),
-          ),
-          Expanded(
-            child: Padding(
-              padding: const EdgeInsets.all(10.0),
-              child: TextField(
-                maxLines: null,
-                expands: true,
-                decoration: InputDecoration(
-                  hintText: 'Your answer...',
-                  border: OutlineInputBorder(),
+      body: LayoutBuilder(
+        builder: (context, constraints) {
+          final halfHeight = constraints.maxHeight / 2;
+          return Column(
+            children: [
+              Container(
+                height: halfHeight,
+                child: SingleChildScrollView(
+                  child: Padding(
+                    padding: const EdgeInsets.all(10.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Part 1: ' + widget.testPartData['note'],
+                          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+                        ),
+                        SizedBox(height: 10),
+                        Text(widget.testPartData['q1']),
+                        SizedBox(height: 10),
+                        Image.asset(widget.testPartData['img']),
+                      ],
+                    ),
+                  ),
                 ),
               ),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(10.0),
-            child: IconButton(
-              icon: Icon(Icons.camera_alt),
-              onPressed: () {
-                _captureImageFromCamera(context);
-              },
-            ),
-          ),
-        ],
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.all(10.0),
+                  child: TextField(
+                    maxLines: null,
+                    expands: true,
+                    decoration: InputDecoration(
+                      hintText: 'Your answer...',
+                      border: OutlineInputBorder(),
+                    ),
+                  ),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(10.0),
+                child: IconButton(
+                  icon: Icon(Icons.camera_alt),
+                  onPressed: () {
+                    _captureImageFromCamera(context);
+                  },
+                ),
+              ),
+            ],
+          );
+        },
       ),
     );
   }
