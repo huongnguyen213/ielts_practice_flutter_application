@@ -2,6 +2,8 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show rootBundle;
+import 'package:shared_preferences/shared_preferences.dart';
+
 import 'writing_set_up_test.dart'; // Ensure this import points to the correct path
 
 class WritingListTestPage extends StatefulWidget {
@@ -20,6 +22,10 @@ class _WritingListTestPageState extends State<WritingListTestPage> {
   late Timer _timer;
 
   late Map<String, dynamic> parsedData = {};
+  List<MapEntry<String, dynamic>> filteredList = [];
+  TextEditingController searchController = TextEditingController();
+  String dropdownValue = "All";
+  static SharedPreferences? _prefs;
 
   @override
   void initState() {
@@ -38,7 +44,21 @@ class _WritingListTestPageState extends State<WritingListTestPage> {
       );
     });
 
-    loadJsonData(); // Gọi hàm để tải dữ liệu từ file JSON
+    _loadData();
+    loadJsonData();
+    searchController.addListener(_filterTests);
+  }
+
+  Future<void> _loadData() async {
+    _prefs = await SharedPreferences.getInstance();
+  }
+
+  @override
+  void dispose() {
+    _pageController.dispose();
+    _timer.cancel();
+    searchController.dispose();
+    super.dispose();
   }
 
   Future<void> loadJsonData() async {
@@ -46,41 +66,68 @@ class _WritingListTestPageState extends State<WritingListTestPage> {
       String jsonString = await rootBundle.loadString('lib/assets/data/writing.json');
       setState(() {
         parsedData = jsonDecode(jsonString)['writing'];
+        parsedData = parsedData.map((key, value) {
+          bool isFavorite = _prefs?.getBool(key) ?? false;
+          value['isFavorite'] = isFavorite;
+          return MapEntry(key, value);
+        });
+        filteredList = List.from(parsedData.entries);
       });
     } catch (error) {
       print('Error loading JSON data: $error');
     }
   }
 
-  @override
-  void dispose() {
-    _pageController.dispose();
-    _timer.cancel();
-    super.dispose();
+  void _filterTests() {
+    String query = searchController.text.toLowerCase();
+    setState(() {
+      filteredList = parsedData.entries.where((entry) {
+        bool matchesQuery = entry.value['name'].toLowerCase().contains(query);
+        bool matchesDropdown = dropdownValue == "All" || (dropdownValue == "Like" && entry.value['isFavorite']);
+        return matchesQuery && matchesDropdown;
+      }).toList();
+    });
   }
 
-  // Hàm xử lý sự kiện khi một bài viết được nhấn vào
+  void _onDropdownChanged(String value) {
+    setState(() {
+      dropdownValue = value;
+      _filterTests();
+    });
+  }
+
+  void _toggleFavorite(String testName) async {
+    bool currentFavorite = _prefs?.getBool(testName) ?? false;
+    bool newFavorite = !currentFavorite;
+    await _prefs?.setBool(testName, newFavorite);
+
+    setState(() {
+      parsedData[testName]['isFavorite'] = newFavorite;
+      _filterTests();
+    });
+  }
+
   void _onWritingItemPressed(String writingKey) {
-    // Kiểm tra xem có dữ liệu của bài viết được nhấn không
     if (parsedData.containsKey(writingKey)) {
-      // Điều hướng sang trang bài viết chi tiết và truyền dữ liệu của bài viết cụ thể
       Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => WritingSetUpPage(writingData: parsedData[writingKey]),
+          builder: (context) => WritingSetUpPage(
+            writingData: parsedData[writingKey],
+            data: null,
+          ),
         ),
       );
     }
   }
 
-  // Hàm để xác định màu sắc của LinearProgressIndicator dựa trên giá trị của score
   Color _getProgressColor(int score) {
     if (score <= 4) {
-      return Colors.red; // Màu đỏ
+      return Colors.red;
     } else if (score > 4 && score <= 6) {
-      return Colors.yellow; // Màu vàng
+      return Colors.yellow;
     } else {
-      return Colors.green; // Màu xanh
+      return Colors.green;
     }
   }
 
@@ -92,11 +139,126 @@ class _WritingListTestPageState extends State<WritingListTestPage> {
         elevation: 0,
         backgroundColor: Color(0xFFB5E0EA),
       ),
-      body: Column(
-        children: [
-          buildCarouselSlider(),
-          Expanded(child: buildListView('Writing Practice')),
-        ],
+      body: SafeArea(
+        child: Column(
+          children: [
+            buildCarouselSlider(),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 16),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: Container(
+                      height: 31,
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(31),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.25),
+                            spreadRadius: 1,
+                            blurRadius: 5,
+                            offset: const Offset(0, 5),
+                          ),
+                        ],
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          const SizedBox(width: 14),
+                          Expanded(
+                            child: TextField(
+                              controller: searchController,
+                              maxLines: 1,
+                              textAlign: TextAlign.center,
+                              style: const TextStyle(
+                                fontSize: 13,
+                                fontWeight: FontWeight.w400,
+                                color: Colors.black,
+                              ),
+                              decoration: const InputDecoration(
+                                isDense: true,
+                                contentPadding: EdgeInsets.zero,
+                                hintText: "Enter writing name",
+                                hintStyle: TextStyle(
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w200,
+                                  color: Colors.black,
+                                ),
+                                border: InputBorder.none,
+                              ),
+                            ),
+                          ),
+                          Image.asset(
+                            "assets/images/img_search.png",
+                            width: 25,
+                            height: 25,
+                          ),
+                          const SizedBox(width: 14),
+                        ],
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 18),
+                  Container(
+                    width: 130,
+                    height: 31,
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(31),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.25),
+                          spreadRadius: 1,
+                          blurRadius: 5,
+                          offset: const Offset(0, 5),
+                        ),
+                      ],
+                    ),
+                    child: Center(
+                      child: DropdownButton<String>(
+                        value: dropdownValue,
+                        icon: Image.asset(
+                          "assets/images/img_expand_arrow.png",
+                          width: 40,
+                          height: 40,
+                        ),
+                        iconSize: 24,
+                        elevation: 16,
+                        style: const TextStyle(color: Colors.black),
+                        underline: Container(
+                          height: 2,
+                          color: Colors.transparent,
+                        ),
+                        onChanged: (String? newValue) {
+                          if (newValue != null) {
+                            _onDropdownChanged(newValue);
+                          }
+                        },
+                        items: <String>['All', 'Like']
+                            .map<DropdownMenuItem<String>>((String value) {
+                          return DropdownMenuItem<String>(
+                            value: value,
+                            child: Container(
+                              alignment: Alignment.center,
+                              child: Text(
+                                value,
+                                textAlign: TextAlign.center,
+                              ),
+                            ),
+                          );
+                        }).toList(),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Expanded(
+              child: buildListView(),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -141,51 +303,63 @@ class _WritingListTestPageState extends State<WritingListTestPage> {
     );
   }
 
-  Widget buildListView(String part) {
+  Widget buildListView() {
     if (parsedData.isEmpty) {
       return Center(child: CircularProgressIndicator());
     }
 
     return ListView.builder(
       padding: const EdgeInsets.all(10.0),
-      itemCount: parsedData.length,
+      itemCount: filteredList.length,
       itemBuilder: (context, index) {
-        String key = parsedData.keys.elementAt(index);
-        var item = parsedData[key];
+        String key = filteredList[index].key;
+        var item = filteredList[index].value;
         int score = item['score'] is int ? item['score'] : 0;
+        bool isFavorite = item['isFavorite'] ?? false;
+
         return GestureDetector(
           onTap: () {
-            // Gọi hàm xử lý sự kiện khi một bài viết được nhấn vào
             _onWritingItemPressed(key);
           },
           child: Card(
             margin: const EdgeInsets.symmetric(vertical: 12.0, horizontal: 15.0),
             elevation: 4.0,
-            color: Color(0xFFFFFFFF), // Set card color to light blue
+            color: Color(0xFFFFFFFF),
             child: Padding(
-              padding: const EdgeInsets.all(10.0),
+              padding: const EdgeInsets.all(5.0),
               child: ListTile(
                 leading: CircleAvatar(
-                  child: Text((index + 1).toString()),
+                  child: Icon(Icons.edit),
                 ),
                 title: Text(item['name']),
                 subtitle: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    LinearProgressIndicator(
-                      value: score / 10.0,
-                      backgroundColor: Colors.grey[300],
-                      valueColor: AlwaysStoppedAnimation<Color>(
-                        _getProgressColor(score),
-                      ),
+                    TweenAnimationBuilder<double>(
+                      tween: Tween<double>(begin: 0.0, end: score / 10.0),
+                      duration: Duration(milliseconds: 500),
+                      builder: (context, value, child) {
+                        return LinearProgressIndicator(
+                          value: value,
+                          backgroundColor: Colors.grey[300],
+                          valueColor: AlwaysStoppedAnimation<Color>(
+                            _getProgressColor(score),
+                          ),
+                        );
+                      },
                     ),
                     SizedBox(height: 15),
-                    Text('Score: ${score == 0 ? 'N/A' : score}/10'),
+                    Text('Score: ${score == 0 ? '_' : score}/10'),
                   ],
                 ),
-                trailing: Icon(
-                  item['like'] ? Icons.star : null,
-                  color: item['like'] ? Colors.amber : null,
+                trailing: IconButton(
+                  icon: Icon(
+                    isFavorite ? Icons.star : Icons.star_border,
+                    color: isFavorite ? Colors.yellow : Colors.grey,
+                  ),
+                  onPressed: () {
+                    _toggleFavorite(key);
+                  },
                 ),
               ),
             ),

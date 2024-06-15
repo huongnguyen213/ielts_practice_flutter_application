@@ -37,7 +37,7 @@ class _TakePictureScreenState extends State<TakePictureScreen> {
       _cameraController = CameraController(
         _cameras![0],
         ResolutionPreset.high,
-        enableAudio: false,
+        enableAudio: true,
         imageFormatGroup: ImageFormatGroup.jpeg,
       );
 
@@ -105,7 +105,12 @@ class _TakePictureScreenState extends State<TakePictureScreen> {
 
         setState(() {
           _capturedImagePath = imagePath;
+          _isCameraInitialized = false;
         });
+
+        // Dispose of the camera controller
+        await _cameraController?.dispose();
+        _cameraController = null;
 
         await _updateJsonWithImagePath(imagePath);
       } catch (e) {
@@ -144,7 +149,11 @@ class _TakePictureScreenState extends State<TakePictureScreen> {
         title: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(Icons.timer),
+            Image.asset(
+              "assets/images/img_clock.png",
+              width: 40,
+              height: 40,
+            ),
             SizedBox(width: 5),
             Text(formatDuration(remainingTime)),
           ],
@@ -165,7 +174,7 @@ class _TakePictureScreenState extends State<TakePictureScreen> {
       ),
       body: Stack(
         children: [
-          if (_isCameraInitialized || _capturedImagePath != null)
+          if (_isCameraInitialized && _capturedImagePath == null)
             Center(
               child: Container(
                 width: screenWidth,
@@ -178,16 +187,20 @@ class _TakePictureScreenState extends State<TakePictureScreen> {
                       child: Container(
                         width: screenWidth,
                         height: screenHeight,
-                        child: _capturedImagePath == null
-                            ? CameraPreview(_cameraController!)
-                            : Image.file(
-                          File(_capturedImagePath!),
-                          fit: BoxFit.cover,
-                        ),
+                        child: CameraPreview(_cameraController!),
                       ),
                     ),
                   ),
                 ),
+              ),
+            )
+          else if (_capturedImagePath != null)
+            Center(
+              child: Image.file(
+                File(_capturedImagePath!),
+                width: screenWidth,
+                height: screenHeight,
+                fit: BoxFit.cover,
               ),
             )
           else
