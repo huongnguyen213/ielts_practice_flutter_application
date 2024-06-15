@@ -162,6 +162,12 @@ class _PartContentState extends State<PartContent> {
     _scrollController.dispose(); // Dispose ScrollController
     super.dispose();
   }
+  void saveAnswer(String questionKey, dynamic answer) {
+    setState(() {
+      widget.partAnswers[questionKey] = answer; // Lưu câu trả lời vào biến partAnswers
+    });
+  }
+
 
   Future<void> _loadPartData() async {
     try {

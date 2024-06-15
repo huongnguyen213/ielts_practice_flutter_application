@@ -24,8 +24,7 @@ class _Part1PageState extends State<Part1Page> {
   Duration audioPosition = Duration.zero;
   double volume = 1.0;
   ScrollController _scrollController = ScrollController();
-
-
+  GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   void initState() {
@@ -66,11 +65,15 @@ class _Part1PageState extends State<Part1Page> {
       final data = json.decode(response);
       final test1Part1Questions =
       data['listening']['Test 1']['part']['Part 1']['question'];
-      final audioUrl = data['listening']['Test 1']['part']['Part 1']['audio'];
-      final answers = test1Part1Questions.values.map((question) => question['A'] as String).toList();
+      final audioUrl =
+      data['listening']['Test 1']['part']['Part 1']['audio'];
+      final answers = test1Part1Questions.values
+          .map((question) => question['A'] as String)
+          .toList();
       setState(() {
         questions = Map<String, dynamic>.from(test1Part1Questions);
-        questionAnswered = List.generate(questions.length, (index) => false);
+        questionAnswered =
+            List.generate(questions.length, (index) => false);
         isLoading = false;
       });
       playAudio(audioUrl);
@@ -81,7 +84,7 @@ class _Part1PageState extends State<Part1Page> {
 
   void playAudio(String url) async {
     try {
-      int result =  audioPlayer.play(UrlSource(url)) as int;
+      int result = audioPlayer.play(UrlSource(url)) as int;
       if (result == 1) {
         setState(() {
           isPlaying = true;
@@ -94,7 +97,7 @@ class _Part1PageState extends State<Part1Page> {
 
   void pauseAudio() async {
     try {
-      int result =  audioPlayer.pause() as int;
+      int result = audioPlayer.pause() as int;
       if (result == 1) {
         setState(() {
           isPlaying = false;
@@ -154,6 +157,7 @@ class _Part1PageState extends State<Part1Page> {
     audioPlayer.dispose();
     super.dispose();
   }
+
   void toggleAudio() {
     setState(() {
       isPlaying = !isPlaying;
@@ -164,43 +168,35 @@ class _Part1PageState extends State<Part1Page> {
       }
     });
   }
+
   void _scrollToQuestion(int index) {
-    // Cuộn đến vị trí của câu hỏi
     _scrollController.animateTo(
       index * 100.0, // Ví dụ: 100.0 là chiều cao của mỗi item (câu hỏi và textfield)
       duration: Duration(milliseconds: 500), // Thời gian cuộn
       curve: Curves.easeInOut, // Kiểu animation
     );
   }
+
   void _showSubmitDialog() {
     showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
           title: Text('Submit Answers'),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: List.generate(questions.length, (index) {
-              final questionKey = 'q${index + 1}';
-              final question = questions[questionKey]!['Q']!;
-              final answer = userAnswers[index].isEmpty ? 'Not Done' : userAnswers[index];
-              return Text('$question: $answer');
-            }),
-          ),
+          content: Text('Are you sure you want to submit your answers?'),
           actions: <Widget>[
             TextButton(
               onPressed: () {
                 Navigator.of(context).pop();
-                // Đặt logic xử lý khi người dùng ấn Submit ở đây
+                _showSidebar();
               },
-              child: Text('Submit'),
+              child: Text('Yes'),
             ),
             TextButton(
               onPressed: () {
                 Navigator.of(context).pop();
               },
-              child: Text('Cancel'),
+              child: Text('No'),
             ),
           ],
         );
@@ -208,17 +204,9 @@ class _Part1PageState extends State<Part1Page> {
     );
   }
 
-
-
-
-
-
-
-
-
-
-
-
+  void _showSidebar() {
+    _scaffoldKey.currentState?.openEndDrawer();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -226,85 +214,117 @@ class _Part1PageState extends State<Part1Page> {
         '${remainingMinutes.toString().padLeft(2, '0')}:${remainingSeconds.toString().padLeft(2, '0')}';
 
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Color(0xffE2F1F4),
-        title: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Row(
+        key: _scaffoldKey,
+        appBar: AppBar(
+          backgroundColor: Color(0xffE2F1F4),
+          title: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Row(
+                children: [
+                  ImageIcon(
+                    AssetImage('icons/oclock.png'),
+                    size: 48,
+                  ),
+                  SizedBox(width: 5),
+                  Text(
+                    remainingTime,
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ],
+              ),
+              IconButton(
+                icon: const Icon(Icons.more_vert),
+                onPressed: _showSidebar,
+              ),
+            ],
+          ),
+        ),
+        endDrawer: Drawer(
+
+          child: Container(
+            width: MediaQuery.of(context).size.width * 0.3,
+            color: Colors.white,
+            child: Column(
               children: [
-                ImageIcon(
-                  AssetImage('icons/oclock.png'),
-                  size: 48,
+                Expanded(
+                  child: ListView.builder(
+                    itemCount: questions.length,
+                    itemBuilder: (context, index) {
+                      String questionKey = questions.keys.elementAt(index);
+                      String questionText = questions[questionKey]['Q'];
+                      String answer = userAnswers[index].isEmpty
+                          ? '_ Not Done'
+                          : userAnswers[index];
+                      return ListTile(
+                        title: Text(
+                          '${index + 1}: $questionText',
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                        subtitle: Text(answer),
+                      );
+                    },
+                  ),
                 ),
-                SizedBox(width: 5),
-                Text(
-                  remainingTime,
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: ElevatedButton(
+                    onPressed: () {
+                      // Đóng sidebar
+                      _showSubmitDialog(); // Hiển thị popup xác nhận submit
+                    },
+                    child: Text('Submit'),
                   ),
                 ),
               ],
             ),
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                  backgroundColor: Color(0xff3898D7)),
-              onPressed: () {
-                _showSubmitDialog();
-              },
-              child: Text('Submit'),
-            ),
-          ],
+          ),
         ),
-      ),
-      backgroundColor: Colors.white,
-      body: Column(
-        children: [
-          SizedBox(height: 10),
-          Container(
-
-            height: MediaQuery.of(context).size.height * 0.10,
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(15.0),
-              border:  Border(
-                bottom: BorderSide(width: 1.0, color: Colors.black),
-              ),
+        backgroundColor: Colors.white,
+        body: Column(
+            children: [
+            SizedBox(height: 10),
+        Container(
+          height: MediaQuery.of(context).size.height * 0.10,
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(15.0),
+            border: Border(
+              bottom: BorderSide(width: 1.0, color: Colors.black),
             ),
-            padding: EdgeInsets.all(5.0),
-            margin: EdgeInsets.all(0.0),
-            child: Row(
+          ),
+          padding: EdgeInsets.all(5.0),
+          margin: EdgeInsets.all(0.0),
+          child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                IconButton(
-                  icon: Icon(Icons.replay_5),
-                  color: Color(0xff1BAABF),
-                  iconSize: 30.0,
-                  onPressed: () {
-
-                  },
-                ),
-                Container(
-                  decoration: BoxDecoration(
-                    color: Color(0xff1BAABF),
-                    shape: BoxShape.rectangle,
-                    borderRadius: BorderRadius.all(Radius.circular(15)),
-                  ),
-                  child: IconButton(
-                    icon: Icon(isPlaying ? Icons.pause : Icons.play_arrow),
-                    iconSize: 30.0,
-                    color: Colors.white,
-                    onPressed: toggleAudio,
-                  ),
-                ),
+          IconButton(
+          icon: Icon(Icons.replay_5),
+          color: Color(0xff1BAABF),
+          iconSize: 30.0,
+          onPressed: () {},
+        ),
+        Container(
+        decoration: BoxDecoration(
+        color: Color(0xff1BAABF),
+    shape: BoxShape.rectangle,
+    borderRadius: BorderRadius.all(Radius.circular(15)),
+    ),
+    child: IconButton(
+      icon: Icon(isPlaying ? Icons.pause : Icons.play_arrow),
+      iconSize: 30.0,
+      color: Colors.white,
+      onPressed: toggleAudio,
+    ),
+        ),
                 IconButton(
                   color: Color(0xff1BAABF),
                   icon: Icon(Icons.forward_5),
                   iconSize: 30.0,
-                  onPressed: () {
-
-                  },
+                  onPressed: () {},
                 ),
                 Expanded(
                   child: Slider(
@@ -312,10 +332,12 @@ class _Part1PageState extends State<Part1Page> {
                     max: audioDuration.inSeconds.toDouble(),
                     value: sliderValue,
                     onChanged: (value) {
-
+                      setState(() {
+                        sliderValue = value;
+                      });
                     },
                     onChangeEnd: (value) {
-
+                      seekAudio(Duration(seconds: value.toInt()));
                     },
                     activeColor: Colors.blue,
                     inactiveColor: Colors.grey,
@@ -358,148 +380,158 @@ class _Part1PageState extends State<Part1Page> {
                   },
                 ),
               ],
-            ),
           ),
-          Container(
-
-            margin: EdgeInsets.all(15.0),
-            child: Column(
-              children: [
-
-                SizedBox(height: 30),
-                Text("Part 1",style: TextStyle(
-                  fontSize: 30,
-                  color: Colors.black,
-                  fontWeight: FontWeight.w500,
-
+        ),
+              Container(
+                margin: EdgeInsets.all(15.0),
+                child: Column(
+                  children: [
+                    SizedBox(height: 30),
+                    Text(
+                      "Part 1",
+                      style: TextStyle(
+                        fontSize: 30,
+                        color: Colors.black,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ],
                 ),
-
+                width: 1000,
+                decoration: BoxDecoration(
+                  border: Border(
+                    bottom: BorderSide(width: 1.0, color: Colors.black),
+                  ),
+                  color: Colors.white,
                 ),
-
-              ],
-            ),
-            width: 1000,
-            decoration: BoxDecoration(
-              border:  Border(
-                bottom: BorderSide(width: 1.0, color: Colors.black),
               ),
-              color: Colors.white,
-            ),
-          ),
-          Container(
-            margin: EdgeInsets.all(20),
-            decoration: BoxDecoration(
-
-            ),
-            child: Text("Write NO MORE THAN THREE WORDS OR A NUMBER for each answer.",style: TextStyle(
-                fontWeight: FontWeight.w500
-            ),),
-          ),
-          SizedBox(height: 20),
-          Expanded(
-            child: isLoading
-                ? Center(child: CircularProgressIndicator())
-                : ListView.builder(
-              controller: _scrollController,
-              itemCount: questions.length,
-              itemBuilder: (context, index) {
-                String questionKey = questions.keys.elementAt(index);
-                String questionText = questions[questionKey]['Q'];
-                return  Container(
-                  padding: EdgeInsets.all(30.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-
-                      SizedBox(height: 8), // Khoảng cách giữa câu hỏi và TextField
-                      Row(
+              Container(
+                margin: EdgeInsets.all(20),
+                decoration: BoxDecoration(),
+                child: Text(
+                  "Write NO MORE THAN THREE WORDS OR A NUMBER for each answer.",
+                  style: TextStyle(fontWeight: FontWeight.w500),
+                ),
+              ),
+              SizedBox(height: 20),
+              Expanded(
+                child: isLoading
+                    ? Center(child: CircularProgressIndicator())
+                    : ListView.builder(
+                  controller: _scrollController,
+                  itemCount: questions.length,
+                  itemBuilder: (context, index) {
+                    String questionKey = questions.keys.elementAt(index);
+                    String questionText = questions[questionKey]['Q'];
+                    return Container(
+                      padding: EdgeInsets.all(30.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(
-                            '${index + 1}: $questionText',
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          SizedBox(width: 30),
-                          Expanded(
-                            child: TextField(
-                              decoration: InputDecoration(
-                                hintText: 'Enter your answer here',
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(10.0), // Đặt bán kính của border radius ở đây
-                                ),
-                                focusedBorder: OutlineInputBorder( // Đường viền khi TextField được focus
-                                  borderRadius: BorderRadius.circular(10.0),
-                                  borderSide: BorderSide(
-                                    color: Colors.blue, // Màu sắc của đường viền khi TextField được focus
-                                    width: 2.0, // Độ dày của đường viền khi TextField được focus
-                                  ),
-                                ),
-                                enabledBorder: OutlineInputBorder( // Đường viền khi TextField không được focus
-                                  borderRadius: BorderRadius.circular(10.0),
-                                  borderSide: BorderSide(
-                                    color: Colors.grey, // Màu sắc của đường viền khi TextField không được focus
-                                    width: 1.0, // Độ dày của đường viền khi TextField không được focus
-                                  ),
+                          SizedBox(height: 8),
+                          Row(
+                            children: [
+                              Text(
+                                '${index + 1}: $questionText',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
                                 ),
                               ),
-                              onChanged: (text) {
-                                setState(() {
-                                  questionAnswered[index] = text.isNotEmpty;
-                                });
-                              },
-                            ),
+                              SizedBox(width: 30),
+                              Expanded(
+                                child: TextField(
+                                  decoration: InputDecoration(
+                                    hintText: 'Enter your answer here',
+                                    border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(
+                                          10.0), // Đặt bán kính của border radius ở đây
+                                    ),
+                                    focusedBorder: OutlineInputBorder(
+                                      // Đường viền khi TextField được focus
+                                      borderRadius: BorderRadius.circular(
+                                          10.0),
+                                      borderSide: BorderSide(
+                                        color: Colors.blue,
+                                        // Màu sắc của đường viền khi TextField được focus
+                                        width: 2.0,
+                                        // Độ dày của đường viền khi TextField được focus
+                                      ),
+                                    ),
+                                    enabledBorder: OutlineInputBorder(
+                                      // Đường viền khi TextField không được focus
+                                      borderRadius: BorderRadius.circular(
+                                          10.0),
+                                      borderSide: BorderSide(
+                                        color: Colors.grey,
+                                        // Màu sắc của đường viền khi TextField không được focus
+                                        width: 1.0,
+                                        // Độ dày của đường viền khi TextField không được focus
+                                      ),
+                                    ),
+                                  ),
+                                  onChanged: (text) {
+                                    setState(() {
+                                      questionAnswered[index] =
+                                          text.isNotEmpty;
+                                      userAnswers[index] = text;
+                                    });
+                                  },
+                                ),
+                              ),
+                            ],
                           ),
                         ],
                       ),
-                    ],
-                  ),
-                );;
-              },
-            ),
-          ),
-          SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            child: Container(
-              padding: EdgeInsets.all(5.0),
-              decoration: BoxDecoration(
-                border: Border.all(
-                  color: Colors.black,
-                  width: 1.0,
-                  style: BorderStyle.solid,
+                    );
+                  },
                 ),
               ),
-              child: Row(
-                children: List.generate(questions.length, (index) {
-                  return Container(
-                    margin: EdgeInsets.symmetric(horizontal: 4.0),
-                    child: ElevatedButton(
-                      onPressed: () {
-                        _scrollToQuestion(index);
-                        // Xử lý di chuyển đến câu hỏi tương ứng
-                      },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: questionAnswered[index] ? Colors.green : Color(0xffD3D3D3),
-                        padding: EdgeInsets.all(4.0),
-                        shape: CircleBorder(),
-                      ),
-                      child: Text(
-                        '${index + 1}',
-                        style: const TextStyle(
-                          fontWeight: FontWeight.w500,
-                          fontSize: 25,
-                          color: Colors.black,
-                        ),
-                      ),
+              SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Container(
+                  padding: EdgeInsets.all(5.0),
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      color: Colors.black,
+                      width: 1.0,
+                      style: BorderStyle.solid,
                     ),
-                  );
-                }
+                  ),
+                  child: Row(
+                    children: List.generate(
+                      questions.length,
+                          (index) {
+                        return Container(
+                          margin: EdgeInsets.symmetric(horizontal: 4.0),
+                          child: ElevatedButton(
+                            onPressed: () {
+                              _scrollToQuestion(index);
+                            },
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: questionAnswered[index]
+                                  ? Colors.green
+                                  : Color(0xffD3D3D3),
+                              padding: EdgeInsets.all(4.0),
+                              shape: CircleBorder(),
+                            ),
+                            child: Text(
+                              '${index + 1}',
+                              style: const TextStyle(
+                                fontWeight: FontWeight.w500,
+                                fontSize: 25,
+                                color: Colors.black,
+                              ),
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                  ),
                 ),
               ),
-            ),
-          ),
-        ],
-      ),
+            ],
+        ),
     );
   }
 }
+

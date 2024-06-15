@@ -64,6 +64,7 @@ class _ListeningListTestPageState extends State<ListeningListTestPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Listening Tests'),
+
       ),
       body: tests == null
           ? Center(child: CircularProgressIndicator())
@@ -185,7 +186,7 @@ class _ListeningTestSetupPageState extends State<ListeningTestSetupPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Listening Test'),
-        backgroundColor: Colors.green,
+        backgroundColor: Color(0xffE2F1F4),
       ),
       body: Container(
         margin: EdgeInsets.all(30),
