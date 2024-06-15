@@ -223,7 +223,7 @@ class _SpeakingListTestPageState extends State<SpeakingListTestPage> {
           child: Card(
             margin: const EdgeInsets.symmetric(vertical: 12.0, horizontal: 15.0),
             elevation: 4.0,
-            color: Color(0xFFFFFFFF),
+            color: Colors.white,
             child: Padding(
               padding: const EdgeInsets.all(10.0),
               child: ListTile(
@@ -232,7 +232,7 @@ class _SpeakingListTestPageState extends State<SpeakingListTestPage> {
                   width: 50,
                   height: 50,
                   decoration: const BoxDecoration(
-                      color: Color(0xffD1F1DC),
+                      color: Colors.white,
                       borderRadius: BorderRadius.all(Radius.circular(15))),
                   child: const Icon(
                     Icons.mic,
