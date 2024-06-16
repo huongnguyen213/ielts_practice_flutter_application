@@ -7,6 +7,7 @@ import 'package:ielts_practice_flutter_application/page/reading/reading_list_tes
 import 'package:ielts_practice_flutter_application/page/writing/writing_list_test.dart';
 import 'package:ielts_practice_flutter_application/page/speaking/speaking_list_test.dart';
 
+import '../full_skill/list_test.dart';
 import '../reading/pages/reading_page.dart';
 
 
@@ -287,7 +288,7 @@ class _IELTSHomeState extends State<HomePage> with SingleTickerProviderStateMixi
           ],
         ),
       ),
-    ),
     );
   }
+
 }
