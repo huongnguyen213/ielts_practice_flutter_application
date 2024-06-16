@@ -5,6 +5,9 @@ import 'package:gap/gap.dart';
 
 import '../cubit/test_cubit.dart';
 import '../pages/test_result_page.dart';
+// Widget DrawableAnswers là một StatelessWidget hiển thị câu trả lời dựa trên trạng thái của TestCubit.
+// Nếu chỉ có một phần được chọn, nó sẽ hiển thị các câu trả lời trong một cột.
+// Nếu có nhiều phần được chọn, nó sẽ hiển thị các câu trả lời trong nhiều cột.
 
 class DrawableAnswers extends StatelessWidget {
   const DrawableAnswers({super.key});
@@ -12,10 +15,17 @@ class DrawableAnswers extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<TestCubit, TestState>(
+      // Sử dụng BlocBuilder để xây dựng widget dựa trên trạng thái của TestCubit
+
       builder: (context, state) {
         if (state.choosePart.length == 1) {
+          // Kiểm tra nếu chỉ có một phần được chọn
+
           int index=0;
           List<Widget>answers = state.parts[state.choosePart[0]-1].yourAnswer.map((e) {
+            // Tạo danh sách các widget Text để hiển thị câu trả lời
+
+
             ++index;
            if(e==""){
              return Text(
@@ -38,10 +48,13 @@ class DrawableAnswers extends StatelessWidget {
            }
           }).toList();
           return Drawer(
+            // Tạo một Drawer để hiển thị các câu trả lời
+
+
             child: SafeArea(
               child: Column(
                 children: [
-                  const Gap(60),
+                  const Gap(60), // Tạo khoảng cách 60px
                   const Text(
                     "Answers",
                     style: TextStyle(
@@ -51,7 +64,7 @@ class DrawableAnswers extends StatelessWidget {
                     ),
                   ),
                   const Gap(24),
-                  Column(children: answers),
+                  Column(children: answers), // Hiển thị danh sách các câu trả lời
                   const Gap(60),
                   CupertinoButton(
                     onPressed: () {
@@ -60,6 +73,8 @@ class DrawableAnswers extends StatelessWidget {
                         builder: (context) {
                           return GestureDetector(
                             onTap: Navigator.of(context).pop,
+                            // Đóng dialog khi chạm ra ngoài
+
                             child: Container(
                               color: Colors.black.withOpacity(0.1),
                               child: Center(
@@ -109,6 +124,7 @@ class DrawableAnswers extends StatelessWidget {
                                                   MaterialPageRoute(
                                                     builder: (context) =>
                                                     const TestResultPage(),
+                                                    // Điều hướng đến trang TestResultPage khi nhấn nút "Yes"
                                                   ),
                                                 );
                                               },
@@ -160,6 +176,8 @@ class DrawableAnswers extends StatelessWidget {
             ),
           );
         } else {
+          // Trường hợp có nhiều phần được chọn
+
           int index=0;
           List<Widget>answers1 = state.parts[state.choosePart[0]-1].yourAnswer.map((e) {
             ++index;
@@ -232,7 +250,7 @@ class DrawableAnswers extends StatelessWidget {
             }
           }).toList();
 
-          return Drawer(
+          return Drawer(  //Tạo Drawer với nhiều cột hiển thị các phần câu trả lời khác nhau
             child: SafeArea(
               child: Column(
                 children: [
@@ -301,7 +319,7 @@ class DrawableAnswers extends StatelessWidget {
                                           children: [
                                             CupertinoButton(
                                               onPressed: () {
-                                                Navigator.of(context).pop();
+                                                Navigator.of(context).pop(); // Đóng dialog khi chạm ra ngoài
                                               },
                                               minSize: 0,
                                               color: const Color(0xff8ed1e0),
@@ -321,7 +339,7 @@ class DrawableAnswers extends StatelessWidget {
                                                     .pushReplacement(
                                                   MaterialPageRoute(
                                                     builder: (context) =>
-                                                    const TestResultPage(),
+                                                    const TestResultPage(), // Điều hướng đến trang TestResultPage khi nhấn nút "Yes"
                                                   ),
                                                 );
                                               },
@@ -377,3 +395,4 @@ class DrawableAnswers extends StatelessWidget {
     );
   }
 }
+

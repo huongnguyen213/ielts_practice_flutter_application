@@ -165,6 +165,8 @@ class _SpeakingSetUpTestState extends State<SpeakingSetUpTest> {
                 ),
               ),
             ),
+            const SizedBox(width: 16.0),
+
             Center(
               child: TextButton(
                 style: TextButton.styleFrom(
