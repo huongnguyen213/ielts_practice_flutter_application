@@ -42,18 +42,10 @@ class _ProgressPageState extends State<ProgressPage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Row(
-              children: [
-                CircleAvatar(
-                  radius: 50,
-                  child: Image.asset("icons/userx64.png"),
-                ),
-                const SizedBox(width: 32),
-                const Text(
-                  'Minh Quan',
-                  style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-                ),
-              ],
+            Image.asset(
+              "assets/images/img_cat.png",
+              width: 80,
+              height: 80,
             ),
             const SizedBox(height: 32),
             const Text(

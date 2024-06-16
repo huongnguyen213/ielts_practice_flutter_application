@@ -41,14 +41,10 @@ class _ProfilePageState extends State<ProfilePage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              CircleAvatar(
-                radius: 50,
-                child: Image.asset("assets/images/img_cat.png"),
-              ),
-              const SizedBox(height: 16),
-              const Text(
-                'Minh Quan',
-                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+              Image.asset(
+                "assets/images/img_cat.png",
+                width: 80,
+                height: 80,
               ),
               const SizedBox(height: 16),
               ExpansionPanelList(
