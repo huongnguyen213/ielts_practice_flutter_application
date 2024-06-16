@@ -8,6 +8,7 @@ import 'package:pie_chart/pie_chart.dart';
 import '../cubit/test_cubit.dart';
 import '../widgets/linear_point.dart';
 
+// Trang hiển thị kết quả bài kiểm tra
 class TestResultPage extends StatelessWidget {
   const TestResultPage({super.key});
 
@@ -19,6 +20,7 @@ class TestResultPage extends StatelessWidget {
           padding: const EdgeInsets.all(18.0),
           child: Column(
             children: [
+              // Hàng đầu tiên chứa các hình ảnh
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -34,20 +36,25 @@ class TestResultPage extends StatelessWidget {
                   ),
                 ],
               ),
+              // Hình ảnh con mèo
               Image.asset(
                 "assets/images/img_cat.png",
                 width: 83,
                 height: 46,
               ),
+
+              // BlocBuilder để lắng nghe và xây dựng giao diện dựa trên trạng thái của TestCubit
               BlocBuilder<TestCubit, TestState>(
                 builder: (context, state) {
-                  int correct = 0;
-                  int wrong = 0;
-                  int notYetDone = 0;
+                  int correct = 0; // Biến đếm số câu trả lời đúng
+                  int wrong = 0; // Biến đếm số câu trả lời sai
+                  int notYetDone = 0; // Biến đếm số câu chưa trả lời
+
+                  // Tính toán số câu đúng, sai, và chưa trả lời
                   for (var e in state.choosePart) {
                     for (int x = 0;
-                    x < state.parts[e - 1].yourAnswer.length;
-                    x++) {
+                        x < state.parts[e - 1].yourAnswer.length;
+                        x++) {
                       if (state.parts[e - 1].yourAnswer[x] == "") {
                         notYetDone++;
                       } else if (state.parts[e - 1].yourAnswer[x] ==
@@ -59,6 +66,7 @@ class TestResultPage extends StatelessWidget {
                     }
                   }
 
+                  // Tạo dữ liệu cho biểu đồ tròn
                   Map<String, double> dataMap = {
                     "Correct": double.parse(correct.toString()) *
                         100 /
@@ -75,7 +83,10 @@ class TestResultPage extends StatelessWidget {
                     children: <Widget>[
                       const Gap(80),
                       PieChart(dataMap: dataMap),
+                      // Hiển thị biểu đồ tròn
                       const Gap(60),
+
+                      // Hiển thị điểm số
                       Text(
                         "Score: $correct/${correct + wrong + notYetDone}",
                         style: const TextStyle(
@@ -86,7 +97,10 @@ class TestResultPage extends StatelessWidget {
                       ),
                       const Gap(12),
                       LinearPoint(point: correct),
+                      // Hiển thị điểm số dưới dạng thanh ngang
                       const Gap(32),
+
+                      // Hiển thị thời gian tiêu tốn
                       Text(
                         "Consumption time: ${state.time} min",
                         style: const TextStyle(
@@ -97,11 +111,13 @@ class TestResultPage extends StatelessWidget {
                       ),
                       const Gap(12),
                       const LinearPoint(point: 9),
+                      // Hiển thị một thanh ngang khác với điểm cố định là 9
                     ],
                   );
                 },
               ),
               const Gap(48),
+              // Nút để xem giải pháp
               CupertinoButton(
                 onPressed: () {
                   Navigator.push(
@@ -114,9 +130,9 @@ class TestResultPage extends StatelessWidget {
                 padding: EdgeInsets.zero,
                 child: Container(
                   padding:
-                  const EdgeInsets.symmetric(vertical: 16, horizontal: 32),
+                      const EdgeInsets.symmetric(vertical: 16, horizontal: 32),
                   decoration:
-                  BoxDecoration(borderRadius: BorderRadius.circular(20)),
+                      BoxDecoration(borderRadius: BorderRadius.circular(20)),
                   child: const Text(
                     "View solution",
                     style: TextStyle(
