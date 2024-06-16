@@ -31,9 +31,9 @@ dependencies:
   just_audio: ^0.9.38
   flutter_sound: 9.2.13
   permission_handler: ^11.3.1
-  shared_preferences: ^2.0.0
+  shared_preferences: ^2.2.3
   carousel_slider: ^4.0.0
-  http: ^0.13.3
+
   flutter_local_notifications: ^15.1.1
   flutter_timezone: ^1.0.7
   rxdart: ^0.27.7
@@ -55,7 +55,11 @@ dependencies:
   flutter_bloc: ^8.1.6
   equatable: ^2.0.5
   pie_chart: ^5.4.0
+
+  flutter_svg: ^2.0.10+1
+
   timezone: ^0.9.3
+
 
 dev_dependencies:
   flutter_test:
@@ -80,6 +84,7 @@ flutter:
   uses-material-design: true
   assets:
     - assets/images/
+    - assets/icons/
     - assets/mock/
     - icons/icons8-book-48.png
     - icons/icons8-diversity-48.png
