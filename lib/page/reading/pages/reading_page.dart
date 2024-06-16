@@ -80,43 +80,11 @@ class _ReadingPageState extends State<ReadingPage> {
   Widget build(BuildContext context) {
     context.read<TestCubit>().loadData(); // Tải dữ liệu từ TestCubit
     return Scaffold(
-      appBar: AppBar(
-        titleSpacing: 0,
-        automaticallyImplyLeading: false,
-        systemOverlayStyle: const SystemUiOverlayStyle(
-          statusBarColor: Color(0xffB5E0EA),
+        appBar: AppBar(
+          title: Text('Reading Practice'),
+          elevation: 0,
+          backgroundColor: Color(0xFFB5E0EA),
         ),
-        title: Container(
-          padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 24),
-          color: const Color(0xffB5E0EA),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              CupertinoButton(
-                onPressed: () {
-                  Navigator.of(context).pop(); // Quay lại trang trước đó
-                },
-                padding: EdgeInsets.zero,
-                minSize: 0,
-                child: Image.asset(
-                  "assets/images/img_back.png",
-                  width: 43,
-                  height: 50,
-                ),
-              ),
-              const Text(
-                "Reading Practice",
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.w600,
-                  color: Colors.black,
-                ),
-              ),
-              const Gap(43),
-            ],
-          ),
-        ),
-      ),
       body: SafeArea(
         child: Column(
           children: [

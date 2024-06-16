@@ -327,7 +327,7 @@ class _ListeningListTestPageState extends State<ListeningListTestPage> {
                               IconButton(
                                 icon: Icon(
                                   isFavorite ? Icons.star : Icons.star_border,
-                                  color: Colors.yellow,
+                                    color: isFavorite ? Colors.yellow : Colors.grey,
                                 ),
                                 onPressed: () {
                                   _toggleFavorite(testName);

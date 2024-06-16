@@ -42,7 +42,7 @@ class TestPage extends StatelessWidget {
             // Sử dụng khóa Scaffold
             appBar: AppBar(
               titleSpacing: 0,
-              automaticallyImplyLeading: false,
+              backgroundColor: Color(0xffE2F1F4),
               actions: const [Gap(0)],
               systemOverlayStyle: const SystemUiOverlayStyle(
                 statusBarColor: Color(0xffE2F1F4), // Màu của thanh trạng thái
@@ -61,18 +61,6 @@ class TestPage extends StatelessWidget {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    CupertinoButton(
-                      onPressed: () {
-                        Navigator.of(context).pop(); // Quay lại trang trước đó
-                      },
-                      padding: EdgeInsets.zero,
-                      minSize: 0,
-                      child: Image.asset(
-                        "assets/images/img_back.png", // Hình ảnh nút quay lại
-                        width: 43,
-                        height: 50,
-                      ),
-                    ),
                     Row(
                       children: [
                         Image.asset(
