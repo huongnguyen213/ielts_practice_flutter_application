@@ -57,7 +57,7 @@
         "q20": "Is it good for workers if the company applies sports facilities for them?",
         "q21": "Are knowledgeable people popular at work?"
       },
-      "score": 8
+      "score": 3
     },
     "test_2": {
       "like": true,
@@ -108,7 +108,7 @@
         "q16": "What are the differences between actors/actresses who earn much and those who earn little?",
         "q17": "What are the differences between acting in a theatre and in a film?"
       },
-      "score": 8
+      "score": 5
     },
     "test_3": {
       "like": true,
@@ -241,7 +241,7 @@
         "q16": "Do you think sports can bring people from different backgrounds together? How?",
         "q17": "What role do sports play in your country's culture?"
       },
-      "score": 8
+      "score": 4.0
     }
   }
 }

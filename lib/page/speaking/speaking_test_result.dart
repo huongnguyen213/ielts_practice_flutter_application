@@ -1,8 +1,8 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:confetti/confetti.dart';
+
+import '../layout/home_page.dart';
 
 class SpeakingTestResultPage extends StatefulWidget {
   final String recordedFilePath;
@@ -73,8 +73,7 @@ class _SpeakingTestResultPageState extends State<SpeakingTestResultPage> {
                   actions: <Widget>[
                     TextButton(
                       onPressed: () {
-                        Navigator.of(context).popUntil((route) => route.isFirst);
-                      },
+                        Navigator.push(context, MaterialPageRoute(builder: (context) => HomePage()));                      },
                       child: const Text('Back to home'),
                     ),
                   ],
@@ -104,10 +103,19 @@ class _SpeakingTestResultPageState extends State<SpeakingTestResultPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Speaking Test Result'),
-        backgroundColor: const Color(0xFFB5E0EA),
         automaticallyImplyLeading: false,
-        centerTitle: true,
+        title: const Text(
+          'IELTS',
+          style: TextStyle(color: Colors.red, fontWeight: FontWeight.bold),
+        ),
+        backgroundColor: Colors.white,
+        elevation: 0,
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.notifications, color: Colors.amber),
+            onPressed: () {},
+          ),
+        ],
       ),
       body: Stack(
         children: [
@@ -191,11 +199,11 @@ class _SpeakingTestResultPageState extends State<SpeakingTestResultPage> {
           Align(
             alignment: Alignment.topCenter,
             child: ConfettiWidget(
-              confettiController: _confettiController,
+              blastDirectionality: BlastDirectionality.explosive,
               blastDirection: -3.14 / 2, // upward
               emissionFrequency: 0.05,
               numberOfParticles: 10,
-              gravity: 0.6,
+              confettiController: _confettiController,
             ),
           ),
         ],

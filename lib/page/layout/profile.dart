@@ -43,11 +43,11 @@ class _ProfilePageState extends State<ProfilePage> {
             children: [
               CircleAvatar(
                 radius: 50,
-                child: Image.asset("icons/userx64.png"),
+                child: Image.asset("assets/images/img_cat.png"),
               ),
               const SizedBox(height: 16),
               const Text(
-                'John Wicks',
+                'Minh Quan',
                 style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 16),

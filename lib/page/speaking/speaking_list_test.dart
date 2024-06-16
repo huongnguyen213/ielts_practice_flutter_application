@@ -259,7 +259,7 @@ class _SpeakingListTestPageState extends State<SpeakingListTestPage> {
                         },
                     ),
                     const SizedBox(height: 15),
-                    Text('Score: ${score == 0 ? '_' : score}/10', style: const TextStyle(fontWeight: FontWeight.bold),),
+                    Text('Score: ${score == 0 ? '_' : score}/9', style: const TextStyle(fontWeight: FontWeight.bold),),
                   ],
                 ),
                 trailing: IconButton(
