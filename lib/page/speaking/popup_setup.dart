@@ -9,18 +9,18 @@ class PopUpSpeakingSetUpTest extends StatefulWidget {
 class _PopUpSpeakingSetUpTestState extends State<PopUpSpeakingSetUpTest> {
   String _selectedPart = 'Part 1';
   String _selectedTime = 'No limit';
-  List<String> _times = ['No limit', '10 minutes', '13 minutes'];
+  final List<String> _times = ['No limit', '10 minutes', '13 minutes'];
 
   void _startTest() async {
     PermissionStatus status = await Permission.microphone.request();
     if (status.isGranted) {
       // Code to start the test
       Navigator.of(context).pop(); // Close the dialog
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
         content: Text('Microphone permission granted. Starting test...'),
       ));
     } else {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
         content: Text('Microphone permission denied.'),
       ));
     }
@@ -29,7 +29,7 @@ class _PopUpSpeakingSetUpTestState extends State<PopUpSpeakingSetUpTest> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: Center(
+      title: const Center(
         child: Text(
           'Set Up Test',
           style: TextStyle(fontWeight: FontWeight.bold),
@@ -39,8 +39,8 @@ class _PopUpSpeakingSetUpTestState extends State<PopUpSpeakingSetUpTest> {
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          SizedBox(height: 8.0),
-          Align(
+          const SizedBox(height: 8.0),
+          const Align(
             alignment: Alignment.centerLeft,
             child: Text(
               'Choose part',
@@ -95,14 +95,14 @@ class _PopUpSpeakingSetUpTestState extends State<PopUpSpeakingSetUpTest> {
               },
             ),
           ),
-          SizedBox(height: 8.0),
+          const SizedBox(height: 8.0),
           Row(
             children: [
-              Text(
+              const Text(
                 'Choose time',
                 style: TextStyle(fontWeight: FontWeight.bold),
               ),
-              SizedBox(width: 16.0),
+              const SizedBox(width: 16.0),
               Expanded(
                 child: DropdownButton<String>(
                   value: _selectedTime,
@@ -129,13 +129,13 @@ class _PopUpSpeakingSetUpTestState extends State<PopUpSpeakingSetUpTest> {
           child: TextButton(
             style: TextButton.styleFrom(
               foregroundColor: Colors.white, backgroundColor: Colors.green,
-              side: BorderSide(color: Colors.green),
+              side: const BorderSide(color: Colors.green),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(8.0),
               ),
             ),
-            child: Text('Start'),
             onPressed: _startTest,
+            child: const Text('Start'),
           ),
         ),
       ],

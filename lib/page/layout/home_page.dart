@@ -1,18 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:ielts_practice_flutter_application/page/layout/profile.dart';
+import 'package:ielts_practice_flutter_application/page/layout/progress.dart';
 import 'package:ielts_practice_flutter_application/page/listening/listening_list_test.dart';
 import 'package:ielts_practice_flutter_application/page/reading/reading_list_test.dart';
 import 'package:ielts_practice_flutter_application/page/writing/writing_list_test.dart';
 import 'package:ielts_practice_flutter_application/page/speaking/speaking_list_test.dart';
+import '../full_skill/list_test.dart';
+import '../reading/pages/reading_page.dart';
+
 
 class HomePage extends StatefulWidget {
   @override
   _IELTSHomeState createState() => _IELTSHomeState();
 }
 
-class _IELTSHomeState extends State<HomePage> {
+class _IELTSHomeState extends State<HomePage> with SingleTickerProviderStateMixin{
   bool isAcademic = true;
   int _currentCarouselIndex = 0;
+  int _selectedIndex = 0;
+  late TabController _tabController;
+  final List<Color> _tabColors = [Colors.grey, Colors.blue];
 
   final Map<String, String> iconPaths = {
     'Listening Test': 'icons/icons8-headphone-48.png',
@@ -42,6 +50,7 @@ class _IELTSHomeState extends State<HomePage> {
     super.initState();
     // Initialize carouselSlides from the initial list
     _updateCarouselSlides();
+    _tabController = TabController(length: 3, vsync: this);
   }
 
   void _updateCarouselSlides() {
@@ -50,11 +59,11 @@ class _IELTSHomeState extends State<HomePage> {
         builder: (BuildContext context) {
           return Container(
             width: MediaQuery.of(context).size.width,
-            margin: EdgeInsets.symmetric(horizontal: 5.0),
-            padding: EdgeInsets.all(16),
+            margin: const EdgeInsets.symmetric(horizontal: 5.0),
+            padding: const EdgeInsets.all(16),
             child: Text(
               text,
-              style: TextStyle(fontSize: 16),
+              style: const TextStyle(fontSize: 16),
               textAlign: TextAlign.center,
             ),
           );
@@ -64,10 +73,42 @@ class _IELTSHomeState extends State<HomePage> {
   }
 
   @override
+  void dispose(){
+    _tabController.dispose();
+    super.dispose();
+  }
+
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+      _tabColors[_selectedIndex] = const Color(0xFFB5E0EA);
+      for (int i = 0; i < _tabColors.length; i++){
+        if (i != _selectedIndex){
+          _tabColors[i] = Colors.grey;
+        }
+      }
+    });
+
+    if (index == 0) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => HomePage()),
+      );
+    }else if (index == 1){
+      Navigator.push(context, MaterialPageRoute(builder: (context) => ProgressPage())
+      );
+    }else{
+      Navigator.push(context, MaterialPageRoute(builder: (context) => ProfilePage())
+      );
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(
+        automaticallyImplyLeading: false,
+        title: const Text(
           'IELTS',
           style: TextStyle(color: Colors.red, fontWeight: FontWeight.bold),
         ),
@@ -75,157 +116,149 @@ class _IELTSHomeState extends State<HomePage> {
         elevation: 0,
         actions: [
           IconButton(
-            icon: Icon(Icons.notifications, color: Colors.amber),
+            icon: const Icon(Icons.notifications, color: Colors.amber),
             onPressed: () {},
           ),
         ],
       ),
-      body: Column(
+      body: TabBarView(
+        controller: _tabController,
         children: [
-          Container(
-            padding: EdgeInsets.all(20),
-            child: Column(
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          Column(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(20),
+                child: Column(
                   children: [
-                    GestureDetector(
-                      onTap: () {
-                        setState(() {
-                          isAcademic = true;
-                        });
-                      },
-                      child: Container(
-                        padding: EdgeInsets.symmetric(horizontal: 10),
-                        decoration: BoxDecoration(
-                          border: Border(
-                            bottom: BorderSide(
-                              color: isAcademic ? Colors.blue : Colors.transparent,
-                              width: 2,
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        GestureDetector(
+                          onTap: () {
+                            setState(() {
+                              isAcademic = true;
+                            });
+                          },
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 10),
+                            decoration: BoxDecoration(
+                              border: Border(
+                                bottom: BorderSide(
+                                  color: isAcademic ? Colors.blue : Colors.transparent,
+                                  width: 2,
+                                ),
+                              ),
+                            ),
+                            child: Row(
+                              children: [
+                                Image.asset(
+                                  'icons/icons8-mortarboard-48.png', // Academic icon
+                                  width: 40,
+                                  height: 40,
+                                ),
+                                const SizedBox(width: 8),
+                                Text('Academic', style: TextStyle(color: isAcademic ? Colors.blue : Colors.grey)),
+                              ],
                             ),
                           ),
                         ),
-                        child: Row(
-                          children: [
-                            Image.asset(
-                              'icons/icons8-mortarboard-48.png', // Academic icon
-                              width: 40,
-                              height: 40,
+                        GestureDetector(
+                          onTap: () {
+                            setState(() {
+                              isAcademic = false;
+                            });
+                          },
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 10),
+                            decoration: BoxDecoration(
+                              border: Border(
+                                bottom: BorderSide(
+                                  color: !isAcademic ? Colors.blue : Colors.transparent,
+                                  width: 2,
+                                ),
+                              ),
                             ),
-                            SizedBox(width: 8),
-                            Text('Academic', style: TextStyle(color: isAcademic ? Colors.blue : Colors.grey)),
-                          ],
+                            child: Row(
+                              children: [
+                                Image.asset(
+                                  'icons/icons8-people-skin-type-7-48.png', // General icon
+                                  width: 40,
+                                  height: 40,
+                                ),
+                                const SizedBox(width: 8),
+                                Text('General', style: TextStyle(color: !isAcademic ? Colors.blue : Colors.grey)),
+                              ],
+                            ),
+                          ),
                         ),
-                      ),
+                      ],
                     ),
-                    GestureDetector(
-                      onTap: () {
-                        setState(() {
-                          isAcademic = false;
-                        });
-                      },
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 10),
-                        decoration: BoxDecoration(
-                          border: Border(
-                            bottom: BorderSide(
-                              color: !isAcademic ? Colors.blue : Colors.transparent,
-                              width: 2,
-                            ),
-                          ),
-                        ),
-                        child: Row(
-                          children: [
-                            Image.asset(
-                              'icons/icons8-people-skin-type-7-48.png', // General icon
-                              width: 40,
-                              height: 40,
-                            ),
-                            SizedBox(width: 8),
-                            Text('General', style: TextStyle(color: !isAcademic ? Colors.blue : Colors.grey)),
-                          ],
+                    const SizedBox(height: 16),
+                    Card(
+                      elevation: 4,
+                      margin: const EdgeInsets.symmetric(horizontal: 0),
+                      child: CarouselSlider(
+                        items: carouselSlides,
+                        options: CarouselOptions(
+                          height: 120.0,
+                          autoPlay: true,
+                          autoPlayInterval: const Duration(seconds: 5),
+                          autoPlayAnimationDuration: const Duration(milliseconds: 1000),
+                          enableInfiniteScroll: true,
+                          viewportFraction: 1.0,
+                          onPageChanged: (index, _) {
+                            setState(() {
+                              _currentCarouselIndex = index;
+                            });
+                          },
                         ),
                       ),
                     ),
                   ],
                 ),
-                SizedBox(height: 16),
-                Card(
-                  elevation: 4,
-                  margin: const EdgeInsets.symmetric(horizontal: 0),
-                  child: CarouselSlider(
-                    items: carouselSlides,
-                    options: CarouselOptions(
-                      height: 120.0,
-                      autoPlay: true,
-                      autoPlayInterval: Duration(seconds: 5),
-                      autoPlayAnimationDuration: Duration(milliseconds: 1000),
-                      enableInfiniteScroll: true,
-                      viewportFraction: 1.0,
-                      onPageChanged: (index, _) {
-                        setState(() {
-                          _currentCarouselIndex = index;
-                        });
-                      },
-                    ),
-                  ),
+              ),
+              Expanded(
+                child: GridView.count(
+                  crossAxisCount: 2,
+                  children: isAcademic ? [
+                    _buildGridItem('Listening Test', ListeningListTestPage()),
+                    _buildGridItem('Reading Test', ReadingListTestPage()),
+                    _buildGridItem('Writing Test', WritingListTestPage()),
+                    _buildGridItem('Speaking Test', SpeakingListTestPage()),
+                    _buildGridItem('Full Skills', ListTestPage()),
+                    _buildGridItem('Grammar', null),
+                  ] : [
+                    _buildGridItem('Listening Practice', ListeningListTestPage()),
+                    _buildGridItem('Reading Practice', ReadingListTestPage()),
+                    _buildGridItem('Writing Practice', WritingListTestPage()),
+                    _buildGridItem('Speaking Practice', SpeakingListTestPage()),
+                    _buildGridItem('General Skills', ListTestPage()),
+                    _buildGridItem('Grammar Practice', null),
+                  ],
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
-          Expanded(
-            child: GridView.count(
-              crossAxisCount: 2,
-              children: isAcademic
-                  ? [
-                _buildGridItem('Listening Test', ListeningListTestPage()),
-                _buildGridItem('Reading Test', ReadingListTestPage()),
-                _buildGridItem('Writing Test', WritingListTestPage()),
-                _buildGridItem('Speaking Test', SpeakingListTestPage()),
-                _buildGridItem('Full Skills', null),
-                _buildGridItem('Grammar', null),
-              ]
-                  : [
-                _buildGridItem('Listening Practice', ListeningListTestPage()),
-                _buildGridItem('Reading Practice', ReadingListTestPage()),
-                _buildGridItem('Writing Practice', WritingListTestPage()),
-                _buildGridItem('Speaking Practice', SpeakingListTestPage()),
-                _buildGridItem('General Skills', null),
-                _buildGridItem('Grammar Practice', null),
-              ],
-            ),
-          ),
+          ProgressPage(),
+          ProfilePage(),
         ],
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        items: [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'Home',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.bar_chart),
-            label: 'Progress',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person),
-            label: 'Profile',
-          ),
-        ],
-        selectedItemColor: Colors.blue,
-        unselectedItemColor: Colors.grey,
-        onTap: (index) {
-          setState(() {
-            isAcademic = index == 0;
-          });
-        },
-      ),
+      bottomNavigationBar: TabBar(
+        controller: _tabController,
+        tabs: const [
+        Tab(icon: Icon(Icons.home), text: "Home"),
+        Tab(icon: Icon(Icons.bar_chart), text: "Progress"),
+        Tab(icon: Icon(Icons.person_2_rounded), text: "Personal"),
+      ],
+      labelColor: const Color(0xFF6EC3D2),
+      unselectedLabelColor: Colors.grey,
+    ),
     );
   }
 
   Widget _buildGridItem(String label, Widget? page) {
     return Card(
-        margin: EdgeInsets.all(8),
+        margin: const EdgeInsets.all(8),
     elevation: 4,
     shadowColor: Colors.black54,
     shape: RoundedRectangleBorder(
@@ -234,19 +267,22 @@ class _IELTSHomeState extends State<HomePage> {
     child: InkWell(
     onTap:
         () {
-      if (page != null) {
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => page),
-        );
-      }
+          if(label=="Reading Test"||label=="Reading Practice"){
+            Navigator.push(context, MaterialPageRoute(builder: (context) => const ReadingPage()));
+          }
+          else if (page != null) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => page),
+            );
+          }
     },
       child: Center(
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             Image.asset(iconPaths[label]!, width: 40, height: 40),
-            SizedBox(height: 8),
+            const SizedBox(height: 8),
             Text(label),
           ],
         ),
@@ -254,4 +290,5 @@ class _IELTSHomeState extends State<HomePage> {
     ),
     );
   }
+
 }
