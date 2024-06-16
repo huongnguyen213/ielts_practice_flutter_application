@@ -250,7 +250,7 @@ class _IELTSHomeState extends State<HomePage> with SingleTickerProviderStateMixi
         Tab(icon: Icon(Icons.bar_chart), text: "Progress"),
         Tab(icon: Icon(Icons.person_2_rounded), text: "Personal"),
       ],
-      labelColor: const Color(0xFFB5E0EA),
+      labelColor: const Color(0xFF6EC3D2),
       unselectedLabelColor: Colors.grey,
     ),
     );

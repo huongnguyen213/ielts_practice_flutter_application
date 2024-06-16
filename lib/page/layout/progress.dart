@@ -10,33 +10,7 @@ class ProgressPage extends StatefulWidget {
 
 class _ProgressPageState extends State<ProgressPage> {
   int _selectedIndex = 0;
-
-  void _showReminderDialog(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('Do you want to set up a study reminder?'),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-                _showTimeSetupDialog(context);
-              },
-              child: const Text('Yes'),
-            ),
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: const Text('No'),
-            ),
-          ],
-        );
-      },
-    );
-  }
-
+  
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
@@ -60,26 +34,6 @@ class _ProgressPageState extends State<ProgressPage> {
     }
   }
 
-  void _showTimeSetupDialog(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('Set up time'),
-          content: const Text('You can set up the time here.'), // Add specific content if necessary
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: const Text('OK'),
-            ),
-          ],
-        );
-      },
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -88,21 +42,22 @@ class _ProgressPageState extends State<ProgressPage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Row(
+            Row(
               children: [
                 CircleAvatar(
-                  radius: 40,
+                  radius: 50,
+                  child: Image.asset("icons/userx64.png"),
                 ),
-                SizedBox(width: 16),
-                Text(
-                  'Progress',
+                const SizedBox(width: 32),
+                const Text(
+                  'Minh Quan',
                   style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
                 ),
               ],
             ),
             const SizedBox(height: 32),
             const Text(
-              'Training History',
+              'Practice History',
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 16),
@@ -112,32 +67,26 @@ class _ProgressPageState extends State<ProgressPage> {
               mainAxisSpacing: 16,
               crossAxisSpacing: 16,
               children: [
-                _buildSkillCard('Listening', Icons.hearing),
-                _buildSkillCard('Speaking', Icons.record_voice_over),
-                _buildSkillCard('Reading', Icons.book),
-                _buildSkillCard('Writing', Icons.edit),
+                _buildSkillCard('Listening', "icons/icons8-headphone-48.png"),
+                _buildSkillCard('Speaking', "icons/icons8-mic-48.png"),
+                _buildSkillCard('Reading', "icons/icons8-book-48.png"),
+                _buildSkillCard('Writing', "icons/icons8-pencil-48.png")
               ],
             ),
             const SizedBox(height: 32),
-            Center(
-              child: ElevatedButton(
-                onPressed: () => _showReminderDialog(context),
-                child: const Text('Set up study reminder'),
-              ),
-            ),
           ],
         ),
       ),
     );
   }
 
-  Widget _buildSkillCard(String skill, IconData icon) {
+  Widget _buildSkillCard(String skill, String iconPath) {
     return Card(
       elevation: 4,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(icon, size: 40),
+          Image.asset(iconPath, width: 40, height: 40),
           const SizedBox(height: 8),
           Text(skill, style: const TextStyle(fontSize: 18)),
         ],
