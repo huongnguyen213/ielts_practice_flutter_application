@@ -22,46 +22,58 @@ class _SearchFilterWidgetState extends State<SearchFilterWidget> {
     return Row(
       children: [
         Expanded(
-          child: TextField(
-            controller: _searchController,
-            onChanged: widget.onSearch,
-            decoration: InputDecoration(
-              prefixIcon: Icon(Icons.search),
-              hintText: 'Enter test name',
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(10.0),
+          child: Card(
+            elevation: 5,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10.0),
+            ),
+            child: TextField(
+              controller: _searchController,
+              onChanged: widget.onSearch,
+              decoration: InputDecoration(
+                prefixIcon: const Icon(Icons.search),
+                hintText: 'Enter test name',
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10.0),
+                  borderSide: BorderSide.none,
+                ),
+                contentPadding: const EdgeInsets.symmetric(vertical: 0, horizontal: 10),
+                filled: true,
+                fillColor: Colors.white,
               ),
-              contentPadding: EdgeInsets.symmetric(vertical: 0, horizontal: 10),
             ),
           ),
         ),
-        SizedBox(width: 10),
-        Container(
-          decoration: BoxDecoration(
+        const SizedBox(width: 10),
+        Card(
+          elevation: 5,
+          shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(10.0),
-            border: Border.all(color: Colors.grey),
           ),
-          padding: EdgeInsets.symmetric(horizontal: 10),
-          child: DropdownButton<bool>(
-            value: _showFavoritesOnly,
-            icon: Icon(Icons.arrow_drop_down),
-            underline: SizedBox(),
-            onChanged: (bool? newValue) {
-              setState(() {
-                _showFavoritesOnly = newValue ?? false;
-              });
-              widget.onFavoriteToggle(_showFavoritesOnly);
-            },
-            items: <DropdownMenuItem<bool>>[
-              DropdownMenuItem<bool>(
-                value: false,
-                child: Text('All'),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 10),
+            child: DropdownButtonHideUnderline(
+              child: DropdownButton<bool>(
+                value: _showFavoritesOnly,
+                icon: const Icon(Icons.arrow_drop_down),
+                onChanged: (bool? newValue) {
+                  setState(() {
+                    _showFavoritesOnly = newValue ?? false;
+                  });
+                  widget.onFavoriteToggle(_showFavoritesOnly);
+                },
+                items: const <DropdownMenuItem<bool>>[
+                  DropdownMenuItem<bool>(
+                    value: false,
+                    child: Text('All'),
+                  ),
+                  DropdownMenuItem<bool>(
+                    value: true,
+                    child: Text('Favorites'),
+                  ),
+                ],
               ),
-              DropdownMenuItem<bool>(
-                value: true,
-                child: Text('Favorites'),
-              ),
-            ],
+            ),
           ),
         ),
       ],

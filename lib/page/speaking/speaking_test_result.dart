@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:just_audio/just_audio.dart';
+import 'package:confetti/confetti.dart';
 
 class SpeakingTestResultPage extends StatefulWidget {
   final String recordedFilePath;
@@ -12,6 +13,7 @@ class SpeakingTestResultPage extends StatefulWidget {
     required this.completionTime,
   });
 
+
   @override
   _SpeakingTestResultPageState createState() => _SpeakingTestResultPageState();
 }
@@ -20,10 +22,22 @@ class _SpeakingTestResultPageState extends State<SpeakingTestResultPage> {
   final AudioPlayer _audioPlayer = AudioPlayer();
   bool isPlaying = false; // Track the playing state
   double playbackProgress = 0.0; // Track playback progress
+  late ConfettiController _confettiController;
+
+
+  @override
+  void initState() {
+    super.initState();
+    _confettiController = ConfettiController(duration: const Duration(seconds: 5));
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _confettiController.play();
+    });
+  }
 
   @override
   void dispose() {
     _audioPlayer.dispose();
+    _confettiController.dispose();
     super.dispose();
   }
 
@@ -80,15 +94,11 @@ class _SpeakingTestResultPageState extends State<SpeakingTestResultPage> {
     );
   }
   void _stopPlayback() {
-    // Replace with actual stop playback logic
-    // Example:
-    // audioPlayer.stop();
     setState(() {
       isPlaying = false;
       playbackProgress = 0.0;
     });
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -99,84 +109,96 @@ class _SpeakingTestResultPageState extends State<SpeakingTestResultPage> {
         automaticallyImplyLeading: false,
         centerTitle: true,
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            const SizedBox(height: 100),
-            const Text(
-              'Congratulations on completing the test!',
-              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-              textAlign: TextAlign.center,
-            ),
-            const SizedBox(height: 16),
-            Row(
+      body: Stack(
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                const Icon(Icons.timer),
-                const SizedBox(width: 8),
-                _buildCompletionTimeText(widget.completionTime),
+                const SizedBox(height: 32),
+                const Text(
+                  'Congratulations on completing the test!',
+                  style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: 16),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Icon(Icons.timer),
+                    const SizedBox(width: 8),
+                    _buildCompletionTimeText(widget.completionTime),
+                  ],
+                ),
+                const SizedBox(height: 32),
+                const Text(
+                  'Your Recording:',
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: 16),
+                if (widget.recordedFilePath.isNotEmpty)
+                  Column(
+                    children: [
+                      IconButton(
+                        icon: Icon(isPlaying ? Icons.pause_circle : Icons.play_circle),
+                        iconSize: 36,
+                        color: Colors.red,
+                        onPressed: () {
+                          setState(() {
+                            isPlaying = !isPlaying;
+                            if (isPlaying) {
+                              _playRecording();
+                            } else {
+                              _stopPlayback();
+                            }
+                          });
+                        },
+                      ),
+                      if (isPlaying)
+                        LinearProgressIndicator(
+                          value: playbackProgress,
+                          backgroundColor: Colors.grey[200],
+                          valueColor: const AlwaysStoppedAnimation<Color>(Colors.red),
+                        ),
+                    ],
+                  )
+                else
+                  const Text(
+                    'No recording available.',
+                    style: TextStyle(fontSize: 16, color: Colors.red),
+                    textAlign: TextAlign.center,
+                  ),
+                const SizedBox(height: 32),
+                ElevatedButton(
+                  style: TextButton.styleFrom(
+                    foregroundColor: Colors.black,
+                    backgroundColor: const Color(0xFFB5E0EA),
+                    minimumSize: const Size(double.infinity, 50),
+                    side: const BorderSide(color: Color(0xFFB5E0EA)),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8.0),
+                    ),
+                  ),
+                  onPressed: _submitTest,
+                  child: const Text('Submit Test', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+                ),
               ],
             ),
-            const SizedBox(height: 32),
-            const Text(
-              'Your Recording:',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-              textAlign: TextAlign.center,
+          ),
+          Align(
+            alignment: Alignment.topCenter,
+            child: ConfettiWidget(
+              confettiController: _confettiController,
+              blastDirection: -3.14 / 2, // upward
+              emissionFrequency: 0.05,
+              numberOfParticles: 10,
+              gravity: 0.6,
             ),
-            const SizedBox(height: 16),
-            if (widget.recordedFilePath.isNotEmpty)
-              Column(
-                children: [
-                  IconButton(
-                    icon: Icon(isPlaying ? Icons.pause_circle : Icons.play_circle),
-                    iconSize: 64,
-                    color: Colors.red,
-                    onPressed: () {
-                      setState(() {
-                        isPlaying = !isPlaying;
-                        if (isPlaying) {
-                          _playRecording();
-                        } else {
-                          // Call function to stop playback
-                          _stopPlayback();
-                        }
-                      });
-                    },
-                  ),
-                  if (isPlaying)
-                    LinearProgressIndicator(
-                      value: playbackProgress,
-                      backgroundColor: Colors.grey[200],
-                      valueColor: const AlwaysStoppedAnimation<Color>(Colors.red),
-                    ),
-                ],
-              )
-            else
-              const Text(
-                'No recording available.',
-                style: TextStyle(fontSize: 16, color: Colors.red),
-                textAlign: TextAlign.center,
-              ),
-            const SizedBox(height: 32),
-            const Spacer(),
-            ElevatedButton(
-              style: TextButton.styleFrom(
-                foregroundColor: Colors.white,
-                backgroundColor: Colors.green,
-                minimumSize: const Size(double.infinity, 50),
-                side: const BorderSide(color: Colors.green),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8.0),
-                ),
-              ),
-              onPressed: _submitTest,
-              child: const Text('Submit Test'),
-            ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
