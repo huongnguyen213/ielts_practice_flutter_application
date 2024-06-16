@@ -1,96 +1,99 @@
 import 'package:flutter/material.dart';
-import 'package:ielts_practice_flutter_application/page/layout/profile.dart';
 
-import 'home_page.dart';
-
-class ProgressPage extends StatefulWidget {
-  @override
-  _ProgressPageState createState() => _ProgressPageState();
-}
-
-class _ProgressPageState extends State<ProgressPage> {
-  int _selectedIndex = 0;
-  
-  void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
-
-    if (index == 0) {
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => HomePage()),
-      );
-    } else if (index == 1) {
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => ProgressPage()),
-      );
-    } else {
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => ProfilePage()),
-      );
-    }
-  }
-
+class ProgressPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                CircleAvatar(
-                  radius: 50,
-                  child: Image.asset("icons/userx64.png"),
-                ),
-                const SizedBox(width: 32),
-                const Text(
-                  'Minh Quan',
-                  style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-                ),
-              ],
-            ),
-            const SizedBox(height: 32),
-            const Text(
-              'Practice History',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 16),
-            GridView.count(
-              crossAxisCount: 2,
-              shrinkWrap: true,
-              mainAxisSpacing: 16,
-              crossAxisSpacing: 16,
-              children: [
-                _buildSkillCard('Listening', "icons/icons8-headphone-48.png"),
-                _buildSkillCard('Speaking', "icons/icons8-mic-48.png"),
-                _buildSkillCard('Reading', "icons/icons8-book-48.png"),
-                _buildSkillCard('Writing', "icons/icons8-pencil-48.png")
-              ],
-            ),
-            const SizedBox(height: 32),
-          ],
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        elevation: 0,
+        leading: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Image(
+            image: AssetImage('assets/images/img_cat.png'), // Your avatar image
+            width: 100,  // Adjust width as needed
+            height: 100, // Adjust height as needed
+          ),
         ),
+      ),
+      body: Column(
+        children: <Widget>[
+          Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Card(
+              child: Column(
+                children: <Widget>[
+                  Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Column(
+                      children: <Widget>[
+                        Text(
+                          'All',
+                          style: TextStyle(fontSize: 24),
+                        ),
+                        Text(
+                          '14',
+                          style: TextStyle(fontSize: 48),
+                        ),
+                        Text(
+                          '3177',
+                          style: TextStyle(color: Colors.grey),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Divider(),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: <Widget>[
+                        _buildScoreColumn('Listening', '7.0', Colors.blue),
+                        _buildScoreColumn('Writing', '4.0', Colors.red),
+                        _buildScoreColumn('Reading', '8.0', Colors.green),
+                        _buildScoreColumn('Speaking', '6.5', Colors.orange),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: SizedBox(
+              height: 200.0,
+              child: Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10.0),
+                  color: Colors.grey[200],
+                ),
+                child: Center(
+                  child: Text(
+                    'Your chart goes here',
+                    style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
 
-  Widget _buildSkillCard(String skill, String iconPath) {
-    return Card(
-      elevation: 4,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Image.asset(iconPath, width: 40, height: 40),
-          const SizedBox(height: 8),
-          Text(skill, style: const TextStyle(fontSize: 18)),
-        ],
-      ),
+  Column _buildScoreColumn(String title, String score, Color color) {
+    return Column(
+      children: <Widget>[
+        Text(
+          title,
+          style: TextStyle(color: color),
+        ),
+        Text(
+          score,
+          style: TextStyle(fontSize: 24),
+        ),
+      ],
     );
   }
 }
