@@ -188,9 +188,11 @@ class _Part2PageState extends State<Part2Page> {
             children: [
               Row(
                 children: [
-                  ImageIcon(
-                    AssetImage('icons/oclock.png'),
-                    size: 48,
+                  SizedBox(width: 40),
+                  Image.asset(
+                    "assets/images/img_clock.png",
+                    width: 40,
+                    height: 40,
                   ),
                   SizedBox(width: 5),
                   Text(
@@ -425,9 +427,10 @@ class _Part2PageState extends State<Part2Page> {
             SingleChildScrollView(
               scrollDirection: Axis.horizontal,
               child: Container(
+                padding: EdgeInsets.all(5.0),
                 decoration: BoxDecoration(
                   border: Border.all(
-                    color: Colors.black,
+                    color: Colors.white,
                     width: 1.0,
                     style: BorderStyle.solid,
                   ),
@@ -445,12 +448,12 @@ class _Part2PageState extends State<Part2Page> {
                           },
                           style: ElevatedButton.styleFrom(
                             backgroundColor: userAnswers[index].isNotEmpty ? Colors.green : Color(0xffD3D3D3),
-                            padding: EdgeInsets.all(4.0),
-                            shape: CircleBorder(),
+                           shape: CircleBorder(),
+                            padding: EdgeInsets.all(3), // foreground
                           ),
                           child: Text('${index + 1}',style: TextStyle(
                             color: Colors.black,
-                             fontSize: 25,
+                             fontSize: 15,
                             fontWeight: FontWeight.w500,
                           ),),
                         ),
