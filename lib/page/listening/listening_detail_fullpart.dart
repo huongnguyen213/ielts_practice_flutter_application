@@ -86,9 +86,11 @@ class _FullPartPageState extends State<FullPartPage> with SingleTickerProviderSt
             children: [
               Row(
                 children: [
-                  ImageIcon(
-                    AssetImage('icons/oclock.png'),
-                    size: 48,
+                  SizedBox(width: 40),
+                  Image.asset(
+                    "assets/images/img_clock.png",
+                    width: 40,
+                    height: 40,
                   ),
                   SizedBox(width: 5),
                   Text(
@@ -100,15 +102,7 @@ class _FullPartPageState extends State<FullPartPage> with SingleTickerProviderSt
                   ),
                 ],
               ),
-              ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Color(0xff3898D7),
-                ),
-                onPressed: () {
-                  // Xử lý nút submit ở đây
-                },
-                child: Text('Submit'),
-              ),
+
             ],
           ),
           bottom: TabBar(
@@ -363,7 +357,7 @@ class _PartContentState extends State<PartContent> {
               Container(
                 margin: EdgeInsets.all(50),
 
-
+           // ff
                 child: Text("Part "+widget.partNumber.toString(),style: TextStyle(
                   fontSize: 25,
                   color: Colors.black,
