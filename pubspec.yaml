@@ -33,6 +33,10 @@ dependencies:
   permission_handler: ^11.3.1
   shared_preferences: ^2.0.0
   carousel_slider: ^4.0.0
+  http: ^0.13.3
+  flutter_local_notifications: ^15.1.1
+  flutter_timezone: ^1.0.7
+  rxdart: ^0.27.7
   flutter:
     sdk: flutter
 
@@ -52,6 +56,7 @@ dependencies:
   flutter_bloc: ^8.1.6
   equatable: ^2.0.5
   pie_chart: ^5.4.0
+  timezone: ^0.9.3
 
 
 dev_dependencies:
@@ -89,6 +94,9 @@ flutter:
     - icons/icons8-user-profile-48.png
     - icons/icons8-right-button-40.png
     - icons/icons8-check-48.png
+    - icons/user.png
+    - icons/userx64.png
+    - icons/icons8-test-48.png
     - lib/assets/images/tip-writing-1.png
     - lib/assets/images/tip-writing-2.png
     - lib/assets/images/tip-writing-3.png

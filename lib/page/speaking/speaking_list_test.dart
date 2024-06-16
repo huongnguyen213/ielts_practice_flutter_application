@@ -28,7 +28,7 @@ class _SpeakingListTestPageState extends State<SpeakingListTestPage> {
   void initState() {
     super.initState();
     _pageController = PageController(initialPage: 0);
-    _timer = Timer.periodic(Duration(seconds: 15), (Timer timer) {
+    _timer = Timer.periodic(const Duration(seconds: 15), (Timer timer) {
       if (_currentIndex < imgList.length - 1) {
         setState(() {
           _currentIndex++;
@@ -40,7 +40,7 @@ class _SpeakingListTestPageState extends State<SpeakingListTestPage> {
       }
       _pageController.animateToPage(
         _currentIndex,
-        duration: Duration(milliseconds: 500),
+        duration: const Duration(milliseconds: 500),
         curve: Curves.easeInOut,
       );
     });
@@ -140,9 +140,9 @@ class _SpeakingListTestPageState extends State<SpeakingListTestPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Speaking Practice'),
+        title: const Text('Speaking Practice'),
         elevation: 0,
-        backgroundColor: Color(0xFFB5E0EA),
+        backgroundColor: const Color(0xFFB5E0EA),
       ),
       body: Column(
         children: [
@@ -177,7 +177,7 @@ class _SpeakingListTestPageState extends State<SpeakingListTestPage> {
         itemBuilder: (BuildContext context, int index) {
           return Container(
             width: MediaQuery.of(context).size.width,
-            margin: EdgeInsets.symmetric(horizontal: 5.0),
+            margin: const EdgeInsets.symmetric(horizontal: 5.0),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(10.0),
             ),
@@ -187,7 +187,7 @@ class _SpeakingListTestPageState extends State<SpeakingListTestPage> {
                 imgList[index],
                 fit: BoxFit.cover,
                 errorBuilder: (context, error, stackTrace) {
-                  return Center(
+                  return const Center(
                     child: Text(
                       'Image not found',
                       style: TextStyle(color: Colors.red),
@@ -204,9 +204,8 @@ class _SpeakingListTestPageState extends State<SpeakingListTestPage> {
 
   Widget buildListView(String part) {
     if (filteredData.isEmpty) {
-      return Center(child: CircularProgressIndicator());
+      return const Center(child: CircularProgressIndicator());
     }
-
     return ListView.builder(
       padding: const EdgeInsets.all(10.0),
       itemCount: filteredData.length,
@@ -215,7 +214,6 @@ class _SpeakingListTestPageState extends State<SpeakingListTestPage> {
         var item = filteredData[key];
         int score = item['score'] is int ? item['score'] : 0;
         bool isFavorite = item['isFavorite'] ?? false;
-
         return GestureDetector(
           onTap: () {
             _onSpeakingItemPressed(key);
@@ -224,34 +222,44 @@ class _SpeakingListTestPageState extends State<SpeakingListTestPage> {
             margin: const EdgeInsets.symmetric(vertical: 12.0, horizontal: 15.0),
             elevation: 4.0,
             color: Colors.white,
+            child: Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(8.5),
+                border: Border.all(
+                  color: const Color(0xFFB5E0EA),
+                  width: 1.5,
+                ),
+              ),
             child: Padding(
               padding: const EdgeInsets.all(10.0),
               child: ListTile(
-                leading: Container(
-                  padding: const EdgeInsets.all(5),
-                  width: 50,
-                  height: 50,
-                  decoration: const BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.all(Radius.circular(15))),
-                  child: const Icon(
-                    Icons.mic,
-                    size: 40.0,
-                  ),
+                leading: CircleAvatar(
+                  backgroundColor: Colors.white,
+
+                  child: Image.asset("icons/icons8-mic-48.png"),
                 ),
-                title: Text(item['name']),
+                title: Text(item['name'], style: const TextStyle(fontWeight: FontWeight.bold),),
                 subtitle: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    LinearProgressIndicator(
-                      value: score / 10.0,
-                      backgroundColor: Colors.grey[300],
-                      valueColor: AlwaysStoppedAnimation<Color>(
-                        _getProgressColor(score),
-                      ),
+                    TweenAnimationBuilder<double>(
+                        tween: Tween<double>(
+                          begin: 0.0,
+                          end: score / 10.0
+                        ),
+                        duration: const Duration(milliseconds: 500),
+                        builder: (context, value, child) {
+                          return LinearProgressIndicator(
+                            value: score / 10.0,
+                            backgroundColor: Colors.grey[300],
+                            valueColor: AlwaysStoppedAnimation<Color>(
+                              _getProgressColor(score),
+                            ),
+                          );
+                        },
                     ),
-                    SizedBox(height: 15),
-                    Text('Score: ${score == 0 ? 'N/A' : score}/10'),
+                    const SizedBox(height: 15),
+                    Text('Score: ${score == 0 ? '_' : score}/10', style: const TextStyle(fontWeight: FontWeight.bold),),
                   ],
                 ),
                 trailing: IconButton(
@@ -264,6 +272,7 @@ class _SpeakingListTestPageState extends State<SpeakingListTestPage> {
                   },
                 ),
               ),
+            ),
             ),
           ),
         );

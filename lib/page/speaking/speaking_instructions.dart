@@ -1,4 +1,6 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'speaking_question.dart';
 
 class SpeakingInstructions extends StatelessWidget {
@@ -28,26 +30,31 @@ class SpeakingInstructions extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
-          icon: Icon(Icons.arrow_back),
+          icon: const Icon(Icons.arrow_back),
           onPressed: () {
             Navigator.of(context).pop();
           },
         ),
         title: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(Icons.timer),
-            SizedBox(width: 8),
+            Image.asset(
+              "assets/images/img_clock.png",
+              width: 40,
+              height: 40,
+            ),
+            const SizedBox(width: 5),
             Text(selectedTime),
           ],
         ),
         elevation: 0,
-        backgroundColor: Color(0xFFB5E0EA),
+        backgroundColor: const Color(0xFFB5E0EA),
       ),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 24.0),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
+            const SizedBox(height: 80),
             Container(
               padding: const EdgeInsets.all(8.0),
               decoration: BoxDecoration(
@@ -56,15 +63,15 @@ class SpeakingInstructions extends StatelessWidget {
               ),
               child: Text(
                 part,
-                style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
+                style: const TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
               ),
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             Container(
               padding: const EdgeInsets.all(16.0),
               decoration: BoxDecoration(
                 color: Colors.white,
-                border: Border.all(color: Colors.lightBlue.shade50, width: 3.5),
+                border: Border.all(color: Colors.lightBlue.shade50, width: 1.5),
                 borderRadius: BorderRadius.circular(8.0),
               ),
               child: Column(
@@ -81,7 +88,7 @@ class SpeakingInstructions extends StatelessWidget {
                   const SizedBox(height: 10),
                   Text(
                     getInstructionContent(part),
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontSize: 16.0,
                       color: Colors.black,
                     ),
@@ -90,7 +97,7 @@ class SpeakingInstructions extends StatelessWidget {
                 ],
               ),
             ),
-            const Spacer(),
+            const SizedBox(height: 20),
             ElevatedButton(
               onPressed: () {
                 Navigator.push(
@@ -105,17 +112,16 @@ class SpeakingInstructions extends StatelessWidget {
                   ),
                 );
               },
-
               style: TextButton.styleFrom(
-                foregroundColor: Colors.white,
-                backgroundColor: Colors.green,
+                foregroundColor: Colors.black,
+                backgroundColor: const Color(0xFFB5E0EA),
                 minimumSize: const Size(double.infinity, 50),
-                side: const BorderSide(color: Colors.green),
+                side: const BorderSide(color: Color(0xFFB5E0EA)),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(8.0),
                 ),
               ),
-              child: const Text('Start'),
+              child: const Text('Start',style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
             ),
           ],
         ),
