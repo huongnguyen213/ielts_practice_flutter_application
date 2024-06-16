@@ -19,8 +19,11 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+  // Bộ điều khiển cho các trường nhập liệu username và password
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+
+  // Biến để kiểm soát hiển thị mật khẩu
   bool _passwordObscure = true;
 
   @override
@@ -61,6 +64,8 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                 ),
                 const Gap(48),
+
+                // Nhãn cho trường nhập liệu username
                 RichText(
                   text: TextSpan(
                     text: "Username",
@@ -78,7 +83,9 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                 ),
                 const Gap(4),
+
                 CupertinoTextField(
+                  // Trường nhập liệu username
                   controller: _usernameController,
                   maxLines: 1,
                   keyboardType: TextInputType.text,
@@ -97,6 +104,8 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                 ),
                 const Gap(16),
+
+                // Nhãn cho trường nhập liệu password
                 RichText(
                   text: TextSpan(
                     text: "Password",
@@ -114,6 +123,8 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                 ),
                 const Gap(4),
+
+                // Trường nhập liệu password
                 CupertinoTextField(
                   controller: _passwordController,
                   maxLines: 1,
@@ -149,6 +160,8 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                 ),
                 const Gap(10),
+
+                // Nút quên mật khẩu
                 Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
@@ -167,26 +180,41 @@ class _LoginPageState extends State<LoginPage> {
                   ],
                 ),
                 const Gap(18),
+
+                // Nút đăng nhập
                 SizedBox(
                   width: double.infinity,
                   child: CupertinoButton(
+                    //một button kiểu iOS.
                     color: kPrimaryColor,
+                    // đặt màu nền của nút.
                     padding: const EdgeInsets.symmetric(vertical: 13),
+                    //thêm khoảng đệm dọc là 13
+
+                    //Xử lý sự kiện khi nhấn nút
                     onPressed: () async {
-                      String username = _usernameController.value.text.trim();
+                      String username = _usernameController.value.text
+                          .trim(); //ấy và loại bỏ khoảng trắng đầu và cuối
                       String password = _passwordController.value.text.trim();
                       if (username.isEmpty || password.isEmpty) {
-                        _showFailureDialog(context);
+                        _showFailureDialog(
+                            context); //Kiểm tra nếu rỗng thì hiển thị hộp thoại thất bại
                       } else {
+                        //Lấy instance của SharedPreferences.
                         final SharedPreferences prefs =
                             await SharedPreferences.getInstance();
+
+                        //Lấy danh sách người dùng từ SharedPreferences và chuyển đổi từ JSON sang danh sách.
                         List<dynamic> data = jsonDecode(
                             prefs.getString("users") == null
                                 ? "[]"
                                 : prefs.getString("users").toString());
+
+                        //giải mã ds json thành user
                         List<User> users = User.decode(data);
                         bool check = false;
                         for (var e in users) {
+                          //kiểm tra từng người dùng trong danh sách
                           if (e.username == username &&
                               e.password == password) {
                             Navigator.of(context).push(CupertinoPageRoute(
@@ -225,6 +253,8 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                 ),
                 const Gap(16),
+
+                // Nút đăng ký tài khoản mới
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -262,6 +292,7 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
+  // Hàm hiển thị thông báo lỗi đăng nhập
   void _showFailureDialog(BuildContext context) {
     showCupertinoModalPopup<void>(
       context: context,
@@ -270,9 +301,10 @@ class _LoginPageState extends State<LoginPage> {
         content: const Text('Please check inputs field!'),
         actions: <CupertinoDialogAction>[
           CupertinoDialogAction(
-            /// This parameter indicates the action would perform
-            /// a destructive action such as deletion, and turns
-            /// the action's text color to red.
+            /// Tham số này cho biết hành động sẽ thực hiện
+            /// một hành động phá hoại như xóa và chuyển
+            /// màu văn bản của hành động thành màu đỏ.
+
             isDestructiveAction: true,
             onPressed: () {
               Navigator.pop(context);

@@ -17,10 +17,11 @@ class SignupPage extends StatefulWidget {
 }
 
 class _SignupPageState extends State<SignupPage> {
+  // Khởi tạo các bộ điều khiển cho trường nhập liệu
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _cPasswordController = TextEditingController();
-  bool _passwordObscure = true;
+  bool _passwordObscure = true; // Biến để ẩn/hiện mật khẩu
 
   @override
   Widget build(BuildContext context) {
@@ -276,6 +277,7 @@ class _SignupPageState extends State<SignupPage> {
   }
 }
 
+// Hàm hiển thị thông báo lỗi khi đăng ký thất bại
 void _showFailureDialog(BuildContext context) {
   showCupertinoModalPopup<void>(
     context: context,
@@ -284,10 +286,10 @@ void _showFailureDialog(BuildContext context) {
       content: const Text('Please check inputs field!'),
       actions: <CupertinoDialogAction>[
         CupertinoDialogAction(
-          /// This parameter indicates the action would perform
-          /// a destructive action such as deletion, and turns
-          /// the action's text color to red.
-          isDestructiveAction: true,
+          /// Tham số này cho biết hành động sẽ thực hiện
+          /// một hành động phá hoại như xóa và chuyển
+          /// màu văn bản của hành động thành màu đỏ.
+          isDestructiveAction: true, // Đặt hành động này là phá hủy
           onPressed: () {
             Navigator.pop(context);
           },
@@ -298,6 +300,7 @@ void _showFailureDialog(BuildContext context) {
   );
 }
 
+// Hàm hiển thị thông báo thành công khi đăng ký
 void _showSuccessDialog(BuildContext context) {
   showCupertinoModalPopup<void>(
     context: context,
@@ -306,13 +309,13 @@ void _showSuccessDialog(BuildContext context) {
       content: const Text('Please login!'),
       actions: <CupertinoDialogAction>[
         CupertinoDialogAction(
-          /// This parameter indicates the action would perform
-          /// a destructive action such as deletion, and turns
-          /// the action's text color to red.
-          isDefaultAction: true,
+          /// Tham số này cho biết hành động sẽ thực hiện
+          /// một hành động phá hoại như xóa và chuyển
+          /// màu văn bản của hành động thành màu đỏ.
+          isDefaultAction: true, // Đặt hành động này là mặc định
           onPressed: () {
-            Navigator.of(context).pop();
-            Navigator.of(context).pop();
+            Navigator.of(context).pop(); // Đóng dialog
+            Navigator.of(context).pop(); // Quay lại màn hình trước
           },
           child: const Text('OK'),
         ),
