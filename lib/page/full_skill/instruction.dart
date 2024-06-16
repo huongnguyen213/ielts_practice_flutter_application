@@ -67,6 +67,7 @@ class InstructionPage extends StatelessWidget {
               ),
             ),
             Spacer(),
+            // Spacer(),
             ElevatedButton(
               onPressed: () {
                 Navigator.push(
@@ -74,16 +75,16 @@ class InstructionPage extends StatelessWidget {
                   MaterialPageRoute(builder: (context) => DetailTest()),
                 );
               },
-              style: ElevatedButton.styleFrom(
-                padding: EdgeInsets.symmetric(vertical: 16),
+              style: TextButton.styleFrom(
+                foregroundColor: Colors.black,
+                backgroundColor: const Color(0xFFB5E0EA),
+                minimumSize: const Size(double.infinity, 50),
+                side: const BorderSide(color: Color(0xFFB5E0EA)),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(8.0),
                 ),
               ),
-              child: Text(
-                'Start',
-                style: TextStyle(fontSize: 18),
-              ),
+              child: const Text('Start',style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.black)),
             ),
           ],
         ),

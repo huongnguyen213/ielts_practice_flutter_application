@@ -226,14 +226,14 @@ class _IELTSHomeState extends State<HomePage> with SingleTickerProviderStateMixi
                     _buildGridItem('Reading Test', ReadingListTestPage()),
                     _buildGridItem('Writing Test', WritingListTestPage()),
                     _buildGridItem('Speaking Test', SpeakingListTestPage()),
-                    _buildGridItem('Full Skills', null),
+                    _buildGridItem('Full Skills', ListTestPage()),
                     _buildGridItem('Grammar', null),
                   ] : [
                     _buildGridItem('Listening Practice', ListeningListTestPage()),
                     _buildGridItem('Reading Practice', ReadingListTestPage()),
                     _buildGridItem('Writing Practice', WritingListTestPage()),
                     _buildGridItem('Speaking Practice', SpeakingListTestPage()),
-                    _buildGridItem('General Skills', null),
+                    _buildGridItem('General Skills', ListTestPage()),
                     _buildGridItem('Grammar Practice', null),
                   ],
                 ),
@@ -288,6 +288,7 @@ class _IELTSHomeState extends State<HomePage> with SingleTickerProviderStateMixi
           ],
         ),
       ),
+    ),
     );
   }
 
