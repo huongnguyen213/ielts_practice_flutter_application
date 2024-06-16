@@ -259,7 +259,7 @@ class _Part3PageState extends State<Part3Page> {
                         : userAnswers[index];
                     return ListTile(
                       title: Text(
-                        '${index + 1}: $questionText',
+                        '${index + 1}',
                         style: TextStyle(fontWeight: FontWeight.bold),
                       ),
                       subtitle: Text(answer),

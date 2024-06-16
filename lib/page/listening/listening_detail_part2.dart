@@ -208,42 +208,42 @@ class _Part2PageState extends State<Part2Page> {
           ),
 
         ),
-    endDrawer: Drawer(
-    child: Container(
-    width: MediaQuery.of(context).size.width * 0.3,
-    color: Colors.white,
-    child: Column(
-    children: [
-    Expanded(
-    child: ListView.builder(
-    itemCount: questions.length,
-    itemBuilder: (context, index) {
-    final questionKey = 'q${index + 1}';
-    final question = questions[questionKey]['Q'];
-    final answer = userAnswers[index].isEmpty ? 'Not Done' : userAnswers[index];
-    return ListTile(
-    title: Text(
-    '$questionKey: $question',
-    style: TextStyle(fontWeight: FontWeight.bold),
-    ),
-    subtitle: Text(answer),
-    );
-    },
-    ),
-    ),
-    Padding(
-    padding: const EdgeInsets.all(8.0),
-    child: ElevatedButton(
-    onPressed: () {
-    _showSubmitDialog();
-    },
-    child: Text('Submit'),
-    ),
-    ),
-    ],
-    ),
-    ),
-    ),
+        endDrawer: Drawer(
+          child: Container(
+            width: MediaQuery.of(context).size.width * 0.3,
+            color: Colors.white,
+            child: Column(
+              children: [
+                Expanded(
+                  child: ListView.builder(
+                    itemCount: userAnswers.length,
+                    itemBuilder: (context, index) {
+                      final questionKey = 'Q${index + 1}';
+                      final answer = userAnswers[index].isEmpty ? 'Not Done' : userAnswers[index];
+                      return ListTile(
+                        title: Text(
+                          questionKey,
+                          style: const TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                        subtitle: Text(answer),
+                      );
+                    },
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: ElevatedButton(
+                    onPressed: () {
+                      _showSubmitDialog();
+                    },
+                    child: Text('Submit'),
+                  ),
+                ),
+                SizedBox(height: 200)
+              ],
+            ),
+          ),
+        ),
         backgroundColor: Colors.white,
         body: Column(
           children: [

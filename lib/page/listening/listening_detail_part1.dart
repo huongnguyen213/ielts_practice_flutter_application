@@ -5,7 +5,7 @@ import 'package:flutter/services.dart' show rootBundle;
 import 'package:audioplayers/audioplayers.dart';
 import 'package:ielts_practice_flutter_application/page/listening/test_set_up.dart';
 
-import 'listening_result_page.dart';
+
 
 class Part1Page extends StatefulWidget {
   TestSetup testSetup;
@@ -218,17 +218,7 @@ class _Part1PageState extends State<Part1Page> {
                 _showSidebar();
                 calculateScore();
 
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => ListeningResultPage()
-                  ),
 
-
-
-
-
-                );
               },
               child: Text('Yes'),
             ),
@@ -298,7 +288,7 @@ class _Part1PageState extends State<Part1Page> {
                           : userAnswers[index];
                       return ListTile(
                         title: Text(
-                          '${index + 1}: $questionText',
+                          '${index + 1}',
                           style: TextStyle(fontWeight: FontWeight.bold),
                         ),
                         subtitle: Text(answer),

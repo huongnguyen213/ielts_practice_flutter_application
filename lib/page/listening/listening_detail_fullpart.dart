@@ -360,6 +360,16 @@ class _PartContentState extends State<PartContent> {
                 ),
               ),
               SizedBox(height: 20),
+              Container(
+                margin: EdgeInsets.all(50),
+
+
+                child: Text("Part "+widget.partNumber.toString(),style: TextStyle(
+                  fontSize: 25,
+                  color: Colors.black,
+                  fontWeight: FontWeight.w500
+                ),),
+              ),
               // Hiển thị các câu hỏi
               if (partData!['question'] != null) ...[
                 if (widget.partNumber == 1 || widget.partNumber == 3 || widget.partNumber == 4)
@@ -451,7 +461,7 @@ class _PartContentState extends State<PartContent> {
           right: 0,
           child: Container(
             color: Colors.white,
-            padding: EdgeInsets.all(10),
+            padding: EdgeInsets.all(5),
             child: SingleChildScrollView(
               scrollDirection: Axis.horizontal,
               child: Row(
@@ -462,10 +472,12 @@ class _PartContentState extends State<PartContent> {
                       scrollToQuestion(index);
                     },
                     style: ElevatedButton.styleFrom(
-                      foregroundColor: Colors.white, backgroundColor: Colors.blue, shape: CircleBorder(),
-                      padding: EdgeInsets.all(20), // foreground
+                      foregroundColor: Colors.white, backgroundColor: Color(0xffD3D3D3), shape: CircleBorder(),
+                      padding: EdgeInsets.all(15), // foreground
                     ),
-                    child: Text((index + 1).toString()),
+                    child: Text((index + 1).toString(),style: TextStyle(
+                      color: Colors.black
+                    ),),
                   );
                 }),
               ),

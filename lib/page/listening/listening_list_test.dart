@@ -32,24 +32,36 @@ class _ListeningListTestPageState extends State<ListeningListTestPage> {
   Map<String, dynamic>? tests;
   SharedPreferences? _prefs;
   TextEditingController _searchController = TextEditingController();
+  List<String> filteredTestNames = [];
 
   @override
   void initState() {
     super.initState();
     _loadJson();
     _loadPreferences();
+    _searchController.addListener(_filterTests);
   }
 
   Future<void> _loadJson() async {
     String jsonString = await rootBundle.loadString('lib/assets/data/listening.json');
     setState(() {
       tests = jsonDecode(jsonString)['listening'];
+      filteredTestNames = tests!.keys.toList();
     });
   }
 
   Future<void> _loadPreferences() async {
     _prefs = await SharedPreferences.getInstance();
     setState(() {});
+  }
+
+  void _filterTests() {
+    setState(() {
+      String query = _searchController.text.toLowerCase();
+      filteredTestNames = tests!.keys
+          .where((testName) => testName.toLowerCase().contains(query))
+          .toList();
+    });
   }
 
   _toggleFavorite(String testName) async {
@@ -63,8 +75,8 @@ class _ListeningListTestPageState extends State<ListeningListTestPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Color(0xffE2F1F4),
         title: Text('Listening Tests'),
-
       ),
       body: tests == null
           ? Center(child: CircularProgressIndicator())
@@ -90,16 +102,13 @@ class _ListeningListTestPageState extends State<ListeningListTestPage> {
                   borderRadius: BorderRadius.circular(10.0),
                 ),
               ),
-              onChanged: (value) {
-                // Implement search functionality here if needed
-              },
             ),
           ),
           Expanded(
             child: ListView.builder(
-              itemCount: tests!.length,
+              itemCount: filteredTestNames.length,
               itemBuilder: (context, index) {
-                String testName = tests!.keys.elementAt(index);
+                String testName = filteredTestNames[index];
                 var test = tests![testName];
                 int score = test['score'];
                 bool isFavorite = _prefs?.getBool(testName) ?? false;
@@ -115,12 +124,7 @@ class _ListeningListTestPageState extends State<ListeningListTestPage> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        ListTile(
-                          contentPadding: EdgeInsets.zero,
-                          title: Text(
-                            'Listening $testName',
-                            style: TextStyle(fontWeight: FontWeight.bold),
-                          ),
+                        GestureDetector(
                           onTap: () {
                             Navigator.push(
                               context,
@@ -129,14 +133,26 @@ class _ListeningListTestPageState extends State<ListeningListTestPage> {
                               ),
                             );
                           },
-                          trailing: IconButton(
-                            icon: Icon(
-                              isFavorite ? Icons.star : Icons.star_border,
-                              color: Colors.yellow,
-                            ),
-                            onPressed: () {
-                              _toggleFavorite(testName);
-                            },
+                          child: Row(
+                            children: [
+
+                              SizedBox(width: 10),
+                              Expanded(
+                                child: Text(
+                                  'Listening $testName',
+                                  style: TextStyle(fontWeight: FontWeight.bold),
+                                ),
+                              ),
+                              IconButton(
+                                icon: Icon(
+                                  isFavorite ? Icons.star : Icons.star_border,
+                                  color: Colors.yellow,
+                                ),
+                                onPressed: () {
+                                  _toggleFavorite(testName);
+                                },
+                              ),
+                            ],
                           ),
                         ),
                         Padding(
@@ -167,9 +183,6 @@ class _ListeningListTestPageState extends State<ListeningListTestPage> {
 class ListeningTestSetupPage extends StatefulWidget {
   late String testname;
 
-
-
-
   ListeningTestSetupPage(this.testname);
 
   @override
@@ -179,7 +192,6 @@ class ListeningTestSetupPage extends StatefulWidget {
 class _ListeningTestSetupPageState extends State<ListeningTestSetupPage> {
   String _selectedPart = 'Part 1';
   String _selectedTime = 'Standard';
-
 
   @override
   Widget build(BuildContext context) {
@@ -204,6 +216,7 @@ class _ListeningTestSetupPageState extends State<ListeningTestSetupPage> {
               'Choose part:',
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
+            SizedBox(height: 24),
             GridView.count(
               shrinkWrap: true,
               crossAxisCount: 2,
@@ -223,6 +236,7 @@ class _ListeningTestSetupPageState extends State<ListeningTestSetupPage> {
               'Choose time:',
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
+            SizedBox(height: 24),
             DropdownButtonFormField<String>(
               value: _selectedTime,
               onChanged: (String? newValue) {
@@ -255,21 +269,31 @@ class _ListeningTestSetupPageState extends State<ListeningTestSetupPage> {
                       selectedPart: _selectedPart,
                       selectedTime: _getTimeValue(_selectedTime),
                       isPlaying: true,
-
                     );
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => testSetup.selectedPart == "Part 1" ?
-                        Part1Page(testSetup):
-                            testSetup.selectedPart == "Part 2"? Part2Page(testSetup): testSetup.selectedPart == "Part 3" ?
-                            Part3Page(testSetup): testSetup.selectedPart == "Part 4" ? Part4Page(testSetup):
-                            FullPartPage(testSetup),
-
+                        builder: (context) => testSetup.selectedPart == "Part 1"
+                            ? Part1Page(testSetup)
+                            : testSetup.selectedPart == "Part 2"
+                            ? Part2Page(testSetup)
+                            : testSetup.selectedPart == "Part 3"
+                            ? Part3Page(testSetup)
+                            : testSetup.selectedPart == "Part 4"
+                            ? Part4Page(testSetup)
+                            : FullPartPage(testSetup),
                       ),
                     );
                   },
-                  child: Text('Start'),
+                  child: Text('Start',style:TextStyle(
+                    fontSize: 20,
+                    color: Colors.black,
+
+                  ),
+                  ),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Color(0xffE2F1F4),
+                  ),
                 ),
               ),
             ),

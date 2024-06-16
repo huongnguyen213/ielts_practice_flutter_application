@@ -265,7 +265,7 @@ class _Part4PageState extends State<Part4Page> {
                         : userAnswers[index];
                     return ListTile(
                       title: Text(
-                        '${index + 1}: $questionText',
+                        '${index + 1}',
                         style: TextStyle(fontWeight: FontWeight.bold),
                       ),
                       subtitle: Text(answer),
