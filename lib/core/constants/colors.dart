@@ -1,0 +1,24 @@
+import 'package:flutter/cupertino.dart';
+
+Color kPrimaryColor = const Color(0xff1877F2);
+Color kBlackColor = const Color(0xff000000);
+Color kWhiteColor = const Color(0xffffffff);
+Color kBackgroundColor = const Color(0xff1C1E21);
+Color kInputColor = const Color(0xff3A3B3C);
+Color kBodyColor = const Color(0xffB0B3B8);
+Color kTitleColor = const Color(0xffE4E6EB);
+Color kErrorDarkColor = const Color(0xffC30052);
+Color kErrorDarkModeColor = const Color(0xffFF84B7);
+Color kErrorDefaultColor = const Color(0xffED2E7E);
+Color kSuccessDarkColor = const Color(0xff00966D);
+Color kSuccessDarkModeColor = const Color(0xff34EAB9);
+Color kSuccessDefaultColor = const Color(0xff00BA88);
+Color kWarningDarkColor = const Color(0xff946200);
+Color kWarningDarkModeColor = const Color(0xffFFD789);
+Color kWarningDefaultColor = const Color(0xffF4B740);
+Color kTitleActiveColor = const Color(0xff050505);
+Color kBodyTextColor = const Color(0xff4E4B66);
+Color kButtonTextColor = const Color(0xff667080);
+Color kPlaceHolderColor = const Color(0xffA0A3BD);
+Color kSecondaryButtonColor = const Color(0xffEEF1F4);
+Color kDisableInputColor = const Color(0xffEEF1F4);
