@@ -5,14 +5,11 @@ import 'package:gap/gap.dart';
 import 'package:ielts_practice_flutter_application/page/reading/pages/solution_page.dart';
 import 'package:pie_chart/pie_chart.dart';
 
-import '../reading/cubit/test_cubit.dart';
-import '../reading/cubit/test_cubit.dart';
-import '../reading/widgets/linear_point.dart';
-import '../reading/widgets/linear_point.dart';
+import '../reading/cubit//test_cubit.dart';
+import '../reading/widgets//linear_point.dart';
 
 class ListeningResultPage extends StatelessWidget {
-  const ListeningResultPage({Key? key}) : super(key: key);
-
+  const ListeningResultPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -107,31 +104,10 @@ class ListeningResultPage extends StatelessWidget {
               const Gap(48),
               CupertinoButton(
                 onPressed: () {
-                  showDialog(
-                    context: context,
-                    builder: (BuildContext context) {
-                      return AlertDialog(
-                        title: Text('Are you sure you want to submit?'),
-                        actions: <Widget>[
-                          TextButton(
-                            child: Text('Cancel'),
-                            onPressed: () {
-                              Navigator.of(context).pop();
-                            },
-                          ),
-                          TextButton(
-                            child: Text('Submit'),
-                            onPressed: () {
-                              Navigator.of(context).pop(); // Đóng popup
-                              // Xử lý hành động khi nhấn "Submit"
-                              // Ví dụ: Chuyển đến trang kết quả
-                              Navigator.pushReplacementNamed(context, '/test_result');
-                            },
-                          ),
-                        ],
-                      );
-                    },
-                  );
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const SolutionPage()));
                 },
                 minSize: 0,
                 color: const Color(0xffcbebc3),
@@ -139,8 +115,8 @@ class ListeningResultPage extends StatelessWidget {
                 child: Container(
                   padding:
                   const EdgeInsets.symmetric(vertical: 16, horizontal: 32),
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(20)),
+                  decoration:
+                  BoxDecoration(borderRadius: BorderRadius.circular(20)),
                   child: const Text(
                     "View solution",
                     style: TextStyle(

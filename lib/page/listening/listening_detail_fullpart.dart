@@ -3,25 +3,17 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:audioplayers/audioplayers.dart';
+import 'package:ielts_practice_flutter_application/page/listening/test_set_up.dart';
 
-void main() {
-  runApp(MyApp());
-}
 
-class MyApp extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Listening Test',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: FullPartPage(),
-    );
-  }
-}
+
 
 class FullPartPage extends StatefulWidget {
+  TestSetup testSetup;
+
+
+  FullPartPage(this.testSetup);
+
   @override
   _FullPartPageState createState() => _FullPartPageState();
 }
@@ -29,15 +21,51 @@ class FullPartPage extends StatefulWidget {
 class _FullPartPageState extends State<FullPartPage> with SingleTickerProviderStateMixin {
   late TabController _tabController;
   late List<Map<String, dynamic>> partAnswers;
+  late int remainingMinutes;
+  int remainingSeconds = 0;
+  late Timer timer;
+  // Các biến khác ...
 
   @override
   void initState() {
     super.initState();
     _tabController = TabController(length: 4, vsync: this);
     partAnswers = List.generate(4, (index) => {});
-
+    remainingMinutes = widget.testSetup.selectedTime;
+    startTimer();
   }
-
+  void startTimer() {
+    timer = Timer.periodic(Duration(seconds: 1), (Timer timer) {
+      setState(() {
+        if (remainingSeconds > 0) {
+          remainingSeconds--;
+        } else if (remainingMinutes > 0) {
+          remainingMinutes--;
+          remainingSeconds = 59;
+        } else {
+          timer.cancel();
+          // Hiển thị hộp thoại khi hết thời gian
+          showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return AlertDialog(
+                title: Text('Time is up!'),
+                content: Text('The timer has ended.'),
+                actions: <Widget>[
+                  TextButton(
+                    child: Text('OK'),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                  ),
+                ],
+              );
+            },
+          );
+        }
+      });
+    });
+  }
   @override
   void dispose() {
     _tabController.dispose();
@@ -46,6 +74,8 @@ class _FullPartPageState extends State<FullPartPage> with SingleTickerProviderSt
 
   @override
   Widget build(BuildContext context) {
+    String remainingTime =
+        '${remainingMinutes.toString().padLeft(2, '0')}:${remainingSeconds.toString().padLeft(2, '0')}';
     return DefaultTabController(
       length: 4,
       child: Scaffold(
@@ -62,7 +92,7 @@ class _FullPartPageState extends State<FullPartPage> with SingleTickerProviderSt
                   ),
                   SizedBox(width: 5),
                   Text(
-                    '10:00',
+                    remainingTime,
                     style: TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
@@ -104,7 +134,6 @@ class _FullPartPageState extends State<FullPartPage> with SingleTickerProviderSt
     );
   }
 }
-
 class PartContent extends StatefulWidget {
   final int partNumber;
   final int questionCount;
@@ -125,13 +154,15 @@ class _PartContentState extends State<PartContent> {
   double volume = 0.5;
   String audioUrl = '';
   Map<String, dynamic>? partData;
-  Map<String, dynamic> _selectedValue = {};
+  late Map<String, dynamic> _selectedValue;
   ScrollController _scrollController = ScrollController();
+  late Map<String, TextEditingController> _textControllers;
 
   @override
   void initState() {
     super.initState();
     _audioPlayer = AudioPlayer();
+    _textControllers = {};
     _selectedValue = Map.from(widget.partAnswers);
     _audioPlayer.onDurationChanged.listen((Duration duration) {
       setState(() {
@@ -164,7 +195,8 @@ class _PartContentState extends State<PartContent> {
   }
   void saveAnswer(String questionKey, dynamic answer) {
     setState(() {
-      widget.partAnswers[questionKey] = answer; // Lưu câu trả lời vào biến partAnswers
+      widget.partAnswers[questionKey] = answer;
+      _selectedValue[questionKey] = answer;// Lưu câu trả lời vào biến partAnswers
     });
   }
 
@@ -353,9 +385,11 @@ class _PartContentState extends State<PartContent> {
                                   hintText: 'Your answer',
                                 ),
                                 onChanged: (value) {
+                                  saveAnswer(entry.key, value);
                                   // Lưu giá trị vào _selectedValue khi người dùng nhập câu trả lời
                                   _selectedValue[entry.key] = value;
                                 },
+                                controller: TextEditingController(text: widget.partAnswers[entry.key] ?? ''),
                               ),
                               SizedBox(height: 16),
                             ],
@@ -389,12 +423,14 @@ class _PartContentState extends State<PartContent> {
                                 return RadioListTile(
                                   title: Text(answerEntry.value.toString()),
                                   value: answerEntry.key,
-                                  groupValue: _selectedValue[entry.key],
+                                  groupValue:  widget.partAnswers[entry.key],
                                   onChanged: (value) {
                                     setState(() {
+                                      saveAnswer(entry.key, value);
                                       _selectedValue[entry.key] = value;
                                     });
                                   },
+
                                 );
                               }).toList()),
                             SizedBox(height: 16),
@@ -440,3 +476,5 @@ class _PartContentState extends State<PartContent> {
     );
   }
 }
+
+

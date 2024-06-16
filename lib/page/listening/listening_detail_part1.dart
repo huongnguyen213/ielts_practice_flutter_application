@@ -3,8 +3,15 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:audioplayers/audioplayers.dart';
+import 'package:ielts_practice_flutter_application/page/listening/test_set_up.dart';
+
+import 'listening_result_page.dart';
 
 class Part1Page extends StatefulWidget {
+  TestSetup testSetup;
+
+  Part1Page(this.testSetup);
+
   @override
   _Part1PageState createState() => _Part1PageState();
 }
@@ -19,17 +26,22 @@ class _Part1PageState extends State<Part1Page> {
   bool isLoading = true;
   late AudioPlayer audioPlayer;
   bool isPlaying = false;
-  late List<String> userAnswers;
+
   Duration audioDuration = Duration.zero;
   Duration audioPosition = Duration.zero;
   double volume = 1.0;
   ScrollController _scrollController = ScrollController();
   GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  List<String> correctAnswers = []; // Danh sách câu trả lời đúng
+  List<String> userAnswers = []; // Danh sách câu trả lời của người dùng
 
+  int correctCount = 0; // Số câu trả lời đúng
+  int incorrectCount = 0; // Số câu trả lời sai
+  int unansweredCount = 0; // Số câu chưa được trả lời
   @override
   void initState() {
     super.initState();
-    remainingMinutes = 6; // Thời gian mặc định là 6 phút
+    remainingMinutes = widget.testSetup.selectedTime; // Thời gian mặc định là 6 phút
     startTimer();
     userAnswers = List.filled(10, '');
     loadJsonData();
@@ -158,6 +170,21 @@ class _Part1PageState extends State<Part1Page> {
     super.dispose();
   }
 
+  void calculateScore() {
+    correctCount = 0;
+    incorrectCount = 0;
+    unansweredCount = 0;
+
+    for (int i = 0; i < questions.length; i++) {
+      if (userAnswers[i].isEmpty) {
+        unansweredCount++;
+      } else if (userAnswers[i] == correctAnswers[i]) {
+        correctCount++;
+      } else {
+        incorrectCount++;
+      }
+    }
+  }
   void toggleAudio() {
     setState(() {
       isPlaying = !isPlaying;
@@ -189,12 +216,25 @@ class _Part1PageState extends State<Part1Page> {
               onPressed: () {
                 Navigator.of(context).pop();
                 _showSidebar();
+                calculateScore();
+
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => ListeningResultPage()
+                  ),
+
+
+
+
+
+                );
               },
               child: Text('Yes'),
             ),
             TextButton(
               onPressed: () {
-                Navigator.of(context).pop();
+
               },
               child: Text('No'),
             ),
@@ -236,10 +276,7 @@ class _Part1PageState extends State<Part1Page> {
                   ),
                 ],
               ),
-              IconButton(
-                icon: const Icon(Icons.more_vert),
-                onPressed: _showSidebar,
-              ),
+
             ],
           ),
         ),

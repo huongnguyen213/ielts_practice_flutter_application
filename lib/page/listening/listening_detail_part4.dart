@@ -3,8 +3,13 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:audioplayers/audioplayers.dart';
+import 'package:ielts_practice_flutter_application/page/listening/test_set_up.dart';
 
 class Part4Page extends StatefulWidget {
+  TestSetup testSetup;
+
+  Part4Page(this.testSetup);
+
   @override
   _Part4PageState createState() => _Part4PageState();
 }
@@ -24,11 +29,12 @@ class _Part4PageState extends State<Part4Page> {
   Duration audioPosition = Duration.zero;
   double volume = 1.0;
   ScrollController _scrollController = ScrollController();
+  GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   void initState() {
     super.initState();
-    remainingMinutes = 6; // Thời gian mặc định là 6 phút
+    remainingMinutes = widget.testSetup.selectedTime; // Thời gian mặc định là 6 phút
     startTimer();
     userAnswers = List.filled(10, '');
     loadJsonData();
@@ -55,6 +61,9 @@ class _Part4PageState extends State<Part4Page> {
         });
       }
     });
+  }
+  void _showSidebar() {
+    _scaffoldKey.currentState?.openEndDrawer();
   }
 
   Future<void> loadJsonData() async {
@@ -178,29 +187,20 @@ class _Part4PageState extends State<Part4Page> {
       builder: (BuildContext context) {
         return AlertDialog(
           title: Text('Submit Answers'),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: List.generate(questions.length, (index) {
-              final questionKey = 'q${index + 1}';
-              final question = questions[questionKey]!['Q']!;
-              final answer = userAnswers[index].isEmpty ? 'Not Done' : userAnswers[index];
-              return Text('$question: $answer');
-            }),
-          ),
+          content: Text('Are you sure you want to submit your answers?'),
           actions: <Widget>[
             TextButton(
               onPressed: () {
                 Navigator.of(context).pop();
-                // Đặt logic xử lý khi người dùng ấn Submit ở đây
+                _showSidebar();
               },
-              child: Text('Submit'),
+              child: Text('Yes'),
             ),
             TextButton(
               onPressed: () {
                 Navigator.of(context).pop();
               },
-              child: Text('Cancel'),
+              child: Text('No'),
             ),
           ],
         );
@@ -245,6 +245,46 @@ class _Part4PageState extends State<Part4Page> {
               child: Text('Submit'),
             ),
           ],
+        ),
+      ),
+      endDrawer: Drawer(
+
+        child: Container(
+          width: MediaQuery.of(context).size.width * 0.3,
+          color: Colors.white,
+          child: Column(
+            children: [
+              Expanded(
+                child: ListView.builder(
+                  itemCount: questions.length,
+                  itemBuilder: (context, index) {
+                    String questionKey = questions.keys.elementAt(index);
+                    String questionText = questions[questionKey]['Q'];
+                    String answer = userAnswers[index].isEmpty
+                        ? '_ Not Done'
+                        : userAnswers[index];
+                    return ListTile(
+                      title: Text(
+                        '${index + 1}: $questionText',
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                      subtitle: Text(answer),
+                    );
+                  },
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: ElevatedButton(
+                  onPressed: () {
+                    // Đóng sidebar
+                    _showSubmitDialog(); // Hiển thị popup xác nhận submit
+                  },
+                  child: Text('Submit'),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
       backgroundColor: Colors.white,

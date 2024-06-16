@@ -261,10 +261,10 @@ class _ListeningTestSetupPageState extends State<ListeningTestSetupPage> {
                       context,
                       MaterialPageRoute(
                         builder: (context) => testSetup.selectedPart == "Part 1" ?
-                        Part1Page():
-                            testSetup.selectedPart == "Part 2"? Part2Page(): testSetup.selectedPart == "Part 3" ?
-                            Part3Page(): testSetup.selectedPart == "Part 4" ? Part4Page():
-                            FullPartPage(),
+                        Part1Page(testSetup):
+                            testSetup.selectedPart == "Part 2"? Part2Page(testSetup): testSetup.selectedPart == "Part 3" ?
+                            Part3Page(testSetup): testSetup.selectedPart == "Part 4" ? Part4Page(testSetup):
+                            FullPartPage(testSetup),
 
                       ),
                     );
