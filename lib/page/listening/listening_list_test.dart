@@ -1,14 +1,16 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
-import 'package:ielts_practice_flutter_application/page/listening/listening_detail_part4.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 import 'package:flutter/services.dart' show rootBundle;
+
 import 'listening_detail_fullpart.dart';
 import 'listening_detail_part1.dart';
 import 'listening_detail_part2.dart';
 import 'listening_detail_part3.dart';
+import 'listening_detail_part4.dart';
 import 'test_set_up.dart';
-import 'listening_detail_part1.dart';
 
 void main() {
   runApp(MyApp());
@@ -30,23 +32,99 @@ class ListeningListTestPage extends StatefulWidget {
 
 class _ListeningListTestPageState extends State<ListeningListTestPage> {
   Map<String, dynamic>? tests;
+  final List<String> imgList = [
+    'lib/assets/images/tip-writing-1.png',
+    'lib/assets/images/tip-writing-2.png',
+    'lib/assets/images/tip-writing-3.png',
+  ];
+  int _currentIndex = 0;
+  late PageController _pageController;
+  late Timer _timer;
   SharedPreferences? _prefs;
   TextEditingController _searchController = TextEditingController();
-  List<String> filteredTestNames = [];
+  String dropdownValue = "All";
+  List<MapEntry<String, dynamic>> filteredList = [];
 
   @override
   void initState() {
+    _pageController = PageController(initialPage: 0);
     super.initState();
     _loadJson();
     _loadPreferences();
     _searchController.addListener(_filterTests);
+    _timer = Timer.periodic(const Duration(seconds: 15), (Timer timer) {
+      if (_currentIndex < imgList.length - 1) {
+        setState(() {
+          _currentIndex++;
+        });
+      } else {
+        setState(() {
+          _currentIndex = 0;
+        });
+      }
+      _pageController.animateToPage(
+        _currentIndex,
+        duration: const Duration(milliseconds: 500),
+        curve: Curves.easeInOut,
+      );
+    });
   }
+  void dispose() {
+    _pageController.dispose();
+    _timer.cancel();
+    super.dispose();
+  }
+  Widget buildCarouselSlider() {
+    return Container(
+      height: 200.0,
+      padding: const EdgeInsets.all(10.0),
+      child: PageView.builder(
+        controller: _pageController,
+        itemCount: imgList.length,
+        onPageChanged: (int index) {
+          setState(() {
+            _currentIndex = index;
+          });
+        },
+        itemBuilder: (BuildContext context, int index) {
+          return Container(
+            width: MediaQuery.of(context).size.width,
+            margin: const EdgeInsets.symmetric(horizontal: 5.0),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(10.0),
+            ),
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(10.0),
+              child: Image.asset(
+                imgList[index],
+                fit: BoxFit.cover,
+                errorBuilder: (context, error, stackTrace) {
+                  return const Center(
+                    child: Text(
+                      'Image not found',
+                      style: TextStyle(color: Colors.red),
+                    ),
+                  );
+                },
+              ),
+            ),
+          );
+        },
+      ),
+    );
+  }
+
 
   Future<void> _loadJson() async {
     String jsonString = await rootBundle.loadString('lib/assets/data/listening.json');
     setState(() {
       tests = jsonDecode(jsonString)['listening'];
-      filteredTestNames = tests!.keys.toList();
+      tests = tests!.map((key, value) {
+        bool isFavorite = _prefs?.getBool(key) ?? false;
+        value['isFavorite'] = isFavorite;
+        return MapEntry(key, value);
+      });
+      filteredList = tests!.entries.toList();
     });
   }
 
@@ -56,19 +134,32 @@ class _ListeningListTestPageState extends State<ListeningListTestPage> {
   }
 
   void _filterTests() {
+    String query = _searchController.text.toLowerCase();
     setState(() {
-      String query = _searchController.text.toLowerCase();
-      filteredTestNames = tests!.keys
-          .where((testName) => testName.toLowerCase().contains(query))
-          .toList();
+      filteredList = tests!.entries.where((entry) {
+        bool matchesQuery = entry.key.toLowerCase().contains(query);
+        bool matchesDropdown = dropdownValue == "All" || (dropdownValue == "Like" && entry.value['isFavorite']);
+        return matchesQuery && matchesDropdown;
+      }).toList();
+    });
+  }
+
+  void _onDropdownChanged(String value) {
+    setState(() {
+      dropdownValue = value;
+      _filterTests();
     });
   }
 
   _toggleFavorite(String testName) async {
-    bool? currentFavorite = _prefs!.getBool(testName);
-    bool newFavorite = currentFavorite != null ? !currentFavorite : true;
+    bool currentFavorite = _prefs!.getBool(testName) ?? false;
+    bool newFavorite = !currentFavorite;
     await _prefs!.setBool(testName, newFavorite);
-    setState(() {});
+
+    setState(() {
+      tests![testName]['isFavorite'] = newFavorite;
+      _filterTests();
+    });
   }
 
   @override
@@ -82,36 +173,126 @@ class _ListeningListTestPageState extends State<ListeningListTestPage> {
           ? Center(child: CircularProgressIndicator())
           : Column(
         children: [
-          Container(
-            padding: EdgeInsets.all(16.0),
-            color: Colors.grey[200],
-            child: Text(
-              'Stay focused, practice regularly, and develop note-taking skills to excel in the IELTS listening test!',
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-              textAlign: TextAlign.center,
-            ),
-          ),
-          Container(
-            padding: EdgeInsets.all(16.0),
-            child: TextField(
-              controller: _searchController,
-              decoration: InputDecoration(
-                prefixIcon: Icon(Icons.search),
-                hintText: 'Search...',
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(10.0),
+          buildCarouselSlider(),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 16),
+            child: Row(
+              children: [
+                Expanded(
+                  child: Container(
+                    height: 31,
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(31),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.25),
+                          spreadRadius: 1,
+                          blurRadius: 5,
+                          offset: const Offset(0, 5),
+                        ),
+                      ],
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const SizedBox(width: 14),
+                        Expanded(
+                          child: TextField(
+                            controller: _searchController,
+                            maxLines: 1,
+                            textAlign: TextAlign.center,
+                            style: const TextStyle(
+                              fontSize: 13,
+                              fontWeight: FontWeight.w400,
+                              color: Colors.black,
+                            ),
+                            decoration: const InputDecoration(
+                              isDense: true,
+                              contentPadding: EdgeInsets.zero,
+                              hintText: "Enter test name",
+                              hintStyle: TextStyle(
+                                fontSize: 12,
+                                fontWeight: FontWeight.w200,
+                                color: Colors.black,
+                              ),
+                              border: InputBorder.none,
+                            ),
+                          ),
+                        ),
+                        Image.asset(
+                          "assets/images/img_search.png",
+                          width: 25,
+                          height: 25,
+                        ),
+                        const SizedBox(width: 14),
+                      ],
+                    ),
+                  ),
                 ),
-              ),
+                const SizedBox(width: 18),
+                Container(
+                  width: 130,
+                  height: 31,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(31),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.25),
+                        spreadRadius: 1,
+                        blurRadius: 5,
+                        offset: const Offset(0, 5),
+                      ),
+                    ],
+                  ),
+                  child: Center(
+                    child: DropdownButton<String>(
+                      value: dropdownValue,
+                      icon: Image.asset(
+                        "assets/images/img_expand_arrow.png",
+                        width: 40,
+                        height: 40,
+                      ),
+                      iconSize: 24,
+                      elevation: 16,
+                      style: const TextStyle(color: Colors.black),
+                      underline: Container(
+                        height: 2,
+                        color: Colors.transparent,
+                      ),
+                      onChanged: (String? newValue) {
+                        if (newValue != null) {
+                          _onDropdownChanged(newValue);
+                        }
+                      },
+                      items: <String>['All', 'Like']
+                          .map<DropdownMenuItem<String>>((String value) {
+                        return DropdownMenuItem<String>(
+                          value: value,
+                          child: Container(
+                            alignment: Alignment.center,
+                            child: Text(
+                              value,
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
+                        );
+                      }).toList(),
+                    ),
+                  ),
+                ),
+              ],
             ),
           ),
           Expanded(
             child: ListView.builder(
-              itemCount: filteredTestNames.length,
+              itemCount: filteredList.length,
               itemBuilder: (context, index) {
-                String testName = filteredTestNames[index];
-                var test = tests![testName];
+                String testName = filteredList[index].key;
+                var test = filteredList[index].value;
                 int score = test['score'];
-                bool isFavorite = _prefs?.getBool(testName) ?? false;
+                bool isFavorite = test['isFavorite'] ?? false;
 
                 return Card(
                   margin: EdgeInsets.all(8.0),
@@ -135,7 +316,7 @@ class _ListeningListTestPageState extends State<ListeningListTestPage> {
                           },
                           child: Row(
                             children: [
-
+                              Icon(Icons.headset),
                               SizedBox(width: 10),
                               Expanded(
                                 child: Text(
@@ -181,9 +362,9 @@ class _ListeningListTestPageState extends State<ListeningListTestPage> {
 }
 
 class ListeningTestSetupPage extends StatefulWidget {
-  late String testname;
+  final String testName;
 
-  ListeningTestSetupPage(this.testname);
+  ListeningTestSetupPage(this.testName);
 
   @override
   _ListeningTestSetupPageState createState() => _ListeningTestSetupPageState();
@@ -207,7 +388,7 @@ class _ListeningTestSetupPageState extends State<ListeningTestSetupPage> {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             Text(
-              'Set up ${widget.testname}',
+              'Set up ${widget.testName}',
               style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
               textAlign: TextAlign.center,
             ),
@@ -231,6 +412,8 @@ class _ListeningTestSetupPageState extends State<ListeningTestSetupPage> {
                 _buildRadioTile('Full part'),
               ],
             ),
+
+
             SizedBox(height: 24),
             Text(
               'Choose time:',

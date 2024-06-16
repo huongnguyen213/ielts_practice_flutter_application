@@ -222,10 +222,13 @@ class _Part3PageState extends State<Part3Page> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Row(
+
               children: [
-                ImageIcon(
-                  AssetImage('icons/oclock.png'),
-                  size: 48,
+                SizedBox(width: 40),
+                Image.asset(
+                  "assets/images/img_clock.png",
+                  width: 40,
+                  height: 40,
                 ),
                 SizedBox(width: 5),
                 Text(
@@ -475,7 +478,7 @@ class _Part3PageState extends State<Part3Page> {
               padding: EdgeInsets.all(5.0),
               decoration: BoxDecoration(
                 border: Border.all(
-                  color: Colors.black,
+                  color: Colors.white,
                   width: 1.0,
                   style: BorderStyle.solid,
                 ),
@@ -491,15 +494,15 @@ class _Part3PageState extends State<Part3Page> {
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: questionAnswered[index] ? Colors.green : Color(0xffD3D3D3),
-                        padding: EdgeInsets.all(4.0),
                         shape: CircleBorder(),
+                        padding: EdgeInsets.all(3), // foreground
                       ),
                       child: Text(
                         '${index + 1}',
                         style: const TextStyle(
                           fontWeight: FontWeight.w500,
                           color: Colors.black,
-                          fontSize: 25,
+                          fontSize: 15,
                         ),
                       ),
                     ),
