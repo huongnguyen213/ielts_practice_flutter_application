@@ -8,6 +8,7 @@ import 'package:ielts_practice_flutter_application/page/reading/pages/test_page.
 import '../cubit/test_cubit.dart';
 import '../widgets/time_dropdown.dart';
 
+// Trang lựa chọn điều kiện cho bài thi reading
 class ReadingChooseConditionPage extends StatefulWidget {
   const ReadingChooseConditionPage({super.key});
 
@@ -18,12 +19,14 @@ class ReadingChooseConditionPage extends StatefulWidget {
 
 class _ReadingChooseConditionPageState
     extends State<ReadingChooseConditionPage> {
+  // Các biến bool để kiểm tra phần nào được chọn
   bool p1 = false;
   bool p2 = false;
   bool p3 = false;
   bool p4 = false;
-  String time = "Standard";
+  String time = "Standard"; //// Thời gian mặc định
 
+  // Hàm xử lý khi thay đổi giá trị dropdown
   void _handleDropdownChanged(String newValue) {
     time = newValue;
   }

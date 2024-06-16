@@ -8,6 +8,7 @@ import '../cubit/test_cubit.dart';
 import '../widgets/dropdown.dart';
 import '../widgets/practice_item.dart';
 
+//Trang reading
 class ReadingPage extends StatefulWidget {
   const ReadingPage({super.key});
 
@@ -16,14 +17,17 @@ class ReadingPage extends StatefulWidget {
 }
 
 class _ReadingPageState extends State<ReadingPage> {
-  List<PracticeTest> list = [];
+  List<PracticeTest> list = []; // Danh sách các bài kiểm tra đã lọc
   List<PracticeTest> filteredList = [];
-  TextEditingController searchController = TextEditingController();
-  String dropdownValue = "All";
+  TextEditingController searchController =
+      TextEditingController(); // Bộ điều khiển văn bản cho ô tìm kiếm
+  String dropdownValue = "All"; //Giá trị mặc định của dropdown
 
   @override
   void initState() {
     super.initState();
+
+    // Khởi tạo danh sách các bài kiểm tra
     list = [
       PracticeTest("Reading Practice Test 1", 9, true),
       PracticeTest("Reading Practice Test 2", 10, false),
@@ -33,38 +37,48 @@ class _ReadingPageState extends State<ReadingPage> {
       PracticeTest("Reading Practice Test 6", 0, true),
       PracticeTest("Reading Practice Test 7", 5, false),
     ];
-    filteredList = List.from(list);
-    searchController.addListener(_filterTests);
+    filteredList =
+        List.from(list); // Sao chép danh sách ban đầu vào danh sách đã lọc
+    searchController
+        .addListener(_filterTests); // Lắng nghe thay đổi trong ô tìm kiếm
   }
 
   @override
   void dispose() {
-    searchController.dispose();
+    searchController
+        .dispose(); // Giải phóng bộ nhớ cho bộ điều khiển khi không dùng nữa
     super.dispose();
   }
 
+  // Hàm lọc các bài kiểm tra dựa trên ô tìm kiếm và dropdown
   void _filterTests() {
-    String query = searchController.text.toLowerCase();
+    String query = searchController.text
+        .toLowerCase(); // Chuyển văn bản tìm kiếm về chữ thường
     setState(() {
       filteredList = list.where((test) {
-        bool matchesQuery = test.name.toLowerCase().contains(query);
-        bool matchesDropdown =
-            dropdownValue == "All" || (dropdownValue == "Like" && test.star);
-        return matchesQuery && matchesDropdown;
+        bool matchesQuery = test.name
+            .toLowerCase()
+            .contains(query); // Kiểm tra tên bài kiểm tra
+        bool matchesDropdown = dropdownValue == "All" ||
+            (dropdownValue == "Like" &&
+                test.star); // Kiểm tra điều kiện dropdown
+        return matchesQuery &&
+            matchesDropdown; // Kết hợp điều kiện tìm kiếm và dropdown
       }).toList();
     });
   }
 
+  // Hàm xử lý khi thay đổi giá trị dropdown
   void _onDropdownChanged(String value) {
     setState(() {
       dropdownValue = value;
-      _filterTests();
+      _filterTests(); // Lọc lại danh sách bài kiểm tra sau khi thay đổi dropdown
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    context.read<TestCubit>().loadData();
+    context.read<TestCubit>().loadData(); // Tải dữ liệu từ TestCubit
     return Scaffold(
       appBar: AppBar(
         titleSpacing: 0,
@@ -80,7 +94,7 @@ class _ReadingPageState extends State<ReadingPage> {
             children: [
               CupertinoButton(
                 onPressed: () {
-                  Navigator.of(context).pop();
+                  Navigator.of(context).pop(); // Quay lại trang trước đó
                 },
                 padding: EdgeInsets.zero,
                 minSize: 0,
@@ -201,7 +215,9 @@ class _ReadingPageState extends State<ReadingPage> {
                         ),
                       ],
                     ),
-                    child: Dropdown(onChanged: _onDropdownChanged),
+                    child: Dropdown(
+                        onChanged:
+                            _onDropdownChanged), // Dropdown để lọc danh sách
                   ),
                 ],
               ),
@@ -214,7 +230,9 @@ class _ReadingPageState extends State<ReadingPage> {
                   itemCount: filteredList.length,
                   separatorBuilder: (context, index) => const Gap(20),
                   itemBuilder: (context, index) {
-                    return PracticeItem(item: filteredList[index]);
+                    return PracticeItem(
+                        item: filteredList[
+                            index]); // Hiển thị từng bài kiểm tra đã lọc
                   },
                 ),
               ),
@@ -226,6 +244,7 @@ class _ReadingPageState extends State<ReadingPage> {
   }
 }
 
+// Lớp mô tả bài kiểm tra thực hành
 class PracticeTest {
   final String name;
   final int point;
